@@ -15,7 +15,7 @@ CC=gcc
 # Base Flags
 # If you want to add a CFLAG to be included in both the 
 # debug and the release build, add it here
-BASE_CFLAGS=-Dstricmp=strcasecmp -DC_ONLY -pedantic -m386 -V2.7.2.3
+BASE_CFLAGS=-Dstricmp=strcasecmp -DC_ONLY -pedantic 
 
 # Release Flags
 # Flags added here are ONLY used for building the release
@@ -34,7 +34,7 @@ DEBUG_CFLAGS=$(BASE_CFLAGS) -g -Wall
 
 ##### Dont go beyond here unless you know what's going on ####
 
-ARCH=i386
+ARCH=x86_64
 
 SHLIBEXT=so
 

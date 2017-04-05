@@ -7,10 +7,10 @@ qboolean	Pickup_Weapon (edict_t *ent, edict_t *other);
 qboolean	Pickup_NoAmmoWeapon (edict_t *ent, edict_t *other);
 void		Use_Weapon (edict_t *ent, gitem_t *inv);
 void		Drop_Weapon (edict_t *ent, gitem_t *inv);
-void		Use_Jet ( edict_t *ent, gitem_t *item );	//MATTHIAS
-void		Use_Invisibility (edict_t *ent, gitem_t *item);	//MATTHIAS
+void		Use_Jet ( edict_t *ent, gitem_t *item );	/* MATTHIAS */
+void		Use_Invisibility (edict_t *ent, gitem_t *item);	/* MATTHIAS */
 qboolean	Jet_Active( edict_t *ent );
-void		AddItemToList(edict_t *ent);	//MATTHIAS
+void		AddItemToList(edict_t *ent);	/* MATTHIAS */
 
 void Weapon_AK42 (edict_t *ent);
 void Weapon_Shotgun (edict_t *ent);
@@ -24,7 +24,7 @@ void Weapon_GrenadeLauncher (edict_t *ent);
 void Weapon_Railgun (edict_t *ent);
 void Weapon_BFG (edict_t *ent);
 
-// MATTHIAS
+/* MATTHIAS */
 void Weapon_FlashGrenade (edict_t *ent);
 void Weapon_LaserGrenade (edict_t *ent);
 void Weapon_PoisonGrenade (edict_t *ent);
@@ -60,7 +60,7 @@ int	power_shield_index;
 void Use_Quad (edict_t *ent, gitem_t *item);
 static int	quad_drop_timeout_hack;
 
-//======================================================================
+/*======================================================================*/
 
 /*
 ===============
@@ -122,19 +122,19 @@ gitem_t	*FindItem (char *pickup_name)
 	return NULL;
 }
 
-//======================================================================
+/*======================================================================*/
 
-//MATTHIAS
+/* MATTHIAS */
 void droptofloor (edict_t *ent);
 
 void DoRespawn (edict_t *ent)
 {
-	float    rn; //MATTHIAS
+	float    rn; /* MATTHIAS */
 	int      newit;
 	gitem_t  *item;
 
-	it_lturret = FindItem("automatic defence turret");	//bugfix
-	it_airfist = FindItem("airgun");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
+	it_airfist = FindItem("airgun");	/* bugfix */
 
 
 	if (ent->team)
@@ -145,15 +145,15 @@ void DoRespawn (edict_t *ent)
 
 		master = ent->teammaster;
 
-//ZOID
-//in ctf, when we are weapons stay, only the master of a team of weapons
-//is spawned
+/* ZOID */
+/* in ctf, when we are weapons stay, only the master of a team of weapons */
+/* is spawned */
 		if (ctf->value &&
 			((int)dmflags->value & DF_WEAPONS_STAY) &&
 			master->item && (master->item->flags & IT_WEAPON))
 			ent = master;
 		else {
-//ZOID
+/* ZOID */
 
 			for (count = 0, ent = master; ent; ent = ent->chain, count++)
 				;
@@ -165,7 +165,7 @@ void DoRespawn (edict_t *ent)
 		}
 	}
 
-	//MATTHIAS - Weapon/Item exchange
+	/* MATTHIAS - Weapon/Item exchange */
 
 	if (ent->item)
 	{
@@ -259,7 +259,7 @@ void DoRespawn (edict_t *ent)
 		{
 			rn = random();
 
-			if ((rn <= 0.2) && (numbots == 0))	//don't spawn laser mines in bot games
+			if ((rn <= 0.2) && (numbots == 0))	/* don't spawn laser mines in bot games */
 			{
 				item = it_lasermines;
 				ent->classname = "ammo_lasermines";
@@ -390,11 +390,11 @@ void DoRespawn (edict_t *ent)
 			}
 			newit = 1;
 		}
-	//MATTHIAS - Weapon banning
+	/* MATTHIAS - Weapon banning */
 
 		if (!Q_stricmp(ent->classname, "weapon_sword") && ban_sword->value)
 		{
-			if (ban_chainsaw->value) //banned,too
+			if (ban_chainsaw->value) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -407,7 +407,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_chainsaw") == 0 && ban_chainsaw->value > 0)
 		{
-			if (ban_sword->value > 0) //banned,too
+			if (ban_sword->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -435,7 +435,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_grenadelauncher") == 0 && ban_grenadelauncher->value > 0)
 		{
-			if (ban_proxylauncher->value > 0) //banned,too
+			if (ban_proxylauncher->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -448,7 +448,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_proxyminelauncher") == 0 && ban_proxylauncher->value > 0)
 		{
-			if (ban_grenadelauncher->value > 0) //banned,too
+			if (ban_grenadelauncher->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -466,7 +466,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_railgun") == 0 && ban_railgun->value > 0)
 		{
-			if (ban_buzzsaw->value > 0) //banned,too
+			if (ban_buzzsaw->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -479,7 +479,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "weapon_buzzsaw") == 0 && ban_buzzsaw->value > 0)
 		{
-			if (ban_railgun->value > 0) //banned,too
+			if (ban_railgun->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -725,7 +725,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_shells") == 0 && ban_ammo_shells->value > 0)
 		{
-			if (ban_ammo_explosiveshells->value > 0) //banned,too
+			if (ban_ammo_explosiveshells->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -738,7 +738,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_explosiveshells") == 0 && ban_ammo_explosiveshells->value > 0)
 		{
-			if (ban_ammo_shells->value > 0) //banned,too
+			if (ban_ammo_shells->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -751,7 +751,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_rockets") == 0 && ban_ammo_rockets->value > 0)
 		{
-			if (ban_ammo_homingmissiles->value > 0) //banned,too
+			if (ban_ammo_homingmissiles->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -764,7 +764,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_homing") == 0 && ban_ammo_homingmissiles->value > 0)
 		{
-			if (ban_ammo_rockets->value > 0) //banned,too
+			if (ban_ammo_rockets->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -777,7 +777,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_slugs") == 0 && ban_ammo_slugs->value > 0)
 		{
-			if (ban_ammo_buzzes->value > 0) //banned,too
+			if (ban_ammo_buzzes->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -790,7 +790,7 @@ void DoRespawn (edict_t *ent)
 		}
 		else if (strcmp(ent->classname, "ammo_buzzes") == 0 && ban_ammo_buzzes->value > 0)
 		{
-			if (ban_ammo_slugs->value > 0) //banned,too
+			if (ban_ammo_slugs->value > 0) /* banned,too */
 			{
 				G_FreeEdict (ent);
 				return;
@@ -1070,7 +1070,7 @@ void DoRespawn (edict_t *ent)
 	ent->solid = SOLID_TRIGGER;
 	gi.linkentity (ent);
 
-	// send an effect
+	/* send an effect */
 	ent->s.event = EV_ITEM_RESPAWN;
 }
 
@@ -1085,7 +1085,7 @@ void SetRespawn (edict_t *ent, float delay)
 }
 
 
-//======================================================================
+/*======================================================================*/
 
 qboolean Pickup_Powerup (edict_t *ent, edict_t *other)
 {
@@ -1098,7 +1098,7 @@ qboolean Pickup_Powerup (edict_t *ent, edict_t *other)
 	if ((coop->value) && (ent->item->flags & IT_STAY_COOP) && (quantity > 0))
 		return false;
 
-	// LETHAL : start
+	/* LETHAL : start */
 	if ( ent->item == it_grapple )
 	{
 		if ( other->client->pers.inventory[ITEM_INDEX(ent->item)] > 0 )
@@ -1133,7 +1133,7 @@ qboolean Pickup_Powerup (edict_t *ent, edict_t *other)
 		}
        	}
 	
-	// LETHAL : end	
+	/* LETHAL : end	*/
 
         other->client->pers.inventory[ITEM_INDEX(ent->item)]++;
                                                         
@@ -1144,7 +1144,7 @@ qboolean Pickup_Powerup (edict_t *ent, edict_t *other)
 		if ((ent->item->use == Use_Quad) && (ent->spawnflags & DROPPED_PLAYER_ITEM))
 			quad_drop_timeout_hack = (ent->nextthink - level.time) / FRAMETIME;
 		{
-			if (ent->item->use)//MATTHIAS
+			if (ent->item->use)/* MATTHIAS */
 				if(!(ent->item->use == Use_Jet))
 					ent->item->use (other, ent->item);
 		}
@@ -1161,7 +1161,7 @@ void Drop_General (edict_t *ent, gitem_t *item)
 }
 
 
-//======================================================================
+/*======================================================================*/
 
 qboolean Pickup_Adrenaline (edict_t *ent, edict_t *other)
 {
@@ -1199,7 +1199,7 @@ qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)
 		other->client->pers.max_cells = 250;
 	if (other->client->pers.max_slugs < 75)
 		other->client->pers.max_slugs = 75;
-	if (other->client->pers.max_eshells < 150) //MATTHIAS
+	if (other->client->pers.max_eshells < 150) /* MATTHIAS */
 		other->client->pers.max_eshells = 150;
 	if (other->client->pers.max_arrows < 100)
 		other->client->pers.max_arrows = 100;
@@ -1256,7 +1256,7 @@ qboolean Pickup_Bandolier (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & DROPPED_ITEM))
 		SetRespawn (ent, ent->item->quantity);
 
-	if (strcmp(other->classname,"bot") == 0)	//MATTHIAS
+	if (strcmp(other->classname,"bot") == 0)	/* MATTHIAS */
 	{
 		if (other->enemy)
 		{
@@ -1295,7 +1295,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 		other->client->pers.max_cells = 300;
 	if (other->client->pers.max_slugs < 100)
 		other->client->pers.max_slugs = 100;
-	if (other->client->pers.max_eshells < 200) //MATTHIAS
+	if (other->client->pers.max_eshells < 200) /* MATTHIAS */
 		other->client->pers.max_eshells = 200;
 	if (other->client->pers.max_arrows < 150)
 		other->client->pers.max_arrows = 150;
@@ -1436,7 +1436,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & DROPPED_ITEM))
 		SetRespawn (ent, ent->item->quantity);
 
-	if (strcmp(other->classname,"bot") == 0)	//MATTHIAS
+	if (strcmp(other->classname,"bot") == 0)	/* MATTHIAS */
 	{
 		if (other->enemy)
 		{
@@ -1456,7 +1456,7 @@ qboolean Pickup_Pack (edict_t *ent, edict_t *other)
 	return true;
 }
 
-//======================================================================
+/*======================================================================*/
 
 void Use_Quad (edict_t *ent, gitem_t *item)
 {
@@ -1483,7 +1483,7 @@ void Use_Quad (edict_t *ent, gitem_t *item)
 	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);
 }
 
-//======================================================================
+/*======================================================================*/
 
 void Use_Breather (edict_t *ent, gitem_t *item)
 {
@@ -1495,10 +1495,10 @@ void Use_Breather (edict_t *ent, gitem_t *item)
 	else
 		ent->client->breather_framenum = level.framenum + 300;
 
-//	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);
+/*	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);*/
 }
 
-//======================================================================
+/*======================================================================*/
 
 void Use_Envirosuit (edict_t *ent, gitem_t *item)
 {
@@ -1510,10 +1510,10 @@ void Use_Envirosuit (edict_t *ent, gitem_t *item)
 	else
 		ent->client->enviro_framenum = level.framenum + 300;
 
-//	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);
+/*	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);*/
 }
 
-//======================================================================
+/*======================================================================*/
 
 void	Use_Invulnerability (edict_t *ent, gitem_t *item)
 {
@@ -1528,7 +1528,7 @@ void	Use_Invulnerability (edict_t *ent, gitem_t *item)
 	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect.wav"), 1, ATTN_NORM, 0);
 }
 
-//======================================================================
+/*======================================================================*/
 
 void	Use_Silencer (edict_t *ent, gitem_t *item)
 {
@@ -1536,10 +1536,10 @@ void	Use_Silencer (edict_t *ent, gitem_t *item)
 	ValidateSelectedItem (ent);
 	ent->client->silencer_shots += 30;
 
-//	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);
+/*	gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage.wav"), 1, ATTN_NORM, 0);*/
 }
 
-//======================================================================
+/*======================================================================*/
 
 qboolean Pickup_Key (edict_t *ent, edict_t *other)
 {
@@ -1564,7 +1564,7 @@ qboolean Pickup_Key (edict_t *ent, edict_t *other)
 	return true;
 }
 
-//======================================================================
+/*======================================================================*/
 
 qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 {
@@ -1586,7 +1586,7 @@ qboolean Add_Ammo (edict_t *ent, gitem_t *item, int count)
 		max = ent->client->pers.max_cells;
 	else if (item->tag == AMMO_SLUGS)
 		max = ent->client->pers.max_slugs;
-	else if (item->tag == AMMO_EXPLOSIVESHELLS) //MATTHIAS
+	else if (item->tag == AMMO_EXPLOSIVESHELLS) /* MATTHIAS */
 		max = ent->client->pers.max_eshells;
 	else if (item->tag == AMMO_ARROWS)
 		max = ent->client->pers.max_arrows;
@@ -1658,7 +1658,7 @@ qboolean Pickup_Ammo (edict_t *ent, edict_t *other)
 	if (!(ent->spawnflags & (DROPPED_ITEM | DROPPED_PLAYER_ITEM)) && (deathmatch->value))
 		SetRespawn (ent, 30);
 
-	if (strcmp(other->classname,"bot") == 0)	//MATTHIAS
+	if (strcmp(other->classname,"bot") == 0)	/* MATTHIAS */
 	{
 		if (other->client->pers.weapon != it_rturret
 			&& other->client->pers.weapon != it_lturret
@@ -1699,7 +1699,7 @@ void Drop_Ammo (edict_t *ent, gitem_t *item)
 }
 
 
-//======================================================================
+/*======================================================================*/
 
 void MegaHealth_think (edict_t *self)
 {
@@ -1725,17 +1725,17 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 		if (other->health >= other->max_health)
 			return false;
 
-//ZOID
+/* ZOID */
 	if (other->health >= 250 && ent->count > 25)
 		return false;
-//ZOID
+/* ZOID */
 
 	other->health += ent->count;
 
-//ZOID
+/* ZOID */
 	if (other->health > 250 && ent->count > 25)
 		other->health = 250;
-//ZOID
+/* ZOID */
 
 	if (ent->count == 2)
 		ent->item->pickup_sound = "items/s_health.wav";
@@ -1743,7 +1743,7 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 		ent->item->pickup_sound = "items/n_health.wav";
 	else if (ent->count == 25)
 		ent->item->pickup_sound = "items/l_health.wav";
-	else // (ent->count == 100)
+	else /* (ent->count == 100)*/
 		ent->item->pickup_sound = "items/m_health.wav";
 
 	if (!(ent->style & HEALTH_IGNORE_MAX))
@@ -1752,10 +1752,10 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 			other->health = other->max_health;
 	}
 
-//ZOID
+/* ZOID */
 	if (ent->style & HEALTH_TIMED )
-		// && !CTFHasRegeneration(other) )
-//ZOID
+		/* && !CTFHasRegeneration(other) )*/
+/* ZOID */
 	{
 		ent->think = MegaHealth_think;
 		ent->nextthink = level.time + 5;
@@ -1773,7 +1773,7 @@ qboolean Pickup_Health (edict_t *ent, edict_t *other)
 	return true;
 }
 
-//======================================================================
+/*======================================================================*/
 
 int ArmorIndex (edict_t *ent)
 {
@@ -1801,12 +1801,12 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 	float			salvage;
 	int				salvagecount;
 
-	// get info on new armor
+	/* get info on new armor */
 	newinfo = (gitem_armor_t *)ent->item->info;
 
 	old_armor_index = ArmorIndex (other);
 
-	// handle armor shards specially
+	/* handle armor shards specially */
 	if (ent->item->tag == ARMOR_SHARD)
 	{
 		if (!old_armor_index)
@@ -1815,52 +1815,52 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 			other->client->pers.inventory[old_armor_index] += 2;
 	}
 
-	// if player has no armor, just use it
+	/* if player has no armor, just use it */
 	else if (!old_armor_index)
 	{
 		other->client->pers.inventory[ITEM_INDEX(ent->item)] = newinfo->base_count;
 	}
 
-	// use the better armor
+	/* use the better armor */
 	else
 	{
-		// get info on old armor
+		/* get info on old armor */
 		if (old_armor_index == jacket_armor_index)
 			oldinfo = &jacketarmor_info;
 		else if (old_armor_index == combat_armor_index)
 			oldinfo = &combatarmor_info;
-		else // (old_armor_index == body_armor_index)
+		else /* (old_armor_index == body_armor_index)*/
 			oldinfo = &bodyarmor_info;
 
 		if (newinfo->normal_protection > oldinfo->normal_protection)
 		{
-			// calc new armor values
+			/* calc new armor values */
 			salvage = oldinfo->normal_protection / newinfo->normal_protection;
 			salvagecount = salvage * other->client->pers.inventory[old_armor_index];
 			newcount = newinfo->base_count + salvagecount;
 			if (newcount > newinfo->max_count)
 				newcount = newinfo->max_count;
 
-			// zero count of old armor so it goes away
+			/* zero count of old armor so it goes away */
 			other->client->pers.inventory[old_armor_index] = 0;
 
-			// change armor to new item with computed value
+			/* change armor to new item with computed value */
 			other->client->pers.inventory[ITEM_INDEX(ent->item)] = newcount;
 		}
 		else
 		{
-			// calc new armor values
+			/* calc new armor values */
 			salvage = newinfo->normal_protection / oldinfo->normal_protection;
 			salvagecount = salvage * newinfo->base_count;
 			newcount = other->client->pers.inventory[old_armor_index] + salvagecount;
 			if (newcount > oldinfo->max_count)
 				newcount = oldinfo->max_count;
 
-			// if we're already maxed out then we don't need the new armor
+			/* if we're already maxed out then we don't need the new armor */
 			if (other->client->pers.inventory[old_armor_index] >= newcount)
 				return false;
 
-			// update current armor value
+			/* update current armor value */
 			other->client->pers.inventory[old_armor_index] = newcount;
 		}
 	}
@@ -1871,7 +1871,7 @@ qboolean Pickup_Armor (edict_t *ent, edict_t *other)
 	return true;
 }
 
-//======================================================================
+/*======================================================================*/
 
 int PowerArmorType (edict_t *ent)
 {
@@ -1922,7 +1922,7 @@ qboolean Pickup_PowerArmor (edict_t *ent, edict_t *other)
 
 	if (!(ent->spawnflags & DROPPED_ITEM) )
 		SetRespawn (ent, ent->item->quantity);
-	// auto-use for DM only if we didn't already have one
+	/* auto-use for DM only if we didn't already have one */
 	if (!quantity)
 		ent->item->use (other, ent->item);
 
@@ -1936,7 +1936,7 @@ void Drop_PowerArmor (edict_t *ent, gitem_t *item)
 	Drop_General (ent, item);
 }
 
-//======================================================================
+/*======================================================================*/
 
 /*
 ===============
@@ -1950,23 +1950,23 @@ void Touch_Item (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf
 	if (!other->client)
 		return;
 	if (other->health < 1)
-		return;		// dead people can't pickup
+		return;		/* dead people can't pickup */
 	if (!ent->item->pickup)
-		return;		// not a grabbable item?
+		return;		/* not a grabbable item?*/
 
 	taken = ent->item->pickup(ent, other);
 
 	if (taken)
 	{
-		// flash the screen
+		/* flash the screen */
 		other->client->bonus_alpha = 0.25;	
 
-		// show icon and name on status bar
+		/* show icon and name on status bar */
 		other->client->ps.stats[STAT_PICKUP_ICON] = gi.imageindex(ent->item->icon);
 		other->client->ps.stats[STAT_PICKUP_STRING] = CS_ITEMS+ITEM_INDEX(ent->item);
 		other->client->pickup_msg_time = level.time + 3.0;
 
-		// change selected item
+		/* change selected item */
 		if (ent->item->use)
 			other->client->pers.selected_item = other->client->ps.stats[STAT_SELECTED_ITEM] = ITEM_INDEX(ent->item);
 
@@ -1991,7 +1991,7 @@ void Touch_Item (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf
 	}
 }
 
-//======================================================================
+/*======================================================================*/
 
 static void drop_temp_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -2076,7 +2076,7 @@ void Use_Item (edict_t *ent, edict_t *other, edict_t *activator)
 	gi.linkentity (ent);
 }
 
-//======================================================================
+/*======================================================================*/
 
 /*
 ================
@@ -2145,7 +2145,7 @@ void droptofloor (edict_t *ent)
 		ent->use = Use_Item;
 	}
 
-	//MATTHIAS Autorespawn
+	/* MATTHIAS Autorespawn */
 
 	ent->nextthink = level.time + 60 + random() * 80;
 	ent->think = DoRespawn;
@@ -2182,7 +2182,7 @@ void PrecacheItem (gitem_t *it)
 	if (it->icon)
 		gi.imageindex (it->icon);
 
-	// parse everything for its ammo
+	/* parse everything for its ammo */
 	if (it->ammo && it->ammo[0])
 	{
 		ammo = FindItem (it->ammo);
@@ -2190,7 +2190,7 @@ void PrecacheItem (gitem_t *it)
 			PrecacheItem (ammo);
 	}
 
-	// parse the space seperated precache string for other items
+	/* parse the space seperated precache string for other items */
 	s = it->precaches;
 	if (!s || !s[0])
 		return;
@@ -2209,7 +2209,7 @@ void PrecacheItem (gitem_t *it)
 		if (*s)
 			s++;
 
-		// determine type based on extension
+		/* determine type based on extension */
 		if (!strcmp(data+len-3, "md2"))
 			gi.modelindex (data);
 		else if (!strcmp(data+len-3, "sp2"))
@@ -2233,10 +2233,10 @@ be on an entity that hasn't spawned yet.
 */
 void SpawnItem (edict_t *ent, gitem_t *item)
 {
-	float  rn; //MATTHIAS
+	float  rn; /* MATTHIAS */
 
-	it_lturret = FindItem("automatic defence turret");	//bugfix
-	it_airfist = FindItem("airgun");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
+	it_airfist = FindItem("airgun");	/* bugfix */
 
 
 	PrecacheItem (item);
@@ -2251,7 +2251,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		}
 	}
 
-	// some items will be prevented in deathmatch
+	/* some items will be prevented in deathmatch */
 	
 	if ( (int)dmflags->value & DF_NO_ARMOR )
 	{
@@ -2286,8 +2286,8 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		}
 	}
 
-//ZOID
-//Don't spawn the flags unless enabled
+/* ZOID */
+/* Don't spawn the flags unless enabled */
 	if (!ctf->value &&
 		(strcmp(ent->classname, "item_flag_team1") == 0 ||
 		strcmp(ent->classname, "item_flag_team2") == 0)) {
@@ -2295,7 +2295,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		return;
 	}
 
-	//MATTHIAS - place flag nodes
+	/* MATTHIAS - place flag nodes */
 	if (ctf->value)
 	{
 		if (strcmp(ent->classname, "item_flag_team1") == 0
@@ -2324,7 +2324,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		}
 	}
 
-//MATTHIAS - Weapon/Item banning
+/* MATTHIAS - Weapon/Item banning */
 
 	if (strcmp(ent->classname, "item_armor_body") == 0 && ban_bodyarmor->value > 0)
 	{
@@ -2377,7 +2377,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		return;
 	}
 
-//MATTHIAS	- Weapon/Item exchange
+/* MATTHIAS	- Weapon/Item exchange */
 
 	if (strcmp(ent->classname, "ammo_shells") == 0)
 	{
@@ -2536,11 +2536,11 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 		}
 	}
 
-//MATTHIAS - Weapon banning
+/* MATTHIAS - Weapon banning */
 
 	if (strcmp(ent->classname, "weapon_sword") == 0 && ban_sword->value > 0)
 	{
-		if (ban_chainsaw->value > 0) //banned,too
+		if (ban_chainsaw->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2568,7 +2568,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "weapon_grenadelauncher") == 0 && ban_grenadelauncher->value > 0)
 	{
-		if (ban_proxylauncher->value > 0) //banned,too
+		if (ban_proxylauncher->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2591,7 +2591,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "weapon_railgun") == 0 && ban_railgun->value > 0)
 	{
-		if (ban_buzzsaw->value > 0) //banned,too
+		if (ban_buzzsaw->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2604,7 +2604,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "weapon_buzzsaw") == 0 && ban_buzzsaw->value > 0)
 	{
-		if (ban_railgun->value > 0) //banned,too
+		if (ban_railgun->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2615,7 +2615,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			ent->classname = "weapon_railgun";
 		}
 	}
-	//BFG
+	/* BFG */
 	else if (strcmp(ent->classname, "weapon_bfg") == 0 && ban_bfg->value > 0)
 	{
 		if (ban_vortex->value == 0)
@@ -2639,7 +2639,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
-	//Vortex
+	/* Vortex */
 	else if (strcmp(ent->classname, "ammo_vortex") == 0 && ban_vortex->value > 0)
 	{
 		if (ban_defenceturret->value == 0)
@@ -2663,7 +2663,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
-	//defence turret
+	/* defence turret */
 	else if (strcmp(ent->classname, "ammo_laserturret") == 0 && ban_defenceturret->value > 0)
 	{
 		if (ban_rocketturret->value == 0)
@@ -2687,7 +2687,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 			return;
 		}
 	}
-	//rocket turret
+	/* rocket turret */
 	else if (strcmp(ent->classname, "ammo_rocketturret") == 0 && ban_rocketturret->value > 0)
 	{
 		if (ban_bfg->value == 0)
@@ -2854,7 +2854,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "ammo_shells") == 0 && ban_ammo_shells->value > 0)
 	{
-		if (ban_ammo_explosiveshells->value > 0) //banned,too
+		if (ban_ammo_explosiveshells->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2867,7 +2867,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "ammo_explosiveshells") == 0 && ban_ammo_explosiveshells->value > 0)
 	{
-		if (ban_ammo_shells->value > 0) //banned,too
+		if (ban_ammo_shells->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2880,7 +2880,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "ammo_rockets") == 0 && ban_ammo_rockets->value > 0)
 	{
-		if (ban_ammo_homingmissiles->value > 0) //banned,too
+		if (ban_ammo_homingmissiles->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2893,7 +2893,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "ammo_homing") == 0 && ban_ammo_homingmissiles->value > 0)
 	{
-		if (ban_ammo_rockets->value > 0) //banned,too
+		if (ban_ammo_rockets->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2906,7 +2906,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "ammo_slugs") == 0 && ban_ammo_slugs->value > 0)
 	{
-		if (ban_ammo_buzzes->value > 0) //banned,too
+		if (ban_ammo_buzzes->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -2919,7 +2919,7 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	}
 	else if (strcmp(ent->classname, "ammo_buzzes") == 0 && ban_ammo_buzzes->value > 0)
 	{
-		if (ban_ammo_slugs->value > 0) //banned,too
+		if (ban_ammo_slugs->value > 0) /* banned,too */
 		{
 			G_FreeEdict (ent);
 			return;
@@ -3187,12 +3187,12 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 	VectorCopy(ent->s.origin, ent->spawnorigin);
 
 	ent->item = item;
-	ent->nextthink = level.time + 2 * FRAMETIME;    // items start after other solids
+	ent->nextthink = level.time + 2 * FRAMETIME;    /* items start after other solids */
 	ent->think = droptofloor;
 	ent->s.effects = item->world_model_flags;
 	ent->s.renderfx = RF_GLOW;
 
-	//MATTHIAS
+	/* MATTHIAS */
 	
 
 	if (ent->model)
@@ -3200,8 +3200,8 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 
 	AddItemToList(ent);
 
-//ZOID
-//flags are server animated and have special handling
+/* ZOID */
+/* flags are server animated and have special handling */
 	if (strcmp(ent->classname, "item_flag_team1") == 0 ||
 		strcmp(ent->classname, "item_flag_team2") == 0) {
 		ent->think = CTFFlagSetup;
@@ -3209,19 +3209,19 @@ void SpawnItem (edict_t *ent, gitem_t *item)
 
 }
 
-//======================================================================
+/*======================================================================*/
 
 gitem_t	itemlist[] = 
 {
 	{
 		NULL
-	},	// leave index 0 alone
+	},	/* leave index 0 alone */
 
-	//
-	// ARMOR
-	//
+	/**/
+	/* ARMOR */
+	/**/
 
-/*QUAKED item_armor_body (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_armor_body (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_armor_body", 
@@ -3243,7 +3243,7 @@ gitem_t	itemlist[] =
 /* precache */ ""
 	},
 
-/*QUAKED item_armor_combat (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_armor_combat (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_armor_combat", 
@@ -3265,7 +3265,7 @@ gitem_t	itemlist[] =
 /* precache */ ""
 	},
 
-/*QUAKED item_armor_jacket (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_armor_jacket (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_armor_jacket", 
@@ -3287,7 +3287,7 @@ gitem_t	itemlist[] =
 /* precache */ ""
 	},
 
-/*QUAKED item_armor_shard (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_armor_shard (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_armor_shard", 
@@ -3310,7 +3310,7 @@ gitem_t	itemlist[] =
 	},
 
 
-/*QUAKED item_power_screen (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_power_screen (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_power_screen", 
@@ -3332,7 +3332,7 @@ gitem_t	itemlist[] =
 /* precache */ ""
 	},
 
-/*QUAKED item_power_shield (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_power_shield (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_power_shield",
@@ -3355,9 +3355,9 @@ gitem_t	itemlist[] =
 	},
 
 
-	//
-	// WEAPONS 
-	//
+	/**/
+	/* WEAPONS */
+	/**/
 
 /* weapon_ak42 (.3 .3 1) (-16 -16 -16) (16 16 16)
 always owned, never in the world
@@ -3382,7 +3382,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED weapon_sword (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_sword (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_sword", 
@@ -3404,7 +3404,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED weapon_chainsaw (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_chainsaw (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_chainsaw", 
@@ -3426,7 +3426,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED weapon_crossbow (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_crossbow (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_crossbow", 
@@ -3448,7 +3448,7 @@ always owned, never in the world
 /* precache */ "crossbow/fly.wav crossbow/release1.wav crossbow/hit1.wav crossbow/hit3.wav crossbow/catch.wav"
 	},
 
-/*QUAKED weapon_posioncrossbow (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_posioncrossbow (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_poisoncrossbow", 
@@ -3470,7 +3470,7 @@ always owned, never in the world
 /* precache */ "crossbow/fly.wav crossbow/release1.wav crossbow/hit1.wav crossbow/hit3.wav crossbow/catch.wav"
 	},
 
-/*QUAKED weapon_explosivecrossbow (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_explosivecrossbow (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_explosivecrossbow", 
@@ -3493,7 +3493,7 @@ always owned, never in the world
 	},
 
 
-/*QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_shotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_shotgun", 
@@ -3515,7 +3515,7 @@ always owned, never in the world
 /* precache */ "weapons/shotgf1b.wav weapons/shotgr1b.wav"
 	},
 
-/*QUAKED weapon_supershotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_supershotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_supershotgun", 
@@ -3537,7 +3537,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED weapon_explosivesupershotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_explosivesupershotgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_explosivesupershotgun", 
@@ -3559,7 +3559,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_machinegun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_machinegun", 
@@ -3581,7 +3581,7 @@ always owned, never in the world
 /* precache */ "weapons/machgf1b.wav weapons/machgf2b.wav weapons/machgf3b.wav weapons/machgf4b.wav weapons/machgf5b.wav"
 	},
 
-/*QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_chaingun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_chaingun", 
@@ -3603,7 +3603,7 @@ always owned, never in the world
 /* precache */ "weapons/chngnu1a.wav weapons/chngnl1a.wav weapons/machgf3b.wav` weapons/chngnd1a.wav"
 	},
 
-/*QUAKED weapon_airfist (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_airfist (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_airfist", 
@@ -3625,7 +3625,7 @@ always owned, never in the world
 /* precache */ "air/agfail.wav air/agfire.wav air/agwater.wav air/fly.wav"
 	},
 
-/*QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_grenades (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_grenades",
@@ -3647,7 +3647,7 @@ always owned, never in the world
 /* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
-/*QUAKED ammo_flashgrenades (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_flashgrenades (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_flashgrenades",
@@ -3669,7 +3669,7 @@ always owned, never in the world
 /* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
-/*QUAKED ammo_lasermines (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_lasermines (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_lasermines",
@@ -3691,7 +3691,7 @@ always owned, never in the world
 /* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
-	/*QUAKED ammo_poisongrenades (.3 .3 1) (-16 -16 -16) (16 16 16)
+	/* QUAKED ammo_poisongrenades (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_poisongrenades",
@@ -3713,7 +3713,7 @@ always owned, never in the world
 /* precache */ "weapons/hgrent1a.wav weapons/hgrena1b.wav weapons/hgrenc1b.wav weapons/hgrenb1a.wav weapons/hgrenb2a.wav "
 	},
 
-	/*QUAKED ammo_proxymines (.3 .3 1) (-16 -16 -16) (16 16 16)
+	/* QUAKED ammo_proxymines (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_proxymines",
@@ -3735,7 +3735,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_grenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_grenadelauncher",
@@ -3757,7 +3757,7 @@ always owned, never in the world
 /* precache */ "models/objects/grenade/tris.md2 weapons/grenlf1a.wav weapons/grenlr1b.wav weapons/grenlb1b.wav"
 	},
 
-/*QUAKED weapon_flashgrenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_flashgrenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_flashgrenadelauncher",
@@ -3779,7 +3779,7 @@ always owned, never in the world
 /* precache */ "models/objects/grenade/tris.md2 weapons/grenlf1a.wav weapons/grenlr1b.wav weapons/grenlb1b.wav"
 	},
 
-/*QUAKED weapon_poisongrenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_poisongrenadelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_poisongrenadelauncher",
@@ -3801,7 +3801,7 @@ always owned, never in the world
 /* precache */ "models/objects/grenade/tris.md2 weapons/grenlf1a.wav weapons/grenlr1b.wav weapons/grenlb1b.wav"
 	},
 
-/*QUAKED weapon_proxyminelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_proxyminelauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_proxyminelauncher",
@@ -3823,7 +3823,7 @@ always owned, never in the world
 /* precache */ "models/objects/grenade/tris.md2 weapons/grenlf1a.wav weapons/grenlr1b.wav weapons/grenlb1b.wav"
 	},
 
-/*QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_rocketlauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_rocketlauncher",
@@ -3845,7 +3845,7 @@ always owned, never in the world
 /* precache */ "models/objects/rocket/tris.md2 weapons/rockfly.wav weapons/rocklf1a.wav weapons/rocklr1b.wav models/objects/debris2/tris.md2"
 	},
 
-/*QUAKED weapon_hominglauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_hominglauncher (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_hominglauncher",
@@ -3867,7 +3867,7 @@ always owned, never in the world
 /* precache */ "models/objects/rocket/tris.md2 weapons/rockfly.wav weapons/rocklf1a.wav weapons/rocklr1b.wav models/objects/debris2/tris.md2"
 	},
 
-/*QUAKED weapon_hyperblaster (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_hyperblaster (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_hyperblaster", 
@@ -3889,7 +3889,7 @@ always owned, never in the world
 /* precache */ "weapons/hyprbu1a.wav weapons/hyprbl1a.wav weapons/hyprbf1a.wav weapons/hyprbd1a.wav misc/lasfly.wav"
 	},
 
-/*QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_railgun (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_railgun", 
@@ -3911,7 +3911,7 @@ always owned, never in the world
 /* precache */ "weapons/rg_hum.wav"
 	},
 
-/*QUAKED weapon_buzzsaw (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_buzzsaw (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_buzzsaw", 
@@ -3933,7 +3933,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED weapon_bfg (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"weapon_bfg",
@@ -3955,7 +3955,7 @@ always owned, never in the world
 /* precache */ "sprites/s_bfg1.sp2 sprites/s_bfg2.sp2 sprites/s_bfg3.sp2 weapons/bfg__f1y.wav weapons/bfg__l1a.wav weapons/bfg__x1b.wav weapons/bfg_hum.wav"
 	},
 
-/*QUAKED ammo_vortex (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_vortex (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_vortex",
@@ -3977,7 +3977,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED ammo_laserturret (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_laserturret (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_laserturret",
@@ -3999,7 +3999,7 @@ always owned, never in the world
 /* precache */
 	},
 
-/*QUAKED ammo_rocketturret (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_rocketturret (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_rocketturret",
@@ -4021,11 +4021,11 @@ always owned, never in the world
 /* precache */
 	},
 
-	//
-	// AMMO ITEMS
-	//
+	/**/
+	/* AMMO ITEMS */
+	/**/
 
-/*QUAKED ammo_shells (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_shells (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_shells",
@@ -4047,7 +4047,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_explosiveshells (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_explosiveshells (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_explosiveshells",
@@ -4069,7 +4069,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_bullets (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_bullets (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_bullets",
@@ -4091,7 +4091,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_arrows (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_arrows (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_arrows",
@@ -4113,7 +4113,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_poisonarrows (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_poisonarrows (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_poisonarrows",
@@ -4135,7 +4135,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_explosivearrows (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_explosivearrows (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_explosivearrows",
@@ -4157,7 +4157,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_cells (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_cells (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_cells",
@@ -4179,7 +4179,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_rockets (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_rockets (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_rockets",
@@ -4201,7 +4201,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_homing (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_homing (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_homing",
@@ -4223,7 +4223,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_slugs (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_slugs (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_slugs",
@@ -4245,7 +4245,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED ammo_buzzes (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED ammo_buzzes (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"ammo_buzzes",
@@ -4268,10 +4268,10 @@ always owned, never in the world
 	},
 
 
-	//
-	// POWERUP ITEMS
-	//
-/*QUAKED item_quad (.3 .3 1) (-16 -16 -16) (16 16 16)
+	/**/
+	/* POWERUP ITEMS */
+	/**/
+/* QUAKED item_quad (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_quad", 
@@ -4293,7 +4293,7 @@ always owned, never in the world
 /* precache */ "items/damage.wav items/damage2.wav items/damage3.wav"
 	},
 
-/*QUAKED item_jet (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_jet (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
        {
          "item_jet",    
@@ -4316,7 +4316,7 @@ always owned, never in the world
        /* precache */ "hover/hovidle1.wav items/damage.wav items/damage2.wav items/damage3.wav"
        },
 
-/*QUAKED item_grapple (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_grapple (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
        {
          "item_grapple",    
@@ -4339,7 +4339,7 @@ always owned, never in the world
        /* precache */
        },
 
-/*QUAKED item_invulnerability (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_invulnerability (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_invulnerability",
@@ -4361,7 +4361,7 @@ always owned, never in the world
 /* precache */ "items/protect.wav items/protect2.wav items/protect4.wav"
 	},
 
-/*QUAKED item_silencer (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_silencer (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_silencer",
@@ -4383,7 +4383,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED item_invisibility (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_invisibility (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_invisibility",
@@ -4405,7 +4405,7 @@ always owned, never in the world
 /* precache */ ""
 	},
 
-/*QUAKED item_breather (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_breather (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_breather",
@@ -4427,7 +4427,7 @@ always owned, never in the world
 /* precache */ "items/airout.wav"
 	},
 
-/*QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_enviro (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_enviro",
@@ -4449,7 +4449,7 @@ always owned, never in the world
 /* precache */ "items/airout.wav"
 	},
 
-/*QUAKED item_ancient_head (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_ancient_head (.3 .3 1) (-16 -16 -16) (16 16 16)
 Special item that gives +2 to maximum health
 */
 	{
@@ -4472,7 +4472,7 @@ Special item that gives +2 to maximum health
 /* precache */ ""
 	},
 
-/*QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_adrenaline (.3 .3 1) (-16 -16 -16) (16 16 16)
 gives +1 to maximum health
 */
 	{
@@ -4495,7 +4495,7 @@ gives +1 to maximum health
 /* precache */ ""
 	},
 
-/*QUAKED item_bandolier (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_bandolier (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_bandolier",
@@ -4517,7 +4517,7 @@ gives +1 to maximum health
 /* precache */ ""
 	},
 
-/*QUAKED item_pack (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_pack (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 	{
 		"item_pack",
@@ -4539,10 +4539,10 @@ gives +1 to maximum health
 /* precache */ ""
 	},
 
-	//
-	// KEYS
-	//
-/*QUAKED key_data_cd (0 .5 .8) (-16 -16 -16) (16 16 16)
+	/**/
+	/* KEYS */
+	/**/
+/* QUAKED key_data_cd (0 .5 .8) (-16 -16 -16) (16 16 16)
 key for computer centers
 */
 	{
@@ -4565,7 +4565,7 @@ key for computer centers
 /* precache */ ""
 	},
 
-/*QUAKED key_power_cube (0 .5 .8) (-16 -16 -16) (16 16 16) TRIGGER_SPAWN NO_TOUCH
+/* QUAKED key_power_cube (0 .5 .8) (-16 -16 -16) (16 16 16) TRIGGER_SPAWN NO_TOUCH
 warehouse circuits
 */
 	{
@@ -4588,7 +4588,7 @@ warehouse circuits
 /* precache */ ""
 	},
 
-/*QUAKED key_pyramid (0 .5 .8) (-16 -16 -16) (16 16 16)
+/* QUAKED key_pyramid (0 .5 .8) (-16 -16 -16) (16 16 16)
 key for the entrance of jail3
 */
 	{
@@ -4611,7 +4611,7 @@ key for the entrance of jail3
 /* precache */ ""
 	},
 
-/*QUAKED key_data_spinner (0 .5 .8) (-16 -16 -16) (16 16 16)
+/* QUAKED key_data_spinner (0 .5 .8) (-16 -16 -16) (16 16 16)
 key for the city computer
 */
 	{
@@ -4634,7 +4634,7 @@ key for the city computer
 /* precache */ ""
 	},
 
-/*QUAKED key_pass (0 .5 .8) (-16 -16 -16) (16 16 16)
+/* QUAKED key_pass (0 .5 .8) (-16 -16 -16) (16 16 16)
 security pass for the security level
 */
 	{
@@ -4657,7 +4657,7 @@ security pass for the security level
 /* precache */ ""
 	},
 
-/*QUAKED key_blue_key (0 .5 .8) (-16 -16 -16) (16 16 16)
+/* QUAKED key_blue_key (0 .5 .8) (-16 -16 -16) (16 16 16)
 normal door key - blue
 */
 	{
@@ -4680,7 +4680,7 @@ normal door key - blue
 /* precache */ ""
 	},
 
-/*QUAKED key_red_key (0 .5 .8) (-16 -16 -16) (16 16 16)
+/* QUAKED key_red_key (0 .5 .8) (-16 -16 -16) (16 16 16)
 normal door key - red
 */
 	{
@@ -4703,7 +4703,7 @@ normal door key - red
 /* precache */ ""
 	},
 
-/*QUAKED key_commander_head (0 .5 .8) (-16 -16 -16) (16 16 16)
+/* QUAKED key_commander_head (0 .5 .8) (-16 -16 -16) (16 16 16)
 tank commander's head
 */
 	{
@@ -4726,7 +4726,7 @@ tank commander's head
 /* precache */ ""
 	},
 
-/*QUAKED key_airstrike_target (0 .5 .8) (-16 -16 -16) (16 16 16)
+/* QUAKED key_airstrike_target (0 .5 .8) (-16 -16 -16) (16 16 16)
 tank commander's head
 */
 	{
@@ -4770,14 +4770,14 @@ tank commander's head
 	},
 
 
-//ZOID
-/*QUAKED item_flag_team1 (1 0.2 0) (-16 -16 -24) (16 16 32)
+/* ZOID */
+/* QUAKED item_flag_team1 (1 0.2 0) (-16 -16 -24) (16 16 32)
 */
 	{
 		"item_flag_team1",
 		CTFPickup_Flag,
 		NULL,
-		CTFDrop_Flag, //Should this be null if we don't want players to drop it manually?
+		CTFDrop_Flag, /* Should this be null if we don't want players to drop it manually?*/
 		NULL,
 		"ctf/flagtk.wav",
 		"players/male/flag1.md2", EF_FLAG1,
@@ -4793,13 +4793,13 @@ tank commander's head
 /* precache */ "ctf/flagcap.wav"
 	},
 
-/*QUAKED item_flag_team2 (1 0.2 0) (-16 -16 -24) (16 16 32)
+/* QUAKED item_flag_team2 (1 0.2 0) (-16 -16 -24) (16 16 32)
 */
 	{
 		"item_flag_team2",
 		CTFPickup_Flag,
 		NULL,
-		CTFDrop_Flag, //Should this be null if we don't want players to drop it manually?
+		CTFDrop_Flag, /* Should this be null if we don't want players to drop it manually?*/
 		NULL,
 		"ctf/flagtk.wav",
 		"players/male/flag2.md2", EF_FLAG2,
@@ -4820,7 +4820,7 @@ tank commander's head
 		"item_tech1",
 		CTFPickup_Tech,
 		NULL,
-		CTFDrop_Tech, //Should this be null if we don't want players to drop it manually?
+		CTFDrop_Tech, /* Should this be null if we don't want players to drop it manually?*/
 		NULL,
 		"items/pkup.wav",
 		"models/ctf/resistance/tris.md2", EF_ROTATE,
@@ -4841,7 +4841,7 @@ tank commander's head
 		"item_tech2",
 		CTFPickup_Tech,
 		NULL,
-		CTFDrop_Tech, //Should this be null if we don't want players to drop it manually?
+		CTFDrop_Tech, /* Should this be null if we don't want players to drop it manually?*/
 		NULL,
 		"items/pkup.wav",
 		"models/ctf/strength/tris.md2", EF_ROTATE,
@@ -4862,7 +4862,7 @@ tank commander's head
 		"item_tech3",
 		CTFPickup_Tech,
 		NULL,
-		CTFDrop_Tech, //Should this be null if we don't want players to drop it manually?
+		CTFDrop_Tech, /* Should this be null if we don't want players to drop it manually?*/
 		NULL,
 		"items/pkup.wav",
 		"models/ctf/haste/tris.md2", EF_ROTATE,
@@ -4883,7 +4883,7 @@ tank commander's head
 		"item_tech4",
 		CTFPickup_Tech,
 		NULL,
-		CTFDrop_Tech, //Should this be null if we don't want players to drop it manually?
+		CTFDrop_Tech, /* Should this be null if we don't want players to drop it manually?*/
 		NULL,
 		"items/pkup.wav",
 		"models/ctf/regeneration/tris.md2", EF_ROTATE,
@@ -4899,14 +4899,14 @@ tank commander's head
 /* precache */ "ctf/tech4.wav"
 	},
 
-//ZOID
+/* ZOID */
 
-	// end of list marker
+	/* end of list marker */
 	{NULL}
 };
 
 
-/*QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_health (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 void SP_item_health (edict_t *self)
 {
@@ -4916,7 +4916,7 @@ void SP_item_health (edict_t *self)
 		return;
 	}
 
-	if (ban_health->value > 0)	//MATTHIAS
+	if (ban_health->value > 0)	/* MATTHIAS */
 	{
 		G_FreeEdict (self);
 		return;
@@ -4926,10 +4926,10 @@ void SP_item_health (edict_t *self)
 	self->count = 10;
 	SpawnItem (self, FindItem ("Health"));
 	gi.soundindex ("items/n_health.wav");
-	AddItemToList(self);	//MATTHIAS
+	AddItemToList(self);	/* MATTHIAS */
 }
 
-/*QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_health_small (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 void SP_item_health_small (edict_t *self)
 {
@@ -4939,7 +4939,7 @@ void SP_item_health_small (edict_t *self)
 		return;
 	}
 
-	if (ban_health_small->value > 0)	//MATTHIAS
+	if (ban_health_small->value > 0)	/* MATTHIAS */
 	{
 		G_FreeEdict (self);
 		return;
@@ -4952,7 +4952,7 @@ void SP_item_health_small (edict_t *self)
 	gi.soundindex ("items/s_health.wav");
 }
 
-/*QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_health_large (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 void SP_item_health_large (edict_t *self)
 {
@@ -4962,7 +4962,7 @@ void SP_item_health_large (edict_t *self)
 		return;
 	}
 
-	if (ban_health_large->value > 0)	//MATTHIAS
+	if (ban_health_large->value > 0)	/* MATTHIAS */
 	{
 		G_FreeEdict (self);
 		return;
@@ -4972,10 +4972,10 @@ void SP_item_health_large (edict_t *self)
 	self->count = 25;
 	SpawnItem (self, FindItem ("Health"));
 	gi.soundindex ("items/l_health.wav");
-	AddItemToList(self);	//MATTHIAS
+	AddItemToList(self);	/* MATTHIAS */
 }
 
-/*QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16)
+/* QUAKED item_health_mega (.3 .3 1) (-16 -16 -16) (16 16 16)
 */
 void SP_item_health_mega (edict_t *self)
 {
@@ -4985,7 +4985,7 @@ void SP_item_health_mega (edict_t *self)
 		return;
 	}
 
-	if (ban_health_mega->value > 0)	//MATTHIAS
+	if (ban_health_mega->value > 0)	/* MATTHIAS */
 	{
 		G_FreeEdict (self);
 		return;
@@ -4996,7 +4996,7 @@ void SP_item_health_mega (edict_t *self)
 	SpawnItem (self, FindItem ("Health"));
 	gi.soundindex ("items/m_health.wav");
 	self->style = HEALTH_IGNORE_MAX|HEALTH_TIMED;
-	AddItemToList(self);	//MATTHIAS
+	AddItemToList(self);	/* MATTHIAS */
 }
 
 
@@ -5031,7 +5031,7 @@ void SetItemNames (void)
 	power_screen_index = ITEM_INDEX(FindItem("Power Screen"));
 	power_shield_index = ITEM_INDEX(FindItem("Power Shield"));
 
-	//MATTHIAS
+	/* MATTHIAS */
 
 	it_shells = FindItem("shells");
 	it_eshells = FindItem("explosive shells");

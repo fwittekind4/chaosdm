@@ -1,4 +1,4 @@
-// g_combat.c
+/* g_combat.c */
 
 #include "g_local.h"
 #include "c_cam.h"
@@ -16,7 +16,7 @@ qboolean CanDamage (edict_t *targ, edict_t *inflictor)
 	vec3_t	dest;
 	trace_t	trace;
 
-// bmodels need special checking because their origin is 0,0,0
+/* bmodels need special checking because their origin is 0,0,0*/
 	if (targ->movetype == MOVETYPE_PUSH)
 	{
 		VectorAdd (targ->absmin, targ->absmax, dest);
@@ -79,7 +79,7 @@ void Killed (edict_t *targ, edict_t *inflictor, edict_t *attacker, int damage, v
 	targ->enemy = attacker;
 
 	if (targ->movetype == MOVETYPE_PUSH || targ->movetype == MOVETYPE_STOP || targ->movetype == MOVETYPE_NONE)
-	{	// doors, triggers, etc
+	{	/* doors, triggers, etc */
 		targ->die (targ, inflictor, attacker, damage, point);
 		return;
 	}
@@ -99,7 +99,7 @@ void SpawnDamage (int type, vec3_t origin, vec3_t normal, int damage)
 		damage = 255;
 	gi.WriteByte (svc_temp_entity);
 	gi.WriteByte (type);
-//	gi.WriteByte (damage);
+/*	gi.WriteByte (damage);*/
 	gi.WritePosition (origin);
 	gi.WriteDir (normal);
 	gi.multicast (origin, MULTICAST_PVS);
@@ -172,7 +172,7 @@ static int CheckPowerArmor (edict_t *ent, vec3_t point, vec3_t normal, int damag
 		float		dot;
 		vec3_t		forward;
 
-		// only works if damage point is in front
+		/* only works if damage point is in front */
 		AngleVectors (ent->s.angles, forward, NULL, NULL);
 		VectorSubtract (point, ent->s.origin, vec);
 		VectorNormalize (vec);
@@ -186,7 +186,7 @@ static int CheckPowerArmor (edict_t *ent, vec3_t point, vec3_t normal, int damag
 	}
 	else
 	{
-		damagePerCell = 1; // power armor is weaker in CTF
+		damagePerCell = 1; /* power armor is weaker in CTF */
 		pa_te_type = TE_SHIELD_SPARKS;
 		damage = (2 * damage) / 3;
 	}
@@ -250,15 +250,15 @@ static int CheckArmor (edict_t *ent, vec3_t point, vec3_t normal, int damage, in
 
 qboolean CheckTeamDamage (edict_t *targ, edict_t *attacker)
 {
-//ZOID
+/* ZOID */
 	if (ctf->value && targ->client && attacker->client)
 		if (targ->client->resp.ctf_team == attacker->client->resp.ctf_team &&
 			targ != attacker)
 			return true;
-//ZOID
+/* ZOID */
 
-		//FIXME make the next line real and uncomment this block
-		// if ((ability to damage a teammate == OFF) && (targ's team == attacker's team))
+		/* FIXME make the next line real and uncomment this block */
+		/* if ((ability to damage a teammate == OFF) && (targ's team == attacker's team))*/
 	return false;
 }
 
@@ -274,9 +274,9 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	if (!targ->takedamage)
 		return;
 
-	// friendly fire avoidance
-	// if enabled you can't hurt teammates (but you can hurt yourself)
-	// knockback still occurs
+	/* friendly fire avoidance */
+	/* if enabled you can't hurt teammates (but you can hurt yourself)*/
+	/* knockback still occurs */
 	if ((targ != attacker) && ((deathmatch->value && ((int)(dmflags->value) & (DF_MODELTEAMS | DF_SKINTEAMS))) || coop->value))
 	{
 		if (OnSameTeam (targ, attacker))
@@ -298,15 +298,15 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 
 	VectorNormalize(dir);
 
-//ZOID
-//strength tech
+/* ZOID */
+/* strength tech */
 	damage = CTFApplyStrength(attacker, damage);
-//ZOID
+/* ZOID */
 
 	if (targ->flags & FL_NO_KNOCKBACK)
 		knockback = 0;
 
-// figure momentum add
+/* figure momentum add */
 	if (!(dflags & DAMAGE_NO_KNOCKBACK))
 	{
 		if ((knockback) && (targ->movetype != MOVETYPE_NONE) && (targ->movetype != MOVETYPE_BOUNCE) && (targ->movetype != MOVETYPE_PUSH) && (targ->movetype != MOVETYPE_STOP))
@@ -320,7 +320,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 				mass = targ->mass;
 
 			if (targ->client  && attacker == targ)
-				VectorScale (dir, 1600.0 * (float)knockback / mass, kvel);	// the rocket jump hack...
+				VectorScale (dir, 1600.0 * (float)knockback / mass, kvel);	/* the rocket jump hack...*/
 			else
 				VectorScale (dir, 500.0 * (float)knockback / mass, kvel);
 
@@ -331,7 +331,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 	take = damage;
 	save = 0;
 
-	// check for godmode
+	/* check for godmode */
 	if ( (targ->flags & FL_GODMODE) && !(dflags & DAMAGE_NO_PROTECTION) )
 	{
 		take = 0;
@@ -339,7 +339,7 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		SpawnDamage (te_sparks, point, normal, save);
 	}
 
-	// check for invincibility
+	/* check for invincibility */
 	if ((client && client->invincible_framenum > level.framenum ) && !(dflags & DAMAGE_NO_PROTECTION))
 	{
 		if (targ->pain_debounce_time < level.time)
@@ -351,14 +351,14 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		save = damage;
 	}
 
-//ZOID
-//team armor protect
+/* ZOID */
+/* team armor protect */
 	if (ctf->value && targ->client && attacker->client &&
 		targ->client->resp.ctf_team == attacker->client->resp.ctf_team &&
 		targ != attacker && ((int)dmflags->value & DF_ARMOR_PROTECT)) {
 		psave = asave = 0;
 	} else {
-//ZOID
+/* ZOID */
 		psave = CheckPowerArmor (targ, point, normal, take, dflags);
 		take -= psave;
 	
@@ -366,23 +366,23 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 		take -= asave;
 	}
 
-	//treat cheat/powerup savings the same as armor
+	/* treat cheat/powerup savings the same as armor */
 	asave += save;
 
-//ZOID
-//resistance tech
+/* ZOID */
+/* resistance tech */
 	take = CTFApplyResistance(targ, take);
-//ZOID
+/* ZOID */
 
-	// team damage avoidance
+	/* team damage avoidance */
 	if (!(dflags & DAMAGE_NO_PROTECTION) && CheckTeamDamage (targ, attacker))
 		return;
 
-//ZOID
+/* ZOID */
 	CTFCheckHurtCarrier(targ, attacker);
-//ZOID
+/* ZOID */
 
-// do the damage
+/* do the damage */
 	if (take)
 	{
 		if (client)
@@ -413,9 +413,9 @@ void T_Damage (edict_t *targ, edict_t *inflictor, edict_t *attacker, vec3_t dir,
 			targ->pain (targ, attacker, knockback, take);
 	}
 
-	// add to the damage inflicted on a player this frame
-	// the total will be turned into screen blends and view angle kicks
-	// at the end of the frame
+	/* add to the damage inflicted on a player this frame */
+	/* the total will be turned into screen blends and view angle kicks */
+	/* at the end of the frame */
 	if (client)
 	{
 		client->damage_parmor += psave;

@@ -33,7 +33,7 @@ qboolean Bot_FindNode(edict_t *self, float radius, int flag)
 	int		i;
 	vec3_t	dvec;
 
-	if (flag == -1)	//find all node types
+	if (flag == -1)	/* find all node types */
 	{
 		for (i = 0; i <= numnodes; i++)
 		{
@@ -47,7 +47,7 @@ qboolean Bot_FindNode(edict_t *self, float radius, int flag)
 		}
 		return false;
 	}
-	else	//find special node types
+	else	/* find special node types */
 	{
 		for (i = 0; i <= numnodes; i++)
 		{
@@ -145,14 +145,14 @@ void Bot_PlaceNode(vec3_t spot, int flag, int duckflag)
 {
 	if (numnodes < MAX_NODES - 1)
 	{
-		// don't place nodes in lava/slime
+		/* don't place nodes in lava/slime */
 		if (gi.pointcontents(spot) & (CONTENTS_LAVA | CONTENTS_SLIME))
 		{
 			nprintf(PRINT_HIGH, "Lava/Slime position, node NOT placed!\n");
 			return;
 		}
 
-		// ok let's place that node
+		/* ok let's place that node */
 		numnodes++;
 		VectorCopy (spot, nodes[numnodes].origin);
 		nodes[numnodes].flag = flag;
@@ -162,7 +162,7 @@ void Bot_PlaceNode(vec3_t spot, int flag, int duckflag)
 		else
 			nodes[numnodes].duckflag = 0;
 
-		// print a nice debug message
+		/* print a nice debug message */
 		if (flag == NORMAL_NODE && duckflag)
 			nprintf(PRINT_HIGH, "Normal node %d placed, duckflag on!\n", numnodes);
 		else if (flag == NORMAL_NODE && !duckflag)
@@ -179,11 +179,11 @@ void Bot_PlaceNode(vec3_t spot, int flag, int duckflag)
 			nprintf(PRINT_HIGH, "Train node %d placed!\n", numnodes);
 		else if (flag == LADDER_NODE)
 		{
-			//edict_t	*arrow;
+			/* edict_t	*arrow;*/
 
 			nprintf(PRINT_HIGH, "Ladder node %d placed!\n", numnodes);
 			
-			/*arrow = G_Spawn();
+			/* arrow = G_Spawn();
 			VectorCopy (spot, arrow->s.origin);
 			
 			arrow->movetype = MOVETYPE_NONE;
@@ -208,17 +208,17 @@ void Bot_CalcNode(edict_t *self, int nindex)
 	vec_t		height;
 	vec3_t  mins = {0, 0, 0},maxs = {0, 0, 0};
 
-	//go through all nodes
+	/* go through all nodes */
 	for (i = 0; i <= numnodes; i++)
 	{
-		//node == currentnode so dist is 1 (FIXME: 0 better ?)
+		/* node == currentnode so dist is 1 (FIXME: 0 better ?)*/
 		if (i == nindex)
 		{
 			nodes[nindex].dist[i] = 1;
 			continue;
 		}
 		
-		//look if node is visible from current node
+		/* look if node is visible from current node */
 		if (visible2(nodes[i].origin, nodes[nindex].origin))
 		{
 			dvec[0] = nodes[i].origin[0] - nodes[nindex].origin[0];
@@ -227,15 +227,15 @@ void Bot_CalcNode(edict_t *self, int nindex)
 
 			dist = (double) VectorLength(dvec);
 
-			if (dist > 160) //check if current node is in range
+			if (dist > 160) /* check if current node is in range */
 				continue;
 
 			if (gi.pointcontents(nodes[i].origin) & (CONTENTS_WATER)
 				|| gi.pointcontents(nodes[nindex].origin) & (CONTENTS_WATER))
 			{
-				// at least one node is in water so don't check for midair position!
+				/* at least one node is in water so don't check for midair position!*/
 				
-				//connect the two nodes
+				/* connect the two nodes */
 				nodes[nindex].dist[i] = dist;
 				nodes[i].dist[nindex] = dist;
 
@@ -244,9 +244,9 @@ void Bot_CalcNode(edict_t *self, int nindex)
 			else if (nodes[nindex].flag == LADDER_NODE
 				|| nodes[i].flag == LADDER_NODE)
 			{
-				// at least one node is a ladder node so don't check for midair position!
+				/* at least one node is a ladder node so don't check for midair position!*/
 				
-				//connect the two nodes
+				/* connect the two nodes */
 				nodes[nindex].dist[i] = dist;
 				nodes[i].dist[nindex] = dist;
 
@@ -254,38 +254,38 @@ void Bot_CalcNode(edict_t *self, int nindex)
 			}
 			else if (nodes[nindex].flag == INAIR_NODE && nodes[i].flag == INAIR_NODE)
 			{
-				// both nodes are in-air nodes...check if we can connect them
+				/* both nodes are in-air nodes...check if we can connect them */
 
 				height = nodes[nindex].origin[2] - nodes[i].origin[2];
 					
 				if(height > 20)
 				{
-					//connect only one direction
+					/* connect only one direction */
 					nodes[nindex].dist[i] = dist;
 				}
 				else if(height < - 20)
 				{
-					//connect only one direction
+					/* connect only one direction */
 					nodes[i].dist[nindex] = dist;
 				}
 				
-				//else connect no direction
+				/* else connect no direction */
 			}
 			else
 			{
-				//find the mid of the line between the two nodes
+				/* find the mid of the line between the two nodes */
 				VectorSubtract(nodes[i].origin, nodes[nindex].origin, addvect);
 				VectorScale(addvect, 0.5, addvect);
 				VectorAdd(nodes[nindex].origin, addvect, midair);
 
-				//find a spot some units below our mid-point
+				/* find a spot some units below our mid-point */
 				VectorCopy(midair, down);
 				down[2] -= 60;
 
-				//trace down to see if we are on ground
+				/* trace down to see if we are on ground */
 				tr = gi.trace(midair, mins, maxs, down, self, MASK_SOLID);
 
-				if (tr.fraction == 1.0)	//we are not on ground -> midair
+				if (tr.fraction == 1.0)	/* we are not on ground -> midair */
 				{
 					nprintf(PRINT_HIGH, "Midair route!\n");
 
@@ -293,24 +293,24 @@ void Bot_CalcNode(edict_t *self, int nindex)
 					
 					if(height > 35)
 					{
-						//connect only one direction
+						/* connect only one direction */
 						nodes[nindex].dist[i] = dist;
 					}
 					else if(height < - 35)
 					{
-						//connect only one direction
+						/* connect only one direction */
 						nodes[i].dist[nindex] = dist;
 					}
 					else
 					{
-						//connect the two nodes
+						/* connect the two nodes */
 						nodes[nindex].dist[i] = dist;
 						nodes[i].dist[nindex] = dist;
 					}
 				}
-				else //we are on ground
+				else /* we are on ground */
 				{
-					//connect the two nodes
+					/* connect the two nodes */
 					nodes[nindex].dist[i] = dist;
 					nodes[i].dist[nindex] = dist;
 				}
@@ -324,11 +324,11 @@ int Bot_ShortestPath (int source, int target)
 	int		i, k, kNew, j;
 	double	minDist;
 
-	//clear path buffer
+	/* clear path buffer */
 	for (j = 0; j < 100; j++)
 		path_buffer[j] = -1;
 
-	//direct path, source=target
+	/* direct path, source=target */
 	if (source == target)
 	{
 		path_buffer[0]	= target;
@@ -336,7 +336,7 @@ int Bot_ShortestPath (int source, int target)
 		return VALID_PATH;
 	}
 
-	// initialize state
+	/* initialize state */
 	for (i = 0; i < numnodes; i++)
 	{
 		nodeinfo[i].predecessor	= noPredecessor;
@@ -344,20 +344,20 @@ int Bot_ShortestPath (int source, int target)
 		nodeinfo[i].state		= tentative;
 	}
 
-	// initialize start position
+	/* initialize start position */
 	nodeinfo[source].dist = 0;
 	nodeinfo[source].state = permanent;
 
-	// k is working (permanent) node
+	/* k is working (permanent) node */
 	k = source;
 
 	do
 	{
-		// kNew is the tentatively labeled node with smallest path size
+		/* kNew is the tentatively labeled node with smallest path size */
 		kNew	= INFINITY; 
 		minDist = (double)INFINITY;
 	
-		// is there a better path from k
+		/* is there a better path from k */
 		for (i = 0; i < numnodes; i++)
 		{
 			double	nodeIdist;
@@ -382,19 +382,19 @@ int Bot_ShortestPath (int source, int target)
 				kNew = i;
 				minDist = nodeIdist;
 			}
-		} // end for-i
+		} /* end for-i */
 
-		// bail out if no path can be found
+		/* bail out if no path can be found */
 
 		if (kNew == INFINITY)
 			return NO_PATH;
 
-		// make that node permanent; there cannot exist a shorter path from source to k
+		/* make that node permanent; there cannot exist a shorter path from source to k */
 		k = kNew;	
 		nodeinfo[k].state		= permanent;
 	} while (k != target);
 
-	// copy path to output array
+	/* copy path to output array */
 	i = 0; k = target;
 	do
 	{
@@ -445,12 +445,12 @@ qboolean Bot_SaveNodes(void)
 	if (!output)
 		return false;
 
-	//check1
+	/* check1*/
 	fwrite (nodetable_id, sizeof(const char), 19, output);
 	fwrite (nodetable_version, sizeof(const char), 4, output);
 	fwrite (&numnodes, sizeof(int), 1, output);
 
-	//dynamic node table generation on/off
+	/* dynamic node table generation on/off */
 	fwrite (&dntgvalue, sizeof(int), 1, output);
 
 	for (i = 0; i < numnodes; i++)
@@ -465,7 +465,7 @@ qboolean Bot_SaveNodes(void)
 			fwrite (&dist, sizeof(float),1, output);
 		}
 	}
-	//check2
+	/* check2*/
 	fwrite (nodetable_id, sizeof(const char), 19, output);
 	fwrite (nodetable_version, sizeof(const char), 4, output);
 	
@@ -512,12 +512,12 @@ qboolean Bot_LoadNodes(void)
 	if(!input)
 		return false;
 
-	//check 1
+	/* check 1*/
 	fread (id_buffer, sizeof(const char), 19, input);
 	fread (version_buffer, sizeof(const char), 4, input);
 	fread (&numnodes, sizeof(int), 1, input);
 
-	//dynamic node table generation on/off
+	/* dynamic node table generation on/off */
 	fread (&dntgvalue, sizeof(int), 1, input);
 
 	if (dntgvalue == 1)
@@ -555,7 +555,7 @@ qboolean Bot_LoadNodes(void)
 		}
 	}
 
-	//check 2
+	/* check 2*/
 	fread (id_buffer, sizeof(const char), 19, input);
 	fread (version_buffer, sizeof(const char), 4, input);
 	

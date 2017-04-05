@@ -228,15 +228,15 @@ edict_t *  GetNextValidPlayer(edict_t *current)
 {
 	int i;
 
-	//find num of current target
+	/* find num of current target */
 	for (i = 0; i < numplayers; i++)
 		if (players[i] == current)
 			break;
 
-	if (i == LastValidPlayer())	//last player so switch to first
+	if (i == LastValidPlayer())	/* last player so switch to first */
 		i = 0;
 	else
-		i++;	//start with player after current target
+		i++;	/* start with player after current target */
 
 	for (; i < numplayers; i++)
 	{
@@ -250,7 +250,7 @@ edict_t *  GetNextValidPlayer(edict_t *current)
 		return players[i];
 	}
 
-	//found none so stay at current target
+	/* found none so stay at current target */
 	return current;
 }
 
@@ -258,15 +258,15 @@ edict_t *  GetPrevValidPlayer(edict_t *current)
 {
 	int i;
 
-	//find num of current target
+	/* find num of current target */
 	for (i = 0; i < numplayers; i++)
 		if (players[i] == current)
 			break;
 
-	if (i == FirstValidPlayer())	//first player so switch to last
+	if (i == FirstValidPlayer())	/* first player so switch to last */
 		i = numplayers -1;
 	else
-		i--;	//start with player before current target
+		i--;	/* start with player before current target */
 
 	for (; i >= 0; i--)
 	{
@@ -280,7 +280,7 @@ edict_t *  GetPrevValidPlayer(edict_t *current)
 		return players[i];
 	}
 
-	//found none so stay at current target
+	/* found none so stay at current target */
 	return current;
 }
 
@@ -549,7 +549,7 @@ void FindNewTVSpot (edict_t *ent)
 
 			dist = VectorLength(dir);
 
-			if (dist < 160 && bestdist == 9999) // closer than 160 is not too good but we take it if we have no other chance
+			if (dist < 160 && bestdist == 9999) /* closer than 160 is not too good but we take it if we have no other chance */
 			{
 				best = dummy;
 				bestdist = dist;
@@ -584,7 +584,7 @@ void CameraThink(edict_t *ent, usercmd_t *ucmd)
 	ent->client->ps.pmove.pm_type = PM_FREEZE;
 	ent->client->ps.pmove.gravity = 0;
 	
-	if (ent->client->cammode == 1)	//Intelli Cam mode
+	if (ent->client->cammode == 1)	/* Intelli Cam mode */
 	{
 		if (NumVisiblePlayers(ent) < 2)
 		{
@@ -633,7 +633,7 @@ void CameraThink(edict_t *ent, usercmd_t *ucmd)
 			ent->client->pTarget = BestViewPlayer(ent);
 		}
 	}
-	else if (ent->client->cammode == 2)	//Chase Cam mode
+	else if (ent->client->cammode == 2)	/* Chase Cam mode */
 	{
 		if ((ent->client->pTarget != NULL) && ent->client->pTarget->client && ent->client->pTarget->inuse)
 		{
@@ -643,7 +643,7 @@ void CameraThink(edict_t *ent, usercmd_t *ucmd)
 		else
 			ent->client->pTarget = GetFirstValidPlayer ();
 	}
-	else if (ent->client->cammode == 3)	//Birdview Cam mode
+	else if (ent->client->cammode == 3)	/* Birdview Cam mode */
 	{
 		if ((ent->client->pTarget != NULL) && ent->client->pTarget->client && ent->client->pTarget->inuse)
 		{
@@ -653,7 +653,7 @@ void CameraThink(edict_t *ent, usercmd_t *ucmd)
 		else
 			ent->client->pTarget = GetFirstValidPlayer ();
 	}
-	else if (ent->client->cammode == 4)	//TV Cam mode
+	else if (ent->client->cammode == 4)	/* TV Cam mode */
 	{
 		if (ent->client->pTarget && ent->client->pTarget->client && ent->client->pTarget->inuse)
 		{
@@ -669,7 +669,7 @@ void CameraThink(edict_t *ent, usercmd_t *ucmd)
 				{
 					PointCamAtPlayer(ent);
 				}
-				else	// go to next valid player
+				else	/* go to next valid player */
 					ent->client->pTarget = GetRandomValidPlayer(ent->client->pTarget);
 			}
 

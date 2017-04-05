@@ -16,9 +16,9 @@ qboolean ClientConnect (edict_t *ent, char *userinfo);
 void ClientDisconnect (edict_t *ent);
 void ClientBegin (edict_t *ent);
 
-///------------------------------------------------------------------------------------------
-/// Misc functions
-///------------------------------------------------------------------------------------------
+/*/------------------------------------------------------------------------------------------*/
+/*/ Misc functions */
+/*/------------------------------------------------------------------------------------------*/
 
 qboolean visible (edict_t *self, edict_t *other)
 {
@@ -52,7 +52,7 @@ qboolean infront (edict_t *self, edict_t *other)
 	return false;
 }
 
-void ShowGun(edict_t *ent)	//vwep
+void ShowGun(edict_t *ent)	/* vwep */
 {
 	int		nIndex;
 	char	*pszIcon;
@@ -63,7 +63,7 @@ void ShowGun(edict_t *ent)	//vwep
 		return;
 	}
 	
-	// Determine the weapon's precache index.
+	/* Determine the weapon's precache index.*/
 
 	nIndex = 0;
 	pszIcon = ent->client->pers.weapon->icon;
@@ -113,10 +113,10 @@ void ShowGun(edict_t *ent)	//vwep
 	else
 		nIndex = 0;
 
-	// Clear previous weapon model.
+	/* Clear previous weapon model.*/
 	ent->s.skinnum &= 255;
 
-	// Set new weapon model.
+	/* Set new weapon model.*/
 	ent->s.skinnum |= (nIndex << 8);
 	ent->s.modelindex2 = 255;
 }
@@ -162,7 +162,7 @@ void ClearMaplist(void)
 
 	maplist.currentmap = -1;
 	maplist.nummaps = 0;
-	maplist.mlflag	= 0; //off
+	maplist.mlflag	= 0; /* off */
 
 	for (i=0;i<MAX_MAPS;i++)
 	{
@@ -202,13 +202,13 @@ void LoadMaplist(char	*filename)
 	  strcat(file, ".txt");
 #endif
 
-	//open the maplist file
+	/* open the maplist file */
 	if ((fp = fopen(file, "r")) == NULL)
     { 
 		gi.cprintf (NULL, PRINT_HIGH, "Could not find file \"%s\".\n\n", file); 
 		return;
     }
-	maplist.nummaps = 0;	//reset maplist counter
+	maplist.nummaps = 0;	/* reset maplist counter */
 
 	if (fp)
 	{ 
@@ -221,33 +221,33 @@ void LoadMaplist(char	*filename)
 			fgets (line, 256, fp);
 			len=strlen(line);
 
-			if (len < 5) //invalid
+			if (len < 5) /* invalid */
 				continue;
-			if (line[0] == ';') //comment
+			if (line[0] == ';') /* comment */
 				continue;
 
 			len--;
 			while(line[len] == '\n'||line[len] == '\r')
 			  len--;
 
-			// lightsoff
+			/* lightsoff */
 			maplist.lightsoff[i] = line[len--];
 
-			// ctf
+			/* ctf */
 			maplist.ctf[i] = line[len--];
 
-			// mapname
+			/* mapname */
 			strncpy(maplist.mapnames[i], line, len);
 			
 			gi.cprintf(NULL, PRINT_HIGH, "...%s,ctf=%c,lightsoff=%c\n", maplist.mapnames[i], maplist.ctf[i], maplist.lightsoff[i]);
 			i++; 
 		} 
 	} 
-	//close file
+	/* close file */
 	if (fp)
 		fclose(fp); 
 
-	//print status
+	/* print status */
 	if (i == 0) 
 	{ 
 		gi.cprintf (NULL, PRINT_HIGH, "No maps listed in %s\n\n", file);
@@ -269,7 +269,7 @@ void GetSettings()
 	defence_turret_ammo = gi.cvar("defence_turret_ammo", "1000", CVAR_SERVERINFO);
 	rocket_turret_ammo = gi.cvar("rocket_turret_ammo", "90", CVAR_SERVERINFO);
 	lasermine_health = gi.cvar("lasermine_health", "150", CVAR_LATCH);
-        // FWP Set ex arrow strngth and radius from server var 
+        /* FWP Set ex arrow strngth and radius from server var */
 	ex_arrow_damage = gi.cvar("ex_arrow_damage", "80", CVAR_LATCH);
 	ex_arrow_radius = gi.cvar("ex_arrow_radius", "200", CVAR_LATCH);
 
@@ -434,7 +434,7 @@ qboolean infront4 (edict_t *self, edict_t *other)
 
 void PreCacheAll()
 {
-	//pics
+	/* pics */
 	gi.imageindex ("scanner/dot");
 	gi.imageindex ("scanner/down");
 	gi.imageindex ("scanner/up");
@@ -487,7 +487,7 @@ void PreCacheAll()
 	gi.imageindex ("w_sword");
 	gi.imageindex ("w_chainsaw");
 
-	//models
+	/* models */
 	gi.modelindex ("models/weapons/v_sword/tris.md2");
 	gi.modelindex ("models/weapons/g_sword/tris.md2");
 	gi.modelindex ("models/weapons/v_chsaw/tris.md2");
@@ -558,7 +558,7 @@ void PreCacheAll()
 	gi.modelindex ("models/items/jet/tris.md2");
 
 
-	//sound
+	/* sound */
 	gi.soundindex ("hook/hit.wav");
 	gi.soundindex ("hook/chain1.wav");
 	gi.soundindex ("hook/chain2.wav");
@@ -632,7 +632,7 @@ qboolean TeamMembers(edict_t *p1, edict_t *p2)
 	}
 	else
 	{
-		// neutral player
+		/* neutral player */
 		if (!p1->client->resp.team || !p2->client->resp.team)
 			return false;
 
@@ -710,7 +710,7 @@ void LoadMOTD()
 			i+=len; 
 		} 
 	} 
-	//close file
+	/* close file */
 	if (fp)
 		fclose(fp); 
 
@@ -727,7 +727,7 @@ void FakeDeath(edict_t *self)
 	  return;
 
 
-	if (self->client->fakedeath == 0)	//fake
+	if (self->client->fakedeath == 0)	/* fake */
 	{
 		if (self->client->PoisonTime > 0)
 		{
@@ -742,11 +742,11 @@ void FakeDeath(edict_t *self)
 		self->takedamage = DAMAGE_YES;
 		self->movetype = MOVETYPE_TOSS;
 
-		self->s.modelindex2 = 0;	// remove linked weapon model
-		self->s.modelindex3 = 0;	// remove linked ctf flag
-		//self->client->ps.gunindex = 0;
+		self->s.modelindex2 = 0;	/* remove linked weapon model */
+		self->s.modelindex3 = 0;	/* remove linked ctf flag */
+		/* self->client->ps.gunindex = 0;*/
 
-		//self->client->killer_yaw = self->s.angles[YAW];
+		/* self->client->killer_yaw = self->s.angles[YAW];*/
 		self->s.angles[0] = 0;
 		self->s.angles[2] = 0;
 
@@ -770,7 +770,7 @@ void FakeDeath(edict_t *self)
 		self->client->enviro_framenum = 0;
 		self->client->jet_framenum = 0;
 
-		// start a death animation
+		/* start a death animation */
 		self->client->anim_priority = ANIM_DEATH;
 
 		i = 0;
@@ -816,7 +816,7 @@ void FakeDeath(edict_t *self)
 
 		gi.linkentity (self);
 	}
-	else	// revive
+	else	/* revive */
 	{
 		self->client->fakedeath = 0;
 
@@ -850,7 +850,7 @@ void FakeDeath(edict_t *self)
 		self->s.effects        = 0;
 		self->s.modelindex     = 255;
 
-		self->s.origin[2] += 1;  // make sure off ground
+		self->s.origin[2] += 1;  /* make sure off ground */
 		
 		self->s.frame = FRAME_stand01;
 		self->client->anim_end = FRAME_stand40;
@@ -858,16 +858,16 @@ void FakeDeath(edict_t *self)
 		self->client->pers.weapon = it_ak42;
 		self->client->newweapon = self->client->pers.weapon;
 		ChangeWeapon(self);
-		ShowGun(self);	//vwep
+		ShowGun(self);	/* vwep */
 
 		self->movetype = MOVETYPE_WALK;
 
-		//self->svflags 	= 0;
+		/* self->svflags 	= 0;*/
 		self->client->ps.pmove.pm_type = PM_NORMAL;
 
 		gi.linkentity (self);
 
-		// force the current weapon up
+		/* force the current weapon up */
 		self->client->newweapon = self->client->pers.weapon;
 		ChangeWeapon (self);
 		                 
@@ -919,20 +919,20 @@ void T_RadiusDamage2 (edict_t *attacker, vec3_t position, float damage, float ra
 
 		VectorSubtract (ent->s.origin, position, v);
 		points = damage - 0.5 * VectorLength (v);
-		//		if (ent == attacker)
-       		//	points = points * 0.5;
+		/*		if (ent == attacker)*/
+       		/*	points = points * 0.5;*/
 		if (points > 0)
 		{
-		  //			if (CanDamage (ent, attacker))
-		  //	{
+		  /*			if (CanDamage (ent, attacker))*/
+		  /*	{*/
 		  VectorSubtract (ent->s.origin, position, dir);
 		  T_Damage (ent, attacker, attacker, dir, position, vec3_origin, (int)points, (int)points, DAMAGE_RADIUS, mod);
-				//	}
+				/*	}*/
 		}
 	}
 }
 
-edict_t *findradius2 (edict_t *from, vec3_t org, float rad)	//find all entities
+edict_t *findradius2 (edict_t *from, vec3_t org, float rad)	/* find all entities */
 {
 	vec3_t	eorg;
 	int		j;
@@ -945,8 +945,8 @@ edict_t *findradius2 (edict_t *from, vec3_t org, float rad)	//find all entities
 	{
 		if (!from->inuse)
 			continue;
-		//if (from->solid != SOLID_NOT)
-		//	continue;
+		/* if (from->solid != SOLID_NOT)*/
+		/*	continue;*/
 		for (j=0 ; j<3 ; j++)
 			eorg[j] = org[j] - (from->s.origin[j] + (from->mins[j] + from->maxs[j])*0.5);
 		if (VectorLength(eorg) > rad)
@@ -1115,7 +1115,7 @@ void Teleport (edict_t *ent)
 	edict_t *telep = NULL;
 	vec3_t spawn_origin;
 	
-	if (ent->client && ent->client->teleporter)	//teleport
+	if (ent->client && ent->client->teleporter)	/* teleport */
 	{
 		if (ctf->value)
 			CTFDeadDropFlag(ent);
@@ -1133,17 +1133,17 @@ void Teleport (edict_t *ent)
 		VectorCopy (spawn_origin, ent->s.origin); 
 
 		if (!KillBox (ent))
-		{	// could't spawn in?
+		{	/* could't spawn in?*/
 		}
 
 		gi.sound(telep, CHAN_VOICE, gi.soundindex("misc/selfteleport.wav"), 1, ATTN_NORM, 0);
 
-		//kill teleport point
-		telep->s.event = EV_ITEM_RESPAWN; // Make an item respawn effect ! Look cool ! :)
+		/* kill teleport point */
+		telep->s.event = EV_ITEM_RESPAWN; /* Make an item respawn effect ! Look cool ! :)*/
 		G_FreeEdict (telep);
 		ent->client->teleporter = NULL;
 	}
-	else	//create teleporter
+	else	/* create teleporter */
 	{
 		telep = G_Spawn();
 		telep->owner = ent;
@@ -1173,9 +1173,9 @@ void Teleport (edict_t *ent)
 	}
 }
 
-///------------------------------------------------------------------------------------------
-/// Weapon switching
-///------------------------------------------------------------------------------------------
+/*/------------------------------------------------------------------------------------------*/
+/*/ Weapon switching */
+/*/------------------------------------------------------------------------------------------*/
 
 void Use_Class2 (edict_t *ent)
 {
@@ -1399,7 +1399,7 @@ void Use_Class9 (edict_t *ent)
 
 void Use_Class0 (edict_t *ent)
 {
-	it_lturret	= FindItem("automatic defence turret");	//bugfix
+	it_lturret	= FindItem("automatic defence turret");	/* bugfix */
 
 	if (ent->client->pers.weapon == it_bfg)
 	{
@@ -1505,9 +1505,9 @@ void Use_Grenades (edict_t *ent)
 	}
 }
 
-///------------------------------------------------------------------------------------------
-/// Command handling
-///------------------------------------------------------------------------------------------
+/*/------------------------------------------------------------------------------------------*/
+/*/ Command handling */
+/*/------------------------------------------------------------------------------------------*/
 
 void ClientCommand2 (edict_t *ent)
 {
@@ -1530,7 +1530,7 @@ void ClientCommand2 (edict_t *ent)
 		else
 		{
 			if (Q_stricmp(ent->classname,"bot") != 0)
-				gi.centerprintf (ent, "\nYou don't have a grappling hook!\n");//MATTHIAS
+				gi.centerprintf (ent, "\nYou don't have a grappling hook!\n");/* MATTHIAS */
 			return;
 		}
 	}
@@ -1647,7 +1647,7 @@ void ClientCommand2 (edict_t *ent)
     }
 	else if (Q_stricmp (cmd, "camera") == 0)
     {
-        if (Q_stricmp(gi.argv(1), "0") == 0)	//cam off
+        if (Q_stricmp(gi.argv(1), "0") == 0)	/* cam off */
 		{
 			if (ent->client->camera)
 			{
@@ -1667,7 +1667,7 @@ void ClientCommand2 (edict_t *ent)
 				cprintf2 (ent, PRINT_HIGH, "Camera OFF!\n");
 			}
 		}
-		else if (Q_stricmp(gi.argv(1), "1") == 0)	//intelli mode
+		else if (Q_stricmp(gi.argv(1), "1") == 0)	/* intelli mode */
 		{
 			if (!ent->client->camera)
 				CreateCamera(ent);
@@ -1675,7 +1675,7 @@ void ClientCommand2 (edict_t *ent)
 			ent->client->cammode = 1;
 			cprintf2 (ent, PRINT_HIGH, "IntelliCam Mode!\n");
 		}
-		else if (Q_stricmp(gi.argv(1), "2") == 0)	//chase cam mode
+		else if (Q_stricmp(gi.argv(1), "2") == 0)	/* chase cam mode */
 		{
 			if (!ent->client->camera)
 				CreateCamera(ent);
@@ -1683,7 +1683,7 @@ void ClientCommand2 (edict_t *ent)
 			ent->client->cammode = 2;
 			cprintf2 (ent, PRINT_HIGH, "ChaseCam Mode!\n");
 		}
-		else if (Q_stricmp(gi.argv(1), "3") == 0)	// birdview chase cam
+		else if (Q_stricmp(gi.argv(1), "3") == 0)	/* birdview chase cam */
 		{
 			if (!ent->client->camera)
 				CreateCamera(ent);
@@ -1691,7 +1691,7 @@ void ClientCommand2 (edict_t *ent)
 			ent->client->cammode = 3;
 			cprintf2 (ent, PRINT_HIGH, "Birdview ChaseCam Mode!\n");
 		}
-		else if (Q_stricmp(gi.argv(1), "4") == 0)	// TV cam mode
+		else if (Q_stricmp(gi.argv(1), "4") == 0)	/* TV cam mode */
 		{
 			if (!ent->client->camera)
 				CreateCamera(ent);
@@ -1740,7 +1740,7 @@ void ClientCommand2 (edict_t *ent)
 			vec3_t	end, spot;
 			trace_t	tr;
 
-			//check if node is in air
+			/* check if node is in air */
 			VectorCopy(ent->s.origin, end);
 			end[2] -= 40;
 
@@ -1853,11 +1853,11 @@ void ClientCommand2 (edict_t *ent)
 			return;
 		if (ent->client->fakedeath > 0)
 			return;
-		if (ent->client->teleporter)	//teleport
+		if (ent->client->teleporter)	/* teleport */
 		{
 			Teleport (ent);
 		}
-		else	//create teleporter
+		else	/* create teleporter */
 		{
 			if (ent->client->pers.inventory[ITEM_INDEX(it_cells)] < 100)
 			{
@@ -2029,56 +2029,56 @@ void ClientCommand2 (edict_t *ent)
 	{
 		edict_t *current = NULL;
 
-		current = weapon_list;	// start with the head
+		current = weapon_list;	/* start with the head */
 	
 
-		//go through all items in the list
+		/* go through all items in the list */
 		while (current)
 		{
 			cprintf2(ent, PRINT_HIGH, "%s\n", current->classname);
-			current = current->next_listitem;	//go to next item in list
+			current = current->next_listitem;	/* go to next item in list */
 		}
 	}
 	else if (Q_stricmp (cmd, "healthlist") == 0)
 	{
 		edict_t *current = NULL;
 
-		current = health_list;	// start with the head
+		current = health_list;	/* start with the head */
 	
 
-		//go through all items in the list
+		/* go through all items in the list */
 		while (current)
 		{
 			cprintf2(ent, PRINT_HIGH, "%s\n", current->classname);
-			current = current->next_listitem;	//go to next item in list
+			current = current->next_listitem;	/* go to next item in list */
 		}
 	}
 	else if (Q_stricmp (cmd, "ammolist") == 0)
 	{
 		edict_t *current = NULL;
 
-		current = ammo_list;	// start with the head
+		current = ammo_list;	/* start with the head */
 	
 
-		//go through all items in the list
+		/* go through all items in the list */
 		while (current)
 		{
 			cprintf2(ent, PRINT_HIGH, "%s\n", current->classname);
-			current = current->next_listitem;	//go to next item in list
+			current = current->next_listitem;	/* go to next item in list */
 		}
 	}
 	else if (Q_stricmp (cmd, "poweruplist") == 0)
 	{
 		edict_t *current = NULL;
 
-		current = powerup_list;	// start with the head
+		current = powerup_list;	/* start with the head */
 	
 
-		//go through all items in the list
+		/* go through all items in the list */
 		while (current)
 		{
 			cprintf2(ent, PRINT_HIGH, "%s\n", current->classname);
-			current = current->next_listitem;	//go to next item in list
+			current = current->next_listitem;	/* go to next item in list */
 		}
 	}
 	else

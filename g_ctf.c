@@ -7,7 +7,7 @@ void ClientBeginDeathmatch (edict_t *ent);
 typedef struct ctfgame_s
 {
 	int team1, team2;
-	int total1, total2; // these are only set when going into intermission!
+	int total1, total2; /* these are only set when going into intermission!*/
 	float last_flag_capture;
 	int last_capture_team;
 } ctfgame_t;
@@ -21,13 +21,13 @@ cvar_t *ctf_forcejoin;
 char *ctf_statusbar =
 "yb	-24 "
 
-// health
+/* health */
 "xv	0 "
 "hnum "
 "xv	50 "
 "pic 0 "
 
-// ammo
+/* ammo */
 "if 2 "
 "	xv	100 "
 "	anum "
@@ -35,7 +35,7 @@ char *ctf_statusbar =
 "	pic 2 "
 "endif "
 
-// armor
+/* armor */
 "if 4 "
 "	xv	200 "
 "	rnum "
@@ -43,7 +43,7 @@ char *ctf_statusbar =
 "	pic 4 "
 "endif "
 
-// selected item
+/* selected item */
 "if 6 "
 "	xv	296 "
 "	pic 6 "
@@ -51,7 +51,7 @@ char *ctf_statusbar =
 
 "yb	-50 "
 
-// picked up item
+/* picked up item */
 "if 7 "
 "	xv	0 "
 "	pic 7 "
@@ -61,7 +61,7 @@ char *ctf_statusbar =
 "	yb	-50 "
 "endif "
 
-// timer
+/* timer */
 "if 9 "
   "xv 246 "
   "num 2 10 "
@@ -69,25 +69,25 @@ char *ctf_statusbar =
   "pic 9 "
 "endif "
 
-//  help / weapon icon 
+/*  help / weapon icon */
 "if 11 "
   "xv 148 "
   "pic 11 "
 "endif "
 
-//  frags
+/*  frags */
 "xr	-50 "
 "yt 2 "
 "num 3 14 "
 
-//tech
+/* tech */
 "yb -129 "
 "if 26 "
   "xr -26 "
   "pic 26 "
 "endif "
 
-// red team
+/* red team */
 "yb -102 "
 "if 17 "
   "xr -26 "
@@ -95,14 +95,14 @@ char *ctf_statusbar =
 "endif "
 "xr -62 "
 "num 2 18 "
-//joined overlay
+/* joined overlay */
 "if 22 "
   "yb -104 "
   "xr -28 "
   "pic 22 "
 "endif "
 
-// blue team
+/* blue team */
 "yb -75 "
 "if 19 "
   "xr -26 "
@@ -116,14 +116,14 @@ char *ctf_statusbar =
   "pic 23 "
 "endif "
 
-// have flag graph
+/* have flag graph */
 "if 21 "
   "yt 26 "
   "xr -24 "
   "pic 21 "
 "endif "
 
-// id view state
+/* id view state */
 "if 27 "
   "xv 0 "
   "yb -58 "
@@ -210,9 +210,9 @@ static qboolean loc_CanSee (edict_t *targ, edict_t *inflictor)
 	int i;
 	vec3_t viewpoint;
 
-// bmodels need special checking because their origin is 0,0,0
+/* bmodels need special checking because their origin is 0,0,0*/
 	if (targ->movetype == MOVETYPE_PUSH)
-		return false; // bmodels not supported
+		return false; /* bmodels not supported */
 
 	loc_buildboxpoints(targpoints, targ->s.origin, targ->mins, targ->maxs);
 	
@@ -235,7 +235,7 @@ static gitem_t *flag2_item;
 
 void CTFInit(void)
 {
-	ctf = gi.cvar("ctf", "0", CVAR_SERVERINFO); //MATTHIAS
+	ctf = gi.cvar("ctf", "0", CVAR_SERVERINFO); /* MATTHIAS */
 	ctf_forcejoin = gi.cvar("ctf_forcejoin", "", 0);
 
 	if (!flag1_item)
@@ -278,7 +278,7 @@ int CTFOtherTeam(int team)
 	case CTF_TEAM2:
 		return CTF_TEAM1;
 	}
-	return -1; // invalid value
+	return -1; /* invalid value */
 }
 
 /*--------------------------------------------------------------------------*/
@@ -314,7 +314,7 @@ void CTFAssignSkin(edict_t *ent, char *s)
 			va("%s\\%s", ent->client->pers.netname, s) );
 		break;
 	}
-//	cprintf2(ent, PRINT_HIGH, "You have been assigned to %s team.\n", ent->client->pers.netname);
+/*	cprintf2(ent, PRINT_HIGH, "You have been assigned to %s team.\n", ent->client->pers.netname);*/
 }
 
 void CTFAssignTeam(gclient_t *who)
@@ -452,15 +452,15 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 	char *c;
 	vec3_t v1, v2;
 
-	// no bonus for fragging yourself
+	/* no bonus for fragging yourself */
 	if (!targ->client || !attacker->client || targ == attacker)
 		return;
 
 	otherteam = CTFOtherTeam(targ->client->resp.ctf_team);
 	if (otherteam < 0)
-		return; // whoever died isn't on a team
+		return; /* whoever died isn't on a team */
 
-	// same team, if the flag at base, check to he has the enemy flag
+	/* same team, if the flag at base, check to he has the enemy flag */
 	if (targ->client->resp.ctf_team == CTF_TEAM1) {
 		flag_item = flag1_item;
 		enemy_flag_item = flag2_item;
@@ -469,14 +469,14 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 		enemy_flag_item = flag1_item;
 	}
 
-	// did the attacker frag the flag carrier?
+	/* did the attacker frag the flag carrier?*/
 	if (targ->client->pers.inventory[ITEM_INDEX(enemy_flag_item)]) {
 		attacker->client->resp.ctf_lastfraggedcarrier = level.time;
 		attacker->client->resp.score += CTF_FRAG_CARRIER_BONUS;
 		cprintf2(attacker, PRINT_MEDIUM, "BONUS: %d points for fragging enemy flag carrier.\n",
 			CTF_FRAG_CARRIER_BONUS);
 
-		// Log Flag Carrier Frag - MarkDavies
+		/* Log Flag Carrier Frag - MarkDavies */
         sl_LogScore( &gi,
                      attacker->client->pers.netname,
                      NULL,
@@ -485,8 +485,8 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
                      CTF_FRAG_CARRIER_BONUS,
                      level.time );
 
-		// the the target had the flag, clear the hurt carrier
-		// field on the other team
+		/* the the target had the flag, clear the hurt carrier */
+		/* field on the other team */
 		for (i = 1; i <= maxclients->value; i++) {
 			ent = g_edicts + i;
 			if (ent->inuse && ent->client->resp.ctf_team == otherteam)
@@ -498,14 +498,14 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 	if (targ->client->resp.ctf_lasthurtcarrier &&
 		level.time - targ->client->resp.ctf_lasthurtcarrier < CTF_CARRIER_DANGER_PROTECT_TIMEOUT &&
 		!attacker->client->pers.inventory[ITEM_INDEX(flag_item)]) {
-		// attacker is on the same team as the flag carrier and
-		// fragged a guy who hurt our flag carrier
+		/* attacker is on the same team as the flag carrier and */
+		/* fragged a guy who hurt our flag carrier */
 		attacker->client->resp.score += CTF_CARRIER_DANGER_PROTECT_BONUS;
 		bprintf2(PRINT_MEDIUM, "%s defends %s's flag carrier against an agressive enemy\n",
 			attacker->client->pers.netname, 
 			CTFTeamName(attacker->client->resp.ctf_team));
 
-		// Log Flag Danger Carrier Protect Frag - MarkDavies
+		/* Log Flag Danger Carrier Protect Frag - MarkDavies */
         sl_LogScore( &gi,
                      attacker->client->pers.netname,
                      NULL,
@@ -517,11 +517,11 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 		return;
 	}
 
-	// flag and flag carrier area defense bonuses
+	/* flag and flag carrier area defense bonuses */
 
-	// we have to find the flag and carrier entities
+	/* we have to find the flag and carrier entities */
 
-	// find the flag
+	/* find the flag */
 	switch (attacker->client->resp.ctf_team) {
 	case CTF_TEAM1:
 		c = "item_flag_team1";
@@ -540,9 +540,9 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 	}
 
 	if (!flag)
-		return; // can't find attacker's flag
+		return; /* can't find attacker's flag */
 
-	// find attacker's team's flag carrier
+	/* find attacker's team's flag carrier */
 	for (i = 1; i <= maxclients->value; i++) {
 		carrier = g_edicts + i;
 		if (carrier->inuse && 
@@ -551,16 +551,16 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 		carrier = NULL;
 	}
 
-	// ok we have the attackers flag and a pointer to the carrier
+	/* ok we have the attackers flag and a pointer to the carrier */
 
-	// check to see if we are defending the base's flag
+	/* check to see if we are defending the base's flag */
 	VectorSubtract(targ->s.origin, flag->s.origin, v1);
 	VectorSubtract(attacker->s.origin, flag->s.origin, v2);
 
 	if (VectorLength(v1) < CTF_TARGET_PROTECT_RADIUS ||
 		VectorLength(v2) < CTF_TARGET_PROTECT_RADIUS ||
 		loc_CanSee(flag, targ) || loc_CanSee(flag, attacker)) {
-		// we defended the base flag
+		/* we defended the base flag */
 		attacker->client->resp.score += CTF_FLAG_DEFENSE_BONUS;
 		if (flag->solid == SOLID_NOT)
 			bprintf2(PRINT_MEDIUM, "%s defends the %s base.\n",
@@ -571,7 +571,7 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 				attacker->client->pers.netname, 
 				CTFTeamName(attacker->client->resp.ctf_team));
 
-		// Log Flag Defense - MarkDavies
+		/* Log Flag Defense - MarkDavies */
         sl_LogScore( &gi,
                      attacker->client->pers.netname,
                      NULL,
@@ -594,7 +594,7 @@ void CTFFragBonuses(edict_t *targ, edict_t *inflictor, edict_t *attacker)
 				attacker->client->pers.netname, 
 				CTFTeamName(attacker->client->resp.ctf_team));
 
-			// Log Flag Carrier Protect Frag - MarkDavies
+			/* Log Flag Carrier Protect Frag - MarkDavies */
             sl_LogScore( &gi,
                          attacker->client->pers.netname,
                          NULL,
@@ -673,7 +673,7 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 	edict_t *player;
 	gitem_t *flag_item, *enemy_flag_item;
 
-	// figure out what team this flag is
+	/* figure out what team this flag is */
 	if (strcmp(ent->classname, "item_flag_team1") == 0)
 		ctf_team = CTF_TEAM1;
 	else if (strcmp(ent->classname, "item_flag_team2") == 0)
@@ -683,7 +683,7 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 		return false;
 	}
 
-	// same team, if the flag at base, check to he has the enemy flag
+	/* same team, if the flag at base, check to he has the enemy flag */
 	if (ctf_team == CTF_TEAM1) {
 		flag_item = flag1_item;
 		enemy_flag_item = flag2_item;
@@ -695,14 +695,14 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 	if (ctf_team == other->client->resp.ctf_team) {
 
 		if (!(ent->spawnflags & DROPPED_ITEM)) {
-			// the flag is at home base.  if the player has the enemy
-			// flag, he's just won!
+			/* the flag is at home base.  if the player has the enemy */
+			/* flag, he's just won!*/
 		
 			if (other->client->pers.inventory[ITEM_INDEX(enemy_flag_item)]) {
 				bprintf2(PRINT_HIGH, "%s captured the %s flag!\n",
 						other->client->pers.netname, CTFOtherTeamName(ctf_team));
 
-				// Log Flag Capture - MarkDavies
+				/* Log Flag Capture - MarkDavies */
                 sl_LogScore( &gi,
                              other->client->pers.netname,
                              NULL,
@@ -722,10 +722,10 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 
 				gi.sound (ent, CHAN_RELIABLE+CHAN_NO_PHS_ADD+CHAN_VOICE, gi.soundindex("ctf/flagcap.wav"), 1, ATTN_NONE, 0);
 
-				// other gets another 10 frag bonus
+				/* other gets another 10 frag bonus */
 				other->client->resp.score += CTF_CAPTURE_BONUS;
 
-				// Ok, let's do the player loop, hand out the bonuses
+				/* Ok, let's do the player loop, hand out the bonuses */
 				for (i = 1; i <= maxclients->value; i++) {
 					player = &g_edicts[i];
 					if (!player->inuse)
@@ -738,7 +738,7 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
                         {
 							player->client->resp.score += CTF_TEAM_BONUS;
 
-                            // Log Flag Capture Team Score - MarkDavies
+                            /* Log Flag Capture Team Score - MarkDavies */
                             sl_LogScore( &gi,
                                          player->client->pers.netname,
                                          NULL,
@@ -748,12 +748,12 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
                                          level.time );
 
                         }
-						// award extra points for capture assists
+						/* award extra points for capture assists */
 						if (player->client->resp.ctf_lastreturnedflag + CTF_RETURN_FLAG_ASSIST_TIMEOUT > level.time) {
 							bprintf2(PRINT_HIGH, "%s gets an assist for returning the flag!\n", player->client->pers.netname);
 							player->client->resp.score += CTF_RETURN_FLAG_ASSIST_BONUS;
 
-							// Log Flag Capture Team Score - MarkDavies
+							/* Log Flag Capture Team Score - MarkDavies */
                             sl_LogScore( &gi,
                                          player->client->pers.netname,
                                          NULL,
@@ -767,7 +767,7 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 							bprintf2(PRINT_HIGH, "%s gets an assist for fragging the flag carrier!\n", player->client->pers.netname);
 							player->client->resp.score += CTF_FRAG_CARRIER_ASSIST_BONUS;
 
-							// Log Flag Capture Team Score - MarkDavies
+							/* Log Flag Capture Team Score - MarkDavies */
                             sl_LogScore( &gi,
                                          player->client->pers.netname,
                                          NULL,
@@ -782,13 +782,13 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 				CTFResetFlags();
 				return false;
 			}
-			return false; // its at home base already
+			return false; /* its at home base already */
 		}	
-		// hey, its not home.  return it by teleporting it back
+		/* hey, its not home.  return it by teleporting it back */
 		bprintf2(PRINT_HIGH, "%s returned the %s flag!\n", 
 			other->client->pers.netname, CTFTeamName(ctf_team));
 
-		// Log Flag Recover - MarkDavies
+		/* Log Flag Recover - MarkDavies */
         sl_LogScore( &gi,
                      other->client->pers.netname,
                      NULL,
@@ -800,17 +800,17 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 		other->client->resp.score += CTF_RECOVERY_BONUS;
 		other->client->resp.ctf_lastreturnedflag = level.time;
 		gi.sound (ent, CHAN_RELIABLE+CHAN_NO_PHS_ADD+CHAN_VOICE, gi.soundindex("ctf/flagret.wav"), 1, ATTN_NONE, 0);
-		//CTFResetFlag will remove this entity!  We must return false
+		/* CTFResetFlag will remove this entity!  We must return false */
 		CTFResetFlag(ctf_team);
 		return false;
 	}
 
-	// hey, its not our flag, pick it up
+	/* hey, its not our flag, pick it up */
 	bprintf2(PRINT_HIGH, "%s got the %s flag!\n",
 		other->client->pers.netname, CTFTeamName(ctf_team));
 	other->client->resp.score += CTF_FLAG_BONUS;
 
-	// Log Flag Pickup - MarkDavies
+	/* Log Flag Pickup - MarkDavies */
     sl_LogScore( &gi,
                  other->client->pers.netname,
                  NULL,
@@ -822,9 +822,9 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 	other->client->pers.inventory[ITEM_INDEX(flag_item)] = 1;
 	other->client->resp.ctf_flagsince = level.time;
 
-	// pick up the flag
-	// if it's not a dropped flag, we just make is disappear
-	// if it's dropped, it will be removed by the pickup caller
+	/* pick up the flag */
+	/* if it's not a dropped flag, we just make is disappear */
+	/* if it's dropped, it will be removed by the pickup caller */
 	if (!(ent->spawnflags & DROPPED_ITEM)) {
 		ent->flags |= FL_RESPAWN;
 		ent->svflags |= SVF_NOCLIENT;
@@ -835,7 +835,7 @@ qboolean CTFPickup_Flag(edict_t *ent, edict_t *other)
 
 static void CTFDropFlagTouch(edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	//owner (who dropped us) can't touch for two secs
+	/* owner (who dropped us) can't touch for two secs */
 	if (other == ent->owner && 
 		ent->nextthink - level.time > CTF_AUTO_FLAG_RETURN_TIMEOUT-2)
 		return;
@@ -845,8 +845,8 @@ static void CTFDropFlagTouch(edict_t *ent, edict_t *other, cplane_t *plane, csur
 
 static void CTFDropFlagThink(edict_t *ent)
 {
-	// auto return the flag
-	// reset flag will remove ourselves
+	/* auto return the flag */
+	/* reset flag will remove ourselves */
 	if (strcmp(ent->classname, "item_flag_team1") == 0) {
 		CTFResetFlag(CTF_TEAM1);
 		bprintf2(PRINT_HIGH, "The %s flag has returned!\n",
@@ -858,7 +858,7 @@ static void CTFDropFlagThink(edict_t *ent)
 	}
 }
 
-// Called from PlayerDie, to drop the flag from a dying player
+/* Called from PlayerDie, to drop the flag from a dying player */
 void CTFDeadDropFlag(edict_t *self)
 {
 	edict_t *dropped = NULL;
@@ -960,7 +960,7 @@ void CTFEffects(edict_t *player)
 		player->s.modelindex3 = 0;
 }
 
-// called when we enter the intermission
+/* called when we enter the intermission */
 void CTFCalcScores(void)
 {
 	int i;
@@ -1033,28 +1033,28 @@ void SetCTFStats(edict_t *ent)
 	int p1, p2;
 	edict_t *e;
 
-	// logo headers for the frag display
+	/* logo headers for the frag display */
 	ent->client->ps.stats[STAT_CTF_TEAM1_HEADER] = gi.imageindex ("ctfsb1");
 	ent->client->ps.stats[STAT_CTF_TEAM2_HEADER] = gi.imageindex ("ctfsb2");
 
-	// if during intermission, we must blink the team header of the winning team
-	if (level.intermissiontime && (level.framenum & 8)) { // blink 1/8th second
-		// note that ctfgame.total[12] is set when we go to intermission
+	/* if during intermission, we must blink the team header of the winning team */
+	if (level.intermissiontime && (level.framenum & 8)) { /* blink 1/8th second */
+		/* note that ctfgame.total[12] is set when we go to intermission */
 		if (ctfgame.team1 > ctfgame.team2)
 			ent->client->ps.stats[STAT_CTF_TEAM1_HEADER] = 0;
 		else if (ctfgame.team2 > ctfgame.team1)
 			ent->client->ps.stats[STAT_CTF_TEAM2_HEADER] = 0;
-		else if (ctfgame.total1 > ctfgame.total2) // frag tie breaker
+		else if (ctfgame.total1 > ctfgame.total2) /* frag tie breaker */
 			ent->client->ps.stats[STAT_CTF_TEAM1_HEADER] = 0;
 		else if (ctfgame.total2 > ctfgame.total1) 
 			ent->client->ps.stats[STAT_CTF_TEAM2_HEADER] = 0;
-		else { // tie game!
+		else { /* tie game!*/
 			ent->client->ps.stats[STAT_CTF_TEAM1_HEADER] = 0;
 			ent->client->ps.stats[STAT_CTF_TEAM2_HEADER] = 0;
 		}
 	}
 
-	// tech icon
+	/* tech icon */
 	i = 0;
 	ent->client->ps.stats[STAT_CTF_TECH] = 0;
 	while (tnames[i]) {
@@ -1066,29 +1066,29 @@ void SetCTFStats(edict_t *ent)
 		i++;
 	}
 
-	// figure out what icon to display for team logos
-	// three states:
-	//   flag at base
-	//   flag taken
-	//   flag dropped
+	/* figure out what icon to display for team logos */
+	/* three states:*/
+	/*   flag at base */
+	/*   flag taken */
+	/*   flag dropped */
 	p1 = gi.imageindex ("i_ctf1");
 	e = G_Find(NULL, FOFS(classname), "item_flag_team1");
 	if (e != NULL) {
 		if (e->solid == SOLID_NOT) {
 			int i;
 
-			// not at base
-			// check if on player
-			p1 = gi.imageindex ("i_ctf1d"); // default to dropped
+			/* not at base */
+			/* check if on player */
+			p1 = gi.imageindex ("i_ctf1d"); /* default to dropped */
 			for (i = 1; i <= maxclients->value; i++)
 				if (g_edicts[i].inuse &&
 					g_edicts[i].client->pers.inventory[ITEM_INDEX(flag1_item)]) {
-					// enemy has it
+					/* enemy has it */
 					p1 = gi.imageindex ("i_ctf1t");
 					break;
 				}
 		} else if (e->spawnflags & DROPPED_ITEM)
-			p1 = gi.imageindex ("i_ctf1d"); // must be dropped
+			p1 = gi.imageindex ("i_ctf1d"); /* must be dropped */
 	}
 	p2 = gi.imageindex ("i_ctf2");
 	e = G_Find(NULL, FOFS(classname), "item_flag_team2");
@@ -1096,18 +1096,18 @@ void SetCTFStats(edict_t *ent)
 		if (e->solid == SOLID_NOT) {
 			int i;
 
-			// not at base
-			// check if on player
-			p2 = gi.imageindex ("i_ctf2d"); // default to dropped
+			/* not at base */
+			/* check if on player */
+			p2 = gi.imageindex ("i_ctf2d"); /* default to dropped */
 			for (i = 1; i <= maxclients->value; i++)
 				if (g_edicts[i].inuse &&
 					g_edicts[i].client->pers.inventory[ITEM_INDEX(flag2_item)]) {
-					// enemy has it
+					/* enemy has it */
 					p2 = gi.imageindex ("i_ctf2t");
 					break;
 				}
 		} else if (e->spawnflags & DROPPED_ITEM)
-			p2 = gi.imageindex ("i_ctf2d"); // must be dropped
+			p2 = gi.imageindex ("i_ctf2d"); /* must be dropped */
 	}
 
 
@@ -1155,14 +1155,14 @@ void SetCTFStats(edict_t *ent)
 
 /*------------------------------------------------------------------------*/
 
-/*QUAKED info_player_team1 (1 0 0) (-16 -16 -24) (16 16 32)
+/* QUAKED info_player_team1 (1 0 0) (-16 -16 -24) (16 16 32)
 potential team1 spawning position for ctf games
 */
 void SP_info_player_team1(edict_t *self)
 {
 }
 
-/*QUAKED info_player_team2 (0 0 1) (-16 -16 -24) (16 16 32)
+/* QUAKED info_player_team2 (0 0 1) (-16 -16 -24) (16 16 32)
 potential team2 spawning position for ctf games
 */
 void SP_info_player_team2(edict_t *self)
@@ -1195,7 +1195,7 @@ void CTFTeam_f (edict_t *ent)
 		return;
 	}
 
-////
+/*//*/
 	ent->svflags = 0;
 	ent->flags &= ~FL_GODMODE;
 	ent->client->resp.ctf_team = desired_team;
@@ -1203,17 +1203,17 @@ void CTFTeam_f (edict_t *ent)
 	s = Info_ValueForKey (ent->client->pers.userinfo, "skin");
 	CTFAssignSkin(ent, s);
 
-	// Log Team Change - MarkDavies
+	/* Log Team Change - MarkDavies */
     sl_LogPlayerTeamChange( &gi,
                             ent->client->pers.netname,
                             CTFTeamName(ent->client->resp.ctf_team),
                             level.time );
 
-	if (ent->solid == SOLID_NOT) { // spectator
+	if (ent->solid == SOLID_NOT) { /* spectator */
 		PutClientInServer (ent);
-		// add a teleportation effect
+		/* add a teleportation effect */
 		ent->s.event = EV_PLAYER_TELEPORT;
-		// hold in place briefly
+		/* hold in place briefly */
 		ent->client->ps.pmove.pm_flags = PMF_TIME_TELEPORT;
 		ent->client->ps.pmove.pm_time = 14;
 		bprintf2(PRINT_HIGH, "%s joined the %s team.\n",
@@ -1223,7 +1223,7 @@ void CTFTeam_f (edict_t *ent)
 
 	ent->health = 0;
 	player_die (ent, ent, ent, 100000, vec3_origin);
-	// don't even bother waiting for death frames
+	/* don't even bother waiting for death frames */
 	ent->deadflag = DEAD_DEAD;
 	respawn (ent);
 
@@ -1253,7 +1253,7 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 	int team;
 	int maxsize = 1000;
 
-	// sort the clients by team and score
+	/* sort the clients by team and score */
 	total[0] = total[1] = 0;
 	last[0] = last[1] = 0;
 	totalscore[0] = totalscore[1] = 0;
@@ -1267,7 +1267,7 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 		else if (game.clients[i].resp.ctf_team == CTF_TEAM2)
 			team = 1;
 		else
-			continue; // unknown team?
+			continue; /* unknown team?*/
 
 		score = game.clients[i].resp.score;
 		for (j=0 ; j<total[team] ; j++)
@@ -1286,12 +1286,12 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 		total[team]++;
 	}
 
-	// print level name and exit rules
-	// add the clients in sorted order
+	/* print level name and exit rules */
+	/* add the clients in sorted order */
 	*string = 0;
 	len = 0;
 
-	// team one
+	/* team one */
 	sprintf(string, "if 24 xv 8 yv 8 pic 24 endif "
 		"xv 40 yv 28 string \"%4d/%-3d\" "
 		"xv 98 yv 12 num 2 18 "
@@ -1305,10 +1305,10 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 	for (i=0 ; i<16 ; i++)
 	{
 		if (i >= total[0] && i >= total[1])
-			break; // we're done
+			break; /* we're done */
 
-#if 0 //ndef NEW_SCORE
-		// set up y
+#if 0 /* ndef NEW_SCORE */
+		/* set up y */
 		sprintf(entry, "yv %d ", 42 + i * 8);
 		if (maxsize - len > strlen(entry)) {
 			strcat(string, entry);
@@ -1318,12 +1318,12 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 		*entry = 0;
 #endif
 
-		// left side
+		/* left side */
 		if (i < total[0]) {
 			cl = &game.clients[sorted[0][i]];
 			cl_ent = g_edicts + 1 + sorted[0][i];
 
-#if 0 //ndef NEW_SCORE
+#if 0 /* ndef NEW_SCORE */
 			sprintf(entry+strlen(entry),
 			"xv 0 %s \"%3d %3d %-12.12s\" ",
 			(cl_ent == ent) ? "string2" : "string",
@@ -1353,12 +1353,12 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 			}
 		}
 
-		// right side
+		/* right side */
 		if (i < total[1]) {
 			cl = &game.clients[sorted[1][i]];
 			cl_ent = g_edicts + 1 + sorted[1][i];
 
-#if 0 //ndef NEW_SCORE
+#if 0 /* ndef NEW_SCORE */
 			sprintf(entry+strlen(entry),
 			"xv 160 %s \"%3d %3d %-12.12s\" ",
 			(cl_ent == ent) ? "string2" : "string",
@@ -1390,7 +1390,7 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 		}
 	}
 
-	// put in spectators if we have enough room
+	/* put in spectators if we have enough room */
 	if (last[0] > last[1])
 		j = last[0];
 	else
@@ -1417,9 +1417,9 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 
 			sprintf(entry+strlen(entry),
 				"ctf %d %d %d %d %d ",
-				(n & 1) ? 160 : 0, // x
-				j, // y
-				i, // playernum
+				(n & 1) ? 160 : 0, /* x */
+				j, /* y */
+				i, /* playernum */
 				cl->resp.score,
 				cl->ping > 999 ? 999 : cl->ping);
 			if (maxsize - len > strlen(entry)) {
@@ -1433,10 +1433,10 @@ void CTFScoreboardMessage (edict_t *ent, edict_t *killer)
 		}
 	}
 
-	if (total[0] - last[0] > 1) // couldn't fit everyone
+	if (total[0] - last[0] > 1) /* couldn't fit everyone */
 		sprintf(string + strlen(string), "xv 8 yv %d string \"..and %d more\" ",
 			42 + (last[0]+1)*8, total[0] - last[0] - 1);
-	if (total[1] - last[1] > 1) // couldn't fit everyone
+	if (total[1] - last[1] > 1) /* couldn't fit everyone */
 		sprintf(string + strlen(string), "xv 168 yv %d string \"..and %d more\" ",
 			42 + (last[1]+1)*8, total[1] - last[1] - 1);
 
@@ -1476,7 +1476,7 @@ gitem_t *CTFWhat_Tech(edict_t *ent)
 	return NULL;
 }
 
-//HAVOC
+/* HAVOC */
 void AddItemToList(edict_t	*tech);
 void RemoveFromList(edict_t	*tech);
 
@@ -1490,12 +1490,12 @@ qboolean CTFPickup_Tech (edict_t *ent, edict_t *other)
 		if ((tech = FindItemByClassname(tnames[i])) != NULL &&
 			other->client->pers.inventory[ITEM_INDEX(tech)]) {
 			CTFHasTech(other);
-			return false; // has this one
+			return false; /* has this one */
 		}
 		i++;
 	}
 	
-	// client only gets one tech
+	/* client only gets one tech */
 	other->client->pers.inventory[ITEM_INDEX(ent->item)]++;
 	other->client->ctf_regentime = level.time;
 	RemoveFromList(ent);
@@ -1556,7 +1556,7 @@ void CTFDeadDropTech(edict_t *ent)
 			ent->client->pers.inventory[ITEM_INDEX(tech)]) {
 			dropped = Drop_Item(ent, tech);
 			AddItemToList (dropped);
-			// hack the velocity to make it bounce random
+			/* hack the velocity to make it bounce random */
 			dropped->velocity[0] = (rand() % 600) - 300;
 			dropped->velocity[1] = (rand() % 600) - 300;
 			dropped->nextthink = level.time + CTF_TECH_TIMEOUT;
@@ -1604,7 +1604,7 @@ static void SpawnTech(gitem_t *item, edict_t *spot)
 
 	gi.linkentity (ent);
 
-	//HAVOC
+	/* HAVOC */
 	AddItemToList(ent);
 }
 
@@ -1623,7 +1623,7 @@ static void SpawnTechs(edict_t *ent)
 	}
 }
 
-// frees the passed edict!
+/* frees the passed edict!*/
 void CTFRespawnTech(edict_t *ent)
 {
 	edict_t *spot;
@@ -1657,7 +1657,7 @@ int CTFApplyResistance(edict_t *ent, int dmg)
 	if (!tech)
 		tech = FindItemByClassname("item_tech1");
 	if (dmg && tech && ent->client && ent->client->pers.inventory[ITEM_INDEX(tech)]) {
-		// make noise
+		/* make noise */
 	   	gi.sound(ent, CHAN_VOICE, gi.soundindex("ctf/tech1.wav"), volume, ATTN_NORM, 0);
 		return dmg / 2;
 	}
@@ -1785,8 +1785,8 @@ SAY_TEAM
 ======================================================================
 */
 
-// This array is in 'importance order', it indicates what items are
-// more important when reporting their names.
+/* This array is in 'importance order', it indicates what items are */
+/* more important when reporting their names.*/
 struct {
 	char *classname;
 	int priority;
@@ -1835,13 +1835,13 @@ static void CTFSay_Team_Location(edict_t *who, char *buf)
 	qboolean cansee;
 
 	while ((what = loc_findradius(what, who->s.origin, 1024)) != NULL) {
-		// find what in loc_classnames
+		/* find what in loc_classnames */
 		for (i = 0; loc_names[i].classname; i++)
 			if (strcmp(what->classname, loc_names[i].classname) == 0)
 				break;
 		if (!loc_names[i].classname)
 			continue;
-		// something we can see get priority over something we can't
+		/* something we can see get priority over something we can't */
 		cansee = loc_CanSee(what, who);
 		if (cansee && !hotsee) {
 			hotsee = true;
@@ -1851,7 +1851,7 @@ static void CTFSay_Team_Location(edict_t *who, char *buf)
 			hotdist = VectorLength(v);
 			continue;
 		}
-		// if we can't see this, but we have something we can see, skip it
+		/* if we can't see this, but we have something we can see, skip it */
 		if (hotsee && !cansee)
 			continue;
 		if (hotsee && hotindex < loc_names[i].priority)
@@ -1872,15 +1872,15 @@ static void CTFSay_Team_Location(edict_t *who, char *buf)
 		return;
 	}
 
-	// we now have the closest item
-	// see if there's more than one in the map, if so
-	// we need to determine what team is closest
+	/* we now have the closest item */
+	/* see if there's more than one in the map, if so */
+	/* we need to determine what team is closest */
 	what = NULL;
 	while ((what = G_Find(what, FOFS(classname), hot->classname)) != NULL) {
 		if (what == hot)
 			continue;
-		// if we are here, there is more than one, find out if hot
-		// is closer to red flag or blue flag
+		/* if we are here, there is more than one, find out if hot */
+		/* is closer to red flag or blue flag */
 		if ((flag1 = G_Find(NULL, FOFS(classname), "item_flag_team1")) != NULL &&
 			(flag2 = G_Find(NULL, FOFS(classname), "item_flag_team2")) != NULL) {
 			VectorSubtract(hot->s.origin, flag1->s.origin, v);
@@ -1900,13 +1900,13 @@ static void CTFSay_Team_Location(edict_t *who, char *buf)
 		return;
 	}
 
-	// in water?
+	/* in water?*/
 	if (who->waterlevel)
 		strcpy(buf, "in the water ");
 	else
 		*buf = 0;
 
-	// near or above
+	/* near or above */
 	VectorSubtract(who->s.origin, hot->s.origin, v);
 	if (fabs(v[2]) > fabs(v[0]) && fabs(v[2]) > fabs(v[1]))
 		if (v[2] > 0)
@@ -1973,7 +1973,7 @@ static void CTFSay_Team_Tech(edict_t *who, char *buf)
 	gitem_t *tech;
 	int i;
 
-	// see if the player has a tech powerup
+	/* see if the player has a tech powerup */
 	i = 0;
 	while (tnames[i]) {
 		if ((tech = FindItemByClassname(tnames[i])) != NULL &&
@@ -2106,7 +2106,7 @@ void CTFSay_Team(edict_t *who, char *msg)
 }
 
 /*-----------------------------------------------------------------------*/
-/*QUAKED misc_ctf_banner (1 .5 0) (-4 -64 0) (4 64 248) TEAM2
+/* QUAKED misc_ctf_banner (1 .5 0) (-4 -64 0) (4 64 248) TEAM2
 The origin is the bottom of the banner.
 The banner is 248 tall.
 */
@@ -2121,7 +2121,7 @@ void SP_misc_ctf_banner (edict_t *ent)
 	ent->movetype = MOVETYPE_NONE;
 	ent->solid = SOLID_NOT;
 	ent->s.modelindex = gi.modelindex ("models/ctf/banner/tris.md2");
-	if (ent->spawnflags & 1) // team2
+	if (ent->spawnflags & 1) /* team2*/
 		ent->s.skinnum = 1;
 
 	ent->s.frame = rand() % 16;
@@ -2131,7 +2131,7 @@ void SP_misc_ctf_banner (edict_t *ent)
 	ent->nextthink = level.time + FRAMETIME;
 }
 
-/*QUAKED misc_ctf_small_banner (1 .5 0) (-4 -32 0) (4 32 124) TEAM2
+/* QUAKED misc_ctf_small_banner (1 .5 0) (-4 -32 0) (4 32 124) TEAM2
 The origin is the bottom of the banner.
 The banner is 124 tall.
 */
@@ -2140,7 +2140,7 @@ void SP_misc_ctf_small_banner (edict_t *ent)
 	ent->movetype = MOVETYPE_NONE;
 	ent->solid = SOLID_NOT;
 	ent->s.modelindex = gi.modelindex ("models/ctf/banner/small.md2");
-	if (ent->spawnflags & 1) // team2
+	if (ent->spawnflags & 1) /* team2*/
 		ent->s.skinnum = 1;
 
 	ent->s.frame = rand() % 16;
@@ -2153,7 +2153,7 @@ void SP_misc_ctf_small_banner (edict_t *ent)
 
 /*-----------------------------------------------------------------------*/
 
-void CTFBotJoinTeam(edict_t *ent, int desired_team)	//MATTHIAS
+void CTFBotJoinTeam(edict_t *ent, int desired_team)	/* MATTHIAS */
 {
 	char *s;
 
@@ -2163,15 +2163,15 @@ void CTFBotJoinTeam(edict_t *ent, int desired_team)	//MATTHIAS
 	s = Info_ValueForKey (ent->client->pers.userinfo, "skin");
 	CTFAssignSkin(ent, s);
 
-	// Log Join Team - MarkDavies
+	/* Log Join Team - MarkDavies */
     sl_LogPlayerName( &gi,
                       ent->client->pers.netname,
                       CTFTeamName(ent->client->resp.ctf_team),
                       level.time );
 
-	// add a teleportation effect
+	/* add a teleportation effect */
 	ent->s.event = EV_PLAYER_TELEPORT;
-	// hold in place briefly
+	/* hold in place briefly */
 	ent->client->ps.pmove.pm_flags = PMF_TIME_TELEPORT;
 	ent->client->ps.pmove.pm_time = 14;
 	bprintf2(PRINT_HIGH, "%s joined the %s team.\n", ent->client->pers.netname, CTFTeamName(desired_team));
@@ -2198,16 +2198,16 @@ void CTFJoinTeam(edict_t *ent, int desired_team)
 	s = Info_ValueForKey (ent->client->pers.userinfo, "skin");
 	CTFAssignSkin(ent, s);
 
-	// Log Join Team - MarkDavies
+	/* Log Join Team - MarkDavies */
     sl_LogPlayerName( &gi,
                       ent->client->pers.netname,
                       CTFTeamName(ent->client->resp.ctf_team),
                       level.time );
 
 	PutClientInServer (ent);
-	// add a teleportation effect
+	/* add a teleportation effect */
 	ent->s.event = EV_PLAYER_TELEPORT;
-	// hold in place briefly
+	/* hold in place briefly */
 	ent->client->ps.pmove.pm_flags = PMF_TIME_TELEPORT;
 	ent->client->ps.pmove.pm_time = 14;
 	bprintf2(PRINT_HIGH, "%s joined the %s team.\n", ent->client->pers.netname, CTFTeamName(desired_team));
@@ -2221,7 +2221,7 @@ void CTFJoinTeam(edict_t *ent, int desired_team)
 		numblue++;
 	}
 
-	gi.centerprintf (ent, motd);//MATTHIAS
+	gi.centerprintf (ent, motd);/* MATTHIAS */
 }
 
 void CTFJoinTeam1(edict_t *ent, pmenu_t *p)
@@ -2236,7 +2236,7 @@ void CTFJoinTeam2(edict_t *ent, pmenu_t *p)
 
 void CTFChaseCam(edict_t *ent, pmenu_t *p)
 {
-	if (ent->client->camera)	//swicth back to player mode
+	if (ent->client->camera)	/* swicth back to player mode */
 	{
 		ClientBeginDeathmatch (ent);
 		PMenu_Close(ent);
@@ -2244,7 +2244,7 @@ void CTFChaseCam(edict_t *ent, pmenu_t *p)
 	}
 
 	ent->client->cammode = 1;
-	CreateCamera(ent);	//switch to intelli cam mode
+	CreateCamera(ent);	/* switch to intelli cam mode */
 	PMenu_Close(ent);
 }
 
@@ -2396,7 +2396,7 @@ qboolean CTFStartClient(edict_t *ent)
 		return false;
 
 	if (!((int)dmflags->value & DF_CTF_FORCEJOIN)) {
-		// start as 'observer'
+		/* start as 'observer'*/
 		ent->movetype = MOVETYPE_NOCLIP;
 		ent->solid = SOLID_NOT;
 		ent->svflags |= SVF_NOCLIENT;
@@ -2440,23 +2440,23 @@ static void old_teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane
 		return;
 	}
 
-	// unlink to make sure it can't possibly interfere with KillBox
+	/* unlink to make sure it can't possibly interfere with KillBox */
 	gi.unlinkentity (other);
 
 	VectorCopy (dest->s.origin, other->s.origin);
 	VectorCopy (dest->s.origin, other->s.old_origin);
-//	other->s.origin[2] += 10;
+/*	other->s.origin[2] += 10;*/
 
-	// clear the velocity and hold them in place briefly
+	/* clear the velocity and hold them in place briefly */
 	VectorClear (other->velocity);
-	other->client->ps.pmove.pm_time = 160>>3;		// hold time
+	other->client->ps.pmove.pm_time = 160>>3;		/* hold time */
 	other->client->ps.pmove.pm_flags |= PMF_TIME_TELEPORT;
 
-	// draw the teleport splash at source and on the player
+	/* draw the teleport splash at source and on the player */
 	self->enemy->s.event = EV_PLAYER_TELEPORT;
 	other->s.event = EV_PLAYER_TELEPORT;
 
-	// set angles
+	/* set angles */
 	for (i=0 ; i<3 ; i++)
 		other->client->ps.pmove.delta_angles[i] = ANGLE2SHORT(dest->s.angles[i] - other->client->resp.cmd_angles[i]);
 
@@ -2466,11 +2466,11 @@ static void old_teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane
 	VectorCopy (dest->s.angles, other->client->ps.viewangles);
 	VectorCopy (dest->s.angles, other->client->v_angle);
 
-	// give a little forward velocity
+	/* give a little forward velocity */
 	AngleVectors (other->client->v_angle, forward, NULL, NULL);
 	VectorScale(forward, 200, other->velocity);
 
-	// kill anything at the destination
+	/* kill anything at the destination */
 	if (!KillBox (other))
 	{
 	}
@@ -2478,7 +2478,7 @@ static void old_teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane
 	gi.linkentity (other);
 }
 
-/*QUAKED trigger_teleport (0.5 0.5 0.5) ?
+/* QUAKED trigger_teleport (0.5 0.5 0.5) ?
 Players touching this will be teleported
 */
 void SP_trigger_teleport (edict_t *ent)
@@ -2499,7 +2499,7 @@ void SP_trigger_teleport (edict_t *ent)
 	gi.setmodel (ent, ent->model);
 	gi.linkentity (ent);
 
-	// noise maker and splash effect dude
+	/* noise maker and splash effect dude */
 	s = G_Spawn();
 	ent->enemy = s;
 	for (i = 0; i < 3; i++)
@@ -2509,7 +2509,7 @@ void SP_trigger_teleport (edict_t *ent)
 	
 }
 
-/*QUAKED info_teleport_destination (0.5 0.5 0.5) (-16 -16 -24) (16 16 32)
+/* QUAKED info_teleport_destination (0.5 0.5 0.5) (-16 -16 -24) (16 16 32)
 Point trigger_teleports at these.
 */
 void SP_info_teleport_destination (edict_t *ent)

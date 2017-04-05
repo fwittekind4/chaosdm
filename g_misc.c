@@ -1,22 +1,22 @@
-// g_misc.c
+/* g_misc.c */
 
 #include "g_local.h"
 #include "c_botnav.h"
 
-/*QUAKED func_group (0 0 0) ?
+/* QUAKED func_group (0 0 0) ?
 Used to group brushes together just for editor convenience.
 */
 
-//=====================================================
+/*=====================================================*/
 
 void Use_Areaportal (edict_t *ent, edict_t *other, edict_t *activator)
 {
-	ent->count ^= 1;		// toggle state
-//	gi.dprintf ("portalstate: %i = %i\n", ent->style, ent->count);
+	ent->count ^= 1;		/* toggle state */
+/*	gi.dprintf ("portalstate: %i = %i\n", ent->style, ent->count);*/
 	gi.SetAreaPortalState (ent->style, ent->count);
 }
 
-/*QUAKED func_areaportal (0 0 0) ?
+/* QUAKED func_areaportal (0 0 0) ?
 
 This is a non-visible object that divides the world into
 areas that are seperated when this portal is not activated.
@@ -25,10 +25,10 @@ Usually enclosed in the middle of a door.
 void SP_func_areaportal (edict_t *ent)
 {
 	ent->use = Use_Areaportal;
-	ent->count = 0;		// allways start closed;
+	ent->count = 0;		/* allways start closed;*/
 }
 
-//=====================================================
+/*=====================================================*/
 
 
 /*
@@ -59,7 +59,7 @@ void ClipGibVelocity (edict_t *ent)
 	else if (ent->velocity[1] > 300)
 		ent->velocity[1] = 300;
 	if (ent->velocity[2] < 200)
-		ent->velocity[2] = 200;	// always some upwards
+		ent->velocity[2] = 200;	/* always some upwards */
 	else if (ent->velocity[2] > 500)
 		ent->velocity[2] = 500;
 }
@@ -111,7 +111,7 @@ void ThrowGib (edict_t *self, char *gibname, int damage, int type)
 	gib->flags |= FL_NO_KNOCKBACK;
 	gib->takedamage = DAMAGE_YES;
 	gib->die = gib_die;
-	gib->classname = "gib";	//MATTHIAS
+	gib->classname = "gib";	/* MATTHIAS */
 
 	if (type == GIB_ORGANIC)
 	{
@@ -162,7 +162,7 @@ void ThrowClientHead (edict_t *self, int damage)
 	VelocityForDamage (damage, vd);
 	VectorAdd (self->velocity, vd, self->velocity);
 
-	if (self->client)	// bodies in the queue don't have a client anymore
+	if (self->client)	/* bodies in the queue don't have a client anymore */
 	{
 		self->client->anim_priority = ANIM_DEATH;
 		self->client->anim_end = self->s.frame;
@@ -212,26 +212,26 @@ void ThrowDebris (edict_t *self, char *modelname, float speed, vec3_t origin)
 
 void BecomeExplosion1 (edict_t *self)
 {
-//ZOID
-	//flags are important
+/* ZOID */
+	/* flags are important */
 	if (strcmp(self->classname, "item_flag_team1") == 0) {
-		CTFResetFlag(CTF_TEAM1); // this will free self!
+		CTFResetFlag(CTF_TEAM1); /* this will free self!*/
 		bprintf2(PRINT_HIGH, "The %s flag has returned!\n",
 			CTFTeamName(CTF_TEAM1));
 		return;
 	}
 	if (strcmp(self->classname, "item_flag_team2") == 0) {
-		CTFResetFlag(CTF_TEAM2); // this will free self!
+		CTFResetFlag(CTF_TEAM2); /* this will free self!*/
 		bprintf2(PRINT_HIGH, "The %s flag has returned!\n",
 			CTFTeamName(CTF_TEAM1));
 		return;
 	}
-	// techs are important too
+	/* techs are important too */
 	if (self->item && (self->item->flags & IT_TECH)) {
-		CTFRespawnTech(self); // this frees self!
+		CTFRespawnTech(self); /* this frees self!*/
 		return;
 	}
-//ZOID
+/* ZOID */
 
 	if (Q_stricmp(self->classname, "rocket_turret") == 0
 		|| Q_stricmp(self->classname, "laser_turret") == 0)
@@ -242,11 +242,11 @@ void BecomeExplosion1 (edict_t *self)
 	gi.WritePosition (self->s.origin);
 	gi.multicast (self->s.origin, MULTICAST_PVS);
 
-// FWP fix for weapon killer bug - respawn weapon after showing cute explosion
+/* FWP fix for weapon killer bug - respawn weapon after showing cute explosion */
 
         if (self->item && (self->item->flags & (IT_WEAPON | IT_POWERUP | IT_AMMO | IT_ARMOR))) {
 	   if (self->spawnorigin) {
-	      DoRespawn(self); // this frees self!
+	      DoRespawn(self); /* this frees self!*/
              return;
 	   }
 	}
@@ -271,7 +271,7 @@ void BecomeExplosion2 (edict_t *self)
 }
 
 
-/*QUAKED path_corner (.5 .3 0) (-8 -8 -8) (8 8 8) TELEPORT
+/* QUAKED path_corner (.5 .3 0) (-8 -8 -8) (8 8 8) TELEPORT
 Target: next path corner
 Pathtarget: gets used when an entity that has
 	this path_corner targeted touches it
@@ -316,15 +316,15 @@ void path_corner_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface
 
 	if (self->wait)
 	{
-		//other->monsterinfo.pausetime = level.time + self->wait;
-		//other->monsterinfo.stand (other);
+		/* other->monsterinfo.pausetime = level.time + self->wait;*/
+		/* other->monsterinfo.stand (other);*/
 		return;
 	}
 
 	if (!other->movetarget)
 	{
-		//other->monsterinfo.pausetime = level.time + 100000000;
-		//other->monsterinfo.stand (other);
+		/* other->monsterinfo.pausetime = level.time + 100000000;*/
+		/* other->monsterinfo.stand (other);*/
 	}
 	else
 	{
@@ -357,7 +357,7 @@ void SP_point_combat (edict_t *self)
 }
 
 
-/*QUAKED viewthing (0 .5 .8) (-8 -8 -8) (8 8 8)
+/* QUAKED viewthing (0 .5 .8) (-8 -8 -8) (8 8 8)
 Just for the debugging level.  Don't use
 */
 static int robotron[4];
@@ -365,9 +365,9 @@ static int robotron[4];
 void TH_viewthing(edict_t *ent)
 {
 	ent->s.frame = (ent->s.frame + 1) % 7;
-//	ent->s.frame = (ent->s.frame + 1) % 9;
+/*	ent->s.frame = (ent->s.frame + 1) % 9;*/
 	ent->nextthink = level.time + FRAMETIME;
-//	return;
+/*	return;*/
 
 	if (ent->spawnflags)
 	{
@@ -388,7 +388,7 @@ void SP_viewthing(edict_t *ent)
 	ent->s.renderfx = RF_FRAMELERP;
 	VectorSet (ent->mins, -16, -16, -24);
 	VectorSet (ent->maxs, 16, 16, 32);
-//	ent->s.modelindex = gi.modelindex ("models/player_y/tris.md2");
+/*	ent->s.modelindex = gi.modelindex ("models/player_y/tris.md2");*/
 	ent->s.modelindex = gi.modelindex ("models/objects/banner/tris.md2");
 	gi.linkentity (ent);
 	ent->nextthink = level.time + 0.5;
@@ -397,7 +397,7 @@ void SP_viewthing(edict_t *ent)
 }
 
 
-/*QUAKED info_null (0 0.5 0) (-4 -4 -4) (4 4 4)
+/* QUAKED info_null (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as a positional target for spotlights, etc.
 */
 void SP_info_null (edict_t *self)
@@ -406,7 +406,7 @@ void SP_info_null (edict_t *self)
 }
 
 
-/*QUAKED info_notnull (0 0.5 0) (-4 -4 -4) (4 4 4)
+/* QUAKED info_notnull (0 0.5 0) (-4 -4 -4) (4 4 4)
 Used as a positional target for lightning.
 */
 void SP_info_notnull (edict_t *self)
@@ -416,7 +416,7 @@ void SP_info_notnull (edict_t *self)
 }
 
 
-/*QUAKED light (0 1 0) (-8 -8 -8) (8 8 8) START_OFF
+/* QUAKED light (0 1 0) (-8 -8 -8) (8 8 8) START_OFF
 Non-displayed light.
 Default light value is 300.
 Default style is 0.
@@ -442,7 +442,7 @@ static void light_use (edict_t *self, edict_t *other, edict_t *activator)
 
 void SP_light (edict_t *self)
 {
-	// no targeted lights in deathmatch, because they cause global messages
+	/* no targeted lights in deathmatch, because they cause global messages */
 	if (!self->targetname || deathmatch->value)
 	{
 		G_FreeEdict (self);
@@ -460,7 +460,7 @@ void SP_light (edict_t *self)
 }
 
 
-/*QUAKED func_wall (0 .5 .8) ? TRIGGER_SPAWN TOGGLE START_ON ANIMATED ANIMATED_FAST
+/* QUAKED func_wall (0 .5 .8) ? TRIGGER_SPAWN TOGGLE START_ON ANIMATED ANIMATED_FAST
 This is just a solid wall if not inhibited
 
 TRIGGER_SPAWN	the wall will not be present until triggered
@@ -503,7 +503,7 @@ void SP_func_wall (edict_t *self)
 	if (self->spawnflags & 16)
 		self->s.effects |= EF_ANIM_ALLFAST;
 
-	// just a wall
+	/* just a wall */
 	if ((self->spawnflags & 7) == 0)
 	{
 		self->solid = SOLID_BSP;
@@ -511,14 +511,14 @@ void SP_func_wall (edict_t *self)
 		return;
 	}
 
-	// it must be TRIGGER_SPAWN
+	/* it must be TRIGGER_SPAWN */
 	if (!(self->spawnflags & 1))
 	{
-//		gi.dprintf("func_wall missing TRIGGER_SPAWN\n");
+/*		gi.dprintf("func_wall missing TRIGGER_SPAWN\n");*/
 		self->spawnflags |= 1;
 	}
 
-	// yell if the spawnflags are odd
+	/* yell if the spawnflags are odd */
 	if (self->spawnflags & 4)
 	{
 		if (!(self->spawnflags & 2))
@@ -542,13 +542,13 @@ void SP_func_wall (edict_t *self)
 }
 
 
-/*QUAKED func_object (0 .5 .8) ? TRIGGER_SPAWN ANIMATED ANIMATED_FAST
+/* QUAKED func_object (0 .5 .8) ? TRIGGER_SPAWN ANIMATED ANIMATED_FAST
 This is solid bmodel that will fall if it's support it removed.
 */
 
 void func_object_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	// only squash thing we fall on top of
+	/* only squash thing we fall on top of */
 	if (!plane)
 		return;
 	if (plane->normal[2] < 1.0)
@@ -625,11 +625,11 @@ void SP_misc_explobox (edict_t *self)
 }
 
 
-//
-// miscellaneous specialty items
-//
+/**/
+/* miscellaneous specialty items */
+/**/
 
-/*QUAKED misc_blackhole (1 .5 0) (-8 -8 -8) (8 8 8)
+/* QUAKED misc_blackhole (1 .5 0) (-8 -8 -8) (8 8 8)
 */
 
 void misc_blackhole_use (edict_t *ent, edict_t *other, edict_t *activator)
@@ -662,7 +662,7 @@ void SP_misc_blackhole (edict_t *ent)
 	gi.linkentity (ent);
 }
 
-/*QUAKED misc_eastertank (1 .5 0) (-32 -32 -16) (32 32 32)
+/* QUAKED misc_eastertank (1 .5 0) (-32 -32 -16) (32 32 32)
 */
 
 void misc_eastertank_think (edict_t *self)
@@ -689,7 +689,7 @@ void SP_misc_eastertank (edict_t *ent)
 	gi.linkentity (ent);
 }
 
-/*QUAKED misc_easterchick (1 .5 0) (-32 -32 0) (32 32 32)
+/* QUAKED misc_easterchick (1 .5 0) (-32 -32 0) (32 32 32)
 */
 
 
@@ -717,7 +717,7 @@ void SP_misc_easterchick (edict_t *ent)
 	gi.linkentity (ent);
 }
 
-/*QUAKED misc_easterchick2 (1 .5 0) (-32 -32 0) (32 32 32)
+/* QUAKED misc_easterchick2 (1 .5 0) (-32 -32 0) (32 32 32)
 */
 
 
@@ -746,7 +746,7 @@ void SP_misc_easterchick2 (edict_t *ent)
 }
 
 
-/*QUAKED monster_commander_body (1 .5 0) (-32 -32 0) (32 32 48)
+/* QUAKED monster_commander_body (1 .5 0) (-32 -32 0) (32 32 48)
 Not really a monster, this is the Tank Commander's decapitated body.
 There should be a item_commander_head that has this as it's target.
 */
@@ -796,7 +796,7 @@ void SP_monster_commander_body (edict_t *self)
 	self->nextthink = level.time + 5 * FRAMETIME;
 }
 
-/*QUAKED misc_banner (1 .5 0) (-4 -4 -4) (4 4 4)
+/* QUAKED misc_banner (1 .5 0) (-4 -4 -4) (4 4 4)
 The origin is the bottom of the banner.
 The banner is 128 tall.
 */
@@ -824,7 +824,7 @@ void SP_misc_deadsoldier (edict_t *ent)
 	return;
 }
 
-/*QUAKED misc_viper (1 .5 0) (-16 -16 0) (16 16 32)
+/* QUAKED misc_viper (1 .5 0) (-16 -16 0) (16 16 32)
 This is the Viper for the flyby bombing.
 It is trigger_spawned, so you must have something use it for it to show up.
 There must be a path for it to follow once it is activated.
@@ -870,7 +870,7 @@ void SP_misc_viper (edict_t *ent)
 }
 
 
-/*QUAKED misc_bigviper (1 .5 0) (-176 -120 -24) (176 120 72) 
+/* QUAKED misc_bigviper (1 .5 0) (-176 -120 -24) (176 120 72) 
 This is a large stationary viper as seen in Paul's intro
 */
 void SP_misc_bigviper (edict_t *ent)
@@ -884,7 +884,7 @@ void SP_misc_bigviper (edict_t *ent)
 }
 
 
-/*QUAKED misc_viper_bomb (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED misc_viper_bomb (1 0 0) (-8 -8 -8) (8 8 8)
 "dmg"	how much boom should the bomb make?
 */
 void misc_viper_bomb_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
@@ -954,7 +954,7 @@ void SP_misc_viper_bomb (edict_t *self)
 }
 
 
-/*QUAKED misc_strogg_ship (1 .5 0) (-16 -16 0) (16 16 32)
+/* QUAKED misc_strogg_ship (1 .5 0) (-16 -16 0) (16 16 32)
 This is a Storgg ship for the flybys.
 It is trigger_spawned, so you must have something use it for it to show up.
 There must be a path for it to follow once it is activated.
@@ -1000,7 +1000,7 @@ void SP_misc_strogg_ship (edict_t *ent)
 }
 
 
-/*QUAKED misc_satellite_dish (1 .5 0) (-64 -64 0) (64 64 128)
+/* QUAKED misc_satellite_dish (1 .5 0) (-64 -64 0) (64 64 128)
 */
 void misc_satellite_dish_think (edict_t *self)
 {
@@ -1028,7 +1028,7 @@ void SP_misc_satellite_dish (edict_t *ent)
 }
 
 
-/*QUAKED light_mine1 (0 1 0) (-2 -2 -12) (2 2 12)
+/* QUAKED light_mine1 (0 1 0) (-2 -2 -12) (2 2 12)
 */
 void SP_light_mine1 (edict_t *ent)
 {
@@ -1039,7 +1039,7 @@ void SP_light_mine1 (edict_t *ent)
 }
 
 
-/*QUAKED light_mine2 (0 1 0) (-2 -2 -12) (2 2 12)
+/* QUAKED light_mine2 (0 1 0) (-2 -2 -12) (2 2 12)
 */
 void SP_light_mine2 (edict_t *ent)
 {
@@ -1050,7 +1050,7 @@ void SP_light_mine2 (edict_t *ent)
 }
 
 
-/*QUAKED misc_gib_arm (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED misc_gib_arm (1 0 0) (-8 -8 -8) (8 8 8)
 Intended for use with the target_spawner
 */
 void SP_misc_gib_arm (edict_t *ent)
@@ -1071,7 +1071,7 @@ void SP_misc_gib_arm (edict_t *ent)
 	gi.linkentity (ent);
 }
 
-/*QUAKED misc_gib_leg (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED misc_gib_leg (1 0 0) (-8 -8 -8) (8 8 8)
 Intended for use with the target_spawner
 */
 void SP_misc_gib_leg (edict_t *ent)
@@ -1092,7 +1092,7 @@ void SP_misc_gib_leg (edict_t *ent)
 	gi.linkentity (ent);
 }
 
-/*QUAKED misc_gib_head (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED misc_gib_head (1 0 0) (-8 -8 -8) (8 8 8)
 Intended for use with the target_spawner
 */
 void SP_misc_gib_head (edict_t *ent)
@@ -1113,9 +1113,9 @@ void SP_misc_gib_head (edict_t *ent)
 	gi.linkentity (ent);
 }
 
-//=====================================================
+/*=====================================================*/
 
-/*QUAKED target_character (0 0 1) ?
+/* QUAKED target_character (0 0 1) ?
 used with target_string (must be on same "team")
 "count" is position in the string (starts at 1)
 */
@@ -1131,7 +1131,7 @@ void SP_target_character (edict_t *self)
 }
 
 
-/*QUAKED target_string (0 0 1) (-8 -8 -8) (8 8 8)
+/* QUAKED target_string (0 0 1) (-8 -8 -8) (8 8 8)
 */
 
 void target_string_use (edict_t *self, edict_t *other, edict_t *activator)
@@ -1172,7 +1172,7 @@ void SP_target_string (edict_t *self)
 }
 
 
-/*QUAKED func_clock (0 0 1) (-8 -8 -8) (8 8 8) TIMER_UP TIMER_DOWN START_OFF MULTI_USE
+/* QUAKED func_clock (0 0 1) (-8 -8 -8) (8 8 8) TIMER_UP TIMER_DOWN START_OFF MULTI_USE
 target a target_string with this
 
 The default is to be a time of day clock
@@ -1187,8 +1187,8 @@ If START_OFF, this entity must be used before it starts
 
 #define	CLOCK_MESSAGE_SIZE	16
 
-// don't let field width of any clock messages change, or it
-// could cause an overwrite after a game load
+/* don't let field width of any clock messages change, or it */
+/* could cause an overwrite after a game load */
 
 static void func_clock_reset (edict_t *self)
 {
@@ -1338,7 +1338,7 @@ void SP_func_clock (edict_t *self)
 		self->nextthink = level.time + 1;
 }
 
-//=================================================================================
+/*=================================================================================*/
 
 void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -1358,7 +1358,7 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 	if (!Bot_FindNode(self, 120, TELEPORT_NODE)
 		&& dntg->value)
 	{
-		//start node
+		/* start node */
 		VectorCopy (other->s.origin, nodeo);
 		
 		if (!(other->client->ps.pmove.pm_flags & PMF_DUCKED))
@@ -1371,35 +1371,35 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 		
 		Bot_CalcNode(other, numnodes);
 
-		//dest node
+		/* dest node */
 		VectorCopy (dest->s.origin, nodeo);
 		nodeo[2] += 20;
 		Bot_PlaceNode(nodeo, NORMAL_NODE, 0);
 		Bot_CalcNode(other, numnodes);
 		
-		//connection
+		/* connection */
 		nodes[numnodes-1].dist[numnodes] = 1;
 
 		nprintf(PRINT_HIGH, "Teleporter nodes placed and connected!\n");
 	}
 
-	// unlink to make sure it can't possibly interfere with KillBox
+	/* unlink to make sure it can't possibly interfere with KillBox */
 	gi.unlinkentity (other);
 
 	VectorCopy (dest->s.origin, other->s.origin);
 	VectorCopy (dest->s.origin, other->s.old_origin);
 	other->s.origin[2] += 10;
 
-	// clear the velocity and hold them in place briefly
+	/* clear the velocity and hold them in place briefly */
 	VectorClear (other->velocity);
-	other->client->ps.pmove.pm_time = 160>>3;		// hold time
+	other->client->ps.pmove.pm_time = 160>>3;		/* hold time */
 	other->client->ps.pmove.pm_flags |= PMF_TIME_TELEPORT;
 
-	// draw the teleport splash at source and on the player
+	/* draw the teleport splash at source and on the player */
 	self->owner->s.event = EV_PLAYER_TELEPORT;
 	other->s.event = EV_PLAYER_TELEPORT;
 
-	// set angles
+	/* set angles */
 	for (i=0 ; i<3 ; i++)
 		other->client->ps.pmove.delta_angles[i] = ANGLE2SHORT(dest->s.angles[i] - other->client->resp.cmd_angles[i]);
 
@@ -1407,13 +1407,13 @@ void teleporter_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_
 	VectorClear (other->client->ps.viewangles);
 	VectorClear (other->client->v_angle);
 
-	// kill anything at the destination
+	/* kill anything at the destination */
 	KillBox (other);
 
 	gi.linkentity (other);
 }
 
-/*QUAKED misc_teleporter (1 0 0) (-32 -32 -24) (32 32 -16)
+/* QUAKED misc_teleporter (1 0 0) (-32 -32 -24) (32 32 -16)
 Stepping onto this disc will teleport players to the targeted misc_teleporter_dest object.
 */
 void SP_misc_teleporter (edict_t *ent)
@@ -1448,7 +1448,7 @@ void SP_misc_teleporter (edict_t *ent)
 	gi.linkentity (trig);
 }
 
-/*QUAKED misc_teleporter_dest (1 0 0) (-32 -32 -24) (32 32 -16)
+/* QUAKED misc_teleporter_dest (1 0 0) (-32 -32 -24) (32 32 -16)
 Point teleporters at these.
 */
 void SP_misc_teleporter_dest (edict_t *ent)
@@ -1456,7 +1456,7 @@ void SP_misc_teleporter_dest (edict_t *ent)
 	gi.setmodel (ent, "models/objects/dmspot/tris.md2");
 	ent->s.skinnum = 0;
 	ent->solid = SOLID_BBOX;
-//	ent->s.effects |= EF_FLIES;
+/*	ent->s.effects |= EF_FLIES;*/
 	VectorSet (ent->mins, -32, -32, -24);
 	VectorSet (ent->maxs, 32, 32, -16);
 	gi.linkentity (ent);

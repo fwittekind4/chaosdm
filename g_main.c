@@ -22,9 +22,9 @@ cvar_t	*dmflags;
 cvar_t	*skill;
 cvar_t	*fraglimit;
 cvar_t	*timelimit;
-//ZOID
+/* ZOID */
 cvar_t	*capturelimit;
-//ZOID
+/* ZOID */
 cvar_t	*password;
 cvar_t	*maxclients;
 cvar_t	*maxentities;
@@ -64,7 +64,7 @@ void InitGame (void);
 void G_RunFrame (void);
 
 
-//===================================================================
+/*===================================================================*/
 
 
 void ShutdownGame (void)
@@ -73,7 +73,7 @@ void ShutdownGame (void)
 
 	gi.dprintf ("==== Shutdown Chaos Deathmatch ====\n");
 
-	sl_GameEnd( &gi, level );	// StdLog - Mark Davies
+	sl_GameEnd( &gi, level );	/* StdLog - Mark Davies */
 	gi.FreeTags (TAG_LEVEL);
 	gi.FreeTags (TAG_GAME);
 
@@ -123,7 +123,7 @@ game_export_t *GetGameAPI (game_import_t *import)
 }
 
 #ifndef GAME_HARD_LINKED
-// this is only here so the functions in q_shared.c and q_shwin.c can link
+/* this is only here so the functions in q_shared.c and q_shwin.c can link */
 void Sys_Error (char *error, ...)
 {
 	va_list		argptr;
@@ -150,7 +150,7 @@ void Com_Printf (char *msg, ...)
 
 #endif
 
-//======================================================================
+/*======================================================================*/
 
 
 /*
@@ -163,8 +163,8 @@ void ClientEndServerFrames (void)
 	int		i;
 	edict_t	*ent;
 
-	// calc the player views now that all pushing
-	// and damage has been added
+	/* calc the player views now that all pushing */
+	/* and damage has been added */
 	for (i=0 ; i<maxclients->value ; i++)
 	{
 		ent = g_edicts + 1 + i;
@@ -188,7 +188,7 @@ void EndDMLevel (void)
 	edict_t		*ent;
 	int			i;
 
-	// stay on same level flag
+	/* stay on same level flag */
 	if ((int)dmflags->value & DF_SAME_LEVEL)
 	{
 		ent = G_Spawn ();
@@ -227,17 +227,17 @@ void EndDMLevel (void)
 		ent->map = maplist.mapnames[i];	
     } 
 	else if (level.nextmap[0])
-	{	// go to a specific map
+	{	/* go to a specific map */
 		ent = G_Spawn ();
 		ent->classname = "target_changelevel";
 		ent->map = level.nextmap;
 	}
 	else
-	{	// search for a changeleve
+	{	/* search for a changeleve */
 		ent = G_Find (NULL, FOFS(classname), "target_changelevel");
 		if (!ent)
-		{	// the map designer didn't include a changelevel,
-			// so create a fake ent that goes back to the same level
+		{	/* the map designer didn't include a changelevel,*/
+			/* so create a fake ent that goes back to the same level */
 			ent = G_Spawn ();
 			ent->classname = "target_changelevel";
 			ent->map = level.mapname;
@@ -272,13 +272,13 @@ void CheckDMRules (void)
 
 	if (fraglimit->value)
 	{
-//ZOID
+/* ZOID */
 		if (ctf->value) {
 			if (CTFCheckRules()) {
 				EndDMLevel ();
 			}
 		}
-//ZOID
+/* ZOID */
 		for (i=0 ; i<maxclients->value ; i++)
 		{
 			cl = game.clients + i;
@@ -314,7 +314,7 @@ void ExitLevel (void)
 	level.intermissiontime = 0;
 	ClientEndServerFrames ();
 
-	// clear some things before going to next level
+	/* clear some things before going to next level */
 	for (i=0 ; i<maxclients->value ; i++)
 	{
 		ent = g_edicts + 1 + i;
@@ -324,9 +324,9 @@ void ExitLevel (void)
 			ent->health = ent->client->pers.max_health;
 	}
 
-//ZOID
+/* ZOID */
 	CTFInit();
-//ZOID
+/* ZOID */
 
 }
 
@@ -346,7 +346,7 @@ void G_RunFrame (void)
 	level.framenum++;
 	level.time = level.framenum*FRAMETIME;
 
-	// exit intermissions
+	/* exit intermissions */
 
 	if (level.exitintermission)
 	{
@@ -354,10 +354,10 @@ void G_RunFrame (void)
 		return;
 	}
 
-	//
-	// treat each object in turn
-	// even the world gets a chance to think
-	//
+	/**/
+	/* treat each object in turn */
+	/* even the world gets a chance to think */
+	/**/
 	ent = &g_edicts[0];
 	for (i=0 ; i<globals.num_edicts ; i++, ent++)
 	{
@@ -368,7 +368,7 @@ void G_RunFrame (void)
 
 		VectorCopy (ent->s.origin, ent->s.old_origin);
 
-		// if the ground entity moved, make sure we are still on it
+		/* if the ground entity moved, make sure we are still on it */
 		if ((ent->groundentity) && (ent->groundentity->linkcount != ent->groundentity_linkcount))
 		{
 			ent->groundentity = NULL;
@@ -378,16 +378,16 @@ void G_RunFrame (void)
 		{
 			ClientBeginServerFrame (ent);
 			if (!(Q_stricmp (ent->classname, "bot") == 0))
-				continue;							//MATTHIAS
+				continue;							/* MATTHIAS */
 		}
 		
 		G_RunEntity (ent);
 	}
 
-	// see if it is time to end a deathmatch
+	/* see if it is time to end a deathmatch */
 	CheckDMRules ();
 
-	// build the playerstate_t structures for all players
+	/* build the playerstate_t structures for all players */
 	ClientEndServerFrames ();
 }
 

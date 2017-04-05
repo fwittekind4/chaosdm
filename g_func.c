@@ -51,9 +51,9 @@
 #define DOOR_Y_AXIS			128
 
 
-//
-// Support routines for movement (changes in origin using velocity)
-//
+/**/
+/* Support routines for movement (changes in origin using velocity)*/
+/**/
 
 void Move_Done (edict_t *ent)
 {
@@ -114,7 +114,7 @@ void Move_Calc (edict_t *ent, vec3_t dest, void(*func)(edict_t*))
 	}
 	else
 	{
-		// accelerative
+		/* accelerative */
 		ent->moveinfo.current_speed = 0;
 		ent->think = Think_AccelMove;
 		ent->nextthink = level.time + FRAMETIME;
@@ -122,9 +122,9 @@ void Move_Calc (edict_t *ent, vec3_t dest, void(*func)(edict_t*))
 }
 
 
-//
-// Support routines for angular movement (changes in angle using avelocity)
-//
+/**/
+/* Support routines for angular movement (changes in angle using avelocity)*/
+/**/
 
 void AngleMove_Done (edict_t *ent)
 {
@@ -160,16 +160,16 @@ void AngleMove_Begin (edict_t *ent)
 	float	traveltime;
 	float	frames;
 
-	// set destdelta to the vector needed to move
+	/* set destdelta to the vector needed to move */
 	if (ent->moveinfo.state == STATE_UP)
 		VectorSubtract (ent->moveinfo.end_angles, ent->s.angles, destdelta);
 	else
 		VectorSubtract (ent->moveinfo.start_angles, ent->s.angles, destdelta);
 	
-	// calculate length of vector
+	/* calculate length of vector */
 	len = VectorLength (destdelta);
 	
-	// divide by speed to get time to reach dest
+	/* divide by speed to get time to reach dest */
 	traveltime = len / ent->moveinfo.speed;
 
 	if (traveltime < FRAMETIME)
@@ -180,10 +180,10 @@ void AngleMove_Begin (edict_t *ent)
 
 	frames = floor(traveltime / FRAMETIME);
 
-	// scale the destdelta vector by the time spent traveling to get velocity
+	/* scale the destdelta vector by the time spent traveling to get velocity */
 	VectorScale (destdelta, 1.0 / traveltime, ent->avelocity);
 
-	// set nextthink to trigger a think when dest is reached
+	/* set nextthink to trigger a think when dest is reached */
 	ent->nextthink = level.time + frames * FRAMETIME;
 	ent->think = AngleMove_Final;
 }
@@ -244,7 +244,7 @@ void plat_CalcAcceleratedMove(moveinfo_t *moveinfo)
 
 void plat_Accelerate (moveinfo_t *moveinfo)
 {
-	// are we decelerating?
+	/* are we decelerating?*/
 	if (moveinfo->remaining_distance <= moveinfo->decel_distance)
 	{
 		if (moveinfo->remaining_distance < moveinfo->decel_distance)
@@ -261,7 +261,7 @@ void plat_Accelerate (moveinfo_t *moveinfo)
 		return;
 	}
 
-	// are we at full speed and need to start decelerating during this move?
+	/* are we at full speed and need to start decelerating during this move?*/
 	if (moveinfo->current_speed == moveinfo->move_speed)
 		if ((moveinfo->remaining_distance - moveinfo->current_speed) < moveinfo->decel_distance)
 		{
@@ -277,7 +277,7 @@ void plat_Accelerate (moveinfo_t *moveinfo)
 			return;
 		}
 
-	// are we accelerating?
+	/* are we accelerating?*/
 	if (moveinfo->current_speed < moveinfo->speed)
 	{
 		float	old_speed;
@@ -288,18 +288,18 @@ void plat_Accelerate (moveinfo_t *moveinfo)
 
 		old_speed = moveinfo->current_speed;
 
-		// figure simple acceleration up to move_speed
+		/* figure simple acceleration up to move_speed */
 		moveinfo->current_speed += moveinfo->accel;
 		if (moveinfo->current_speed > moveinfo->speed)
 			moveinfo->current_speed = moveinfo->speed;
 
-		// are we accelerating throughout this entire move?
+		/* are we accelerating throughout this entire move?*/
 		if ((moveinfo->remaining_distance - moveinfo->current_speed) >= moveinfo->decel_distance)
 			return;
 
-		// during this move we will accelrate from current_speed to move_speed
-		// and cross over the decel_distance; figure the average speed for the
-		// entire move
+		/* during this move we will accelrate from current_speed to move_speed */
+		/* and cross over the decel_distance; figure the average speed for the */
+		/* entire move */
 		p1_distance = moveinfo->remaining_distance - moveinfo->decel_distance;
 		p1_speed = (old_speed + moveinfo->move_speed) / 2.0;
 		p2_distance = moveinfo->move_speed * (1.0 - (p1_distance / p1_speed));
@@ -309,7 +309,7 @@ void plat_Accelerate (moveinfo_t *moveinfo)
 		return;
 	}
 
-	// we are at constant velocity (move_speed)
+	/* we are at constant velocity (move_speed)*/
 	return;
 }
 
@@ -317,12 +317,12 @@ void Think_AccelMove (edict_t *ent)
 {
 	ent->moveinfo.remaining_distance -= ent->moveinfo.current_speed;
 
-	if (ent->moveinfo.current_speed == 0)		// starting or blocked
+	if (ent->moveinfo.current_speed == 0)		/* starting or blocked */
 		plat_CalcAcceleratedMove(&ent->moveinfo);
 
 	plat_Accelerate (&ent->moveinfo);
 
-	// will the entire move complete on next frame?
+	/* will the entire move complete on next frame?*/
 	if (ent->moveinfo.remaining_distance <= ent->moveinfo.current_speed)
 	{
 		Move_Final (ent);
@@ -391,9 +391,9 @@ void plat_blocked (edict_t *self, edict_t *other)
 {
 	if (!other->client)
 	{
-		// give it a chance to go away on it's own terms (like gibs)
+		/* give it a chance to go away on it's own terms (like gibs)*/
 		T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, 100000, 1, 0, MOD_CRUSH);
-		// if it's still there, nuke it
+		/* if it's still there, nuke it */
 		if (other)
 			BecomeExplosion1 (other);
 		return;
@@ -411,7 +411,7 @@ void plat_blocked (edict_t *self, edict_t *other)
 void Use_Plat (edict_t *ent, edict_t *other, edict_t *activator)
 { 
 	if (ent->think)
-		return;		// already down
+		return;		/* already down */
 	plat_go_down (ent);
 }
 
@@ -425,10 +425,10 @@ void Touch_Plat_Center (edict_t *ent, edict_t *other, cplane_t *plane, csurface_
 		return;
 
 
-	ent = ent->enemy;	// now point at the plat, not the trigger
+	ent = ent->enemy;	/* now point at the plat, not the trigger */
 	
-	//MATTHIAS
-	if (ent->moveinfo.state == STATE_BOTTOM)	//plat is at the bottom so place nodes
+	/* MATTHIAS */
+	if (ent->moveinfo.state == STATE_BOTTOM)	/* plat is at the bottom so place nodes */
 	{
 		if (other->client
 			&& !Bot_FindNode(other, 120, PLAT_NODE)
@@ -439,7 +439,7 @@ void Touch_Plat_Center (edict_t *ent, edict_t *other, cplane_t *plane, csurface_
 
 			AngleVectors (other->client->v_angle, forward, NULL, NULL);
 
-			//place bottom node
+			/* place bottom node */
 			VectorCopy(other->s.origin, spot);
 			VectorMA (spot, 8, forward, spot);
 			
@@ -453,12 +453,12 @@ void Touch_Plat_Center (edict_t *ent, edict_t *other, cplane_t *plane, csurface_
 
 			Bot_CalcNode(other, numnodes);
 
-			//calc top position
+			/* calc top position */
 			VectorCopy(other->s.origin, spot);
 			VectorMA (spot, 8, forward, top_pos);
 			top_pos[2] += - (ent->pos2[2]);
 
-			// place the top node
+			/* place the top node */
 			if (!(other->client->ps.pmove.pm_flags & PMF_DUCKED))
 			{
 				top_pos[2] += 5;
@@ -470,7 +470,7 @@ void Touch_Plat_Center (edict_t *ent, edict_t *other, cplane_t *plane, csurface_
 			
 			Bot_CalcNode(other, numnodes);
 
-			// connect the plat nodes
+			/* connect the plat nodes */
 			nodes[numnodes-1].dist[numnodes] = - (ent->pos2[2]);
 
 			nprintf(PRINT_HIGH, "Plat nodes placed and connected!\n");
@@ -479,7 +479,7 @@ void Touch_Plat_Center (edict_t *ent, edict_t *other, cplane_t *plane, csurface_
 	}
 	else if (ent->moveinfo.state == STATE_TOP)
 	{
-		ent->nextthink = level.time + 1;	// the player is still on the plat, so delay going down
+		ent->nextthink = level.time + 1;	/* the player is still on the plat, so delay going down */
 	}
 }
 
@@ -488,9 +488,9 @@ void plat_spawn_inside_trigger (edict_t *ent)
 	edict_t	*trigger;
 	vec3_t	tmin, tmax;
 
-//
-// middle trigger
-//	
+/**/
+/* middle trigger */
+/*	*/
 	trigger = G_Spawn();
 	trigger->touch = Touch_Plat_Center;
 	trigger->movetype = MOVETYPE_NONE;
@@ -528,7 +528,7 @@ void plat_spawn_inside_trigger (edict_t *ent)
 }
 
 
-/*QUAKED func_plat (0 .5 .8) ? PLAT_LOW_TRIGGER
+/* QUAKED func_plat (0 .5 .8) ? PLAT_LOW_TRIGGER
 speed	default 150
 
 Plats are always drawn in the extended position, so they will light correctly.
@@ -576,7 +576,7 @@ void SP_func_plat (edict_t *ent)
 	if (!st.lip)
 		st.lip = 8;
 
-	// pos1 is the top position, pos2 is the bottom
+	/* pos1 is the top position, pos2 is the bottom */
 	VectorCopy (ent->s.origin, ent->pos1);
 	VectorCopy (ent->s.origin, ent->pos2);
 	if (st.height)
@@ -586,7 +586,7 @@ void SP_func_plat (edict_t *ent)
 
 	ent->use = Use_Plat;
 
-	plat_spawn_inside_trigger (ent);	// the "start moving" trigger	
+	plat_spawn_inside_trigger (ent);	/* the "start moving" trigger	*/
 
 	if (ent->targetname)
 	{
@@ -613,9 +613,9 @@ void SP_func_plat (edict_t *ent)
 	ent->moveinfo.sound_end = gi.soundindex ("plats/pt1_end.wav");
 }
 
-//====================================================================
+/*====================================================================*/
 
-/*QUAKED func_rotating (0 .5 .8) ? START_ON REVERSE X_AXIS Y_AXIS TOUCH_PAIN STOP ANIMATED ANIMATED_FAST
+/* QUAKED func_rotating (0 .5 .8) ? START_ON REVERSE X_AXIS Y_AXIS TOUCH_PAIN STOP ANIMATED ANIMATED_FAST
 You need to have an origin brush as part of this entity.  The center of that brush will be
 the point around which it is rotated. It will rotate around the Z axis by default.  You can
 check either the X_AXIS or Y_AXIS box to change that.
@@ -663,16 +663,16 @@ void SP_func_rotating (edict_t *ent)
 	else
 		ent->movetype = MOVETYPE_PUSH;
 
-	// set the axis of rotation
+	/* set the axis of rotation */
 	VectorClear(ent->movedir);
 	if (ent->spawnflags & 4)
 		ent->movedir[2] = 1.0;
 	else if (ent->spawnflags & 8)
 		ent->movedir[0] = 1.0;
-	else // Z_AXIS
+	else /* Z_AXIS */
 		ent->movedir[1] = 1.0;
 
-	// check for reverse rotation
+	/* check for reverse rotation */
 	if (ent->spawnflags & 2)
 		VectorNegate (ent->movedir, ent->movedir);
 
@@ -681,7 +681,7 @@ void SP_func_rotating (edict_t *ent)
 	if (!ent->dmg)
 		ent->dmg = 2;
 
-//	ent->moveinfo.sound_middle = "doors/hydro1.wav";
+/*	ent->moveinfo.sound_middle = "doors/hydro1.wav";*/
 
 	ent->use = rotating_use;
 	if (ent->dmg)
@@ -707,7 +707,7 @@ BUTTONS
 ======================================================================
 */
 
-/*QUAKED func_button (0 .5 .8) ?
+/* QUAKED func_button (0 .5 .8) ?
 When a button is touched, it moves some distance in the direction of it's angle, triggers all of it's targets, waits some time, then returns to it's original position where it can be triggered again.
 
 "angle"		determines the opening direction
@@ -864,7 +864,7 @@ DOORS
 ======================================================================
 */
 
-/*QUAKED func_door (0 .5 .8) ? START_OPEN x CRUSHER NOMONSTER ANIMATED TOGGLE ANIMATED_FAST
+/* QUAKED func_door (0 .5 .8) ? START_OPEN x CRUSHER NOMONSTER ANIMATED TOGGLE ANIMATED_FAST
 TOGGLE		wait in both the start and end states for a trigger event.
 START_OPEN	the door to moves to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
 NOMONSTER	monsters will not trigger this door
@@ -956,10 +956,10 @@ void door_go_down (edict_t *self)
 void door_go_up (edict_t *self, edict_t *activator)
 {
 	if (self->moveinfo.state == STATE_UP)
-		return;		// already going up
+		return;		/* already going up */
 
 	if (self->moveinfo.state == STATE_TOP)
-	{	// reset top wait time
+	{	/* reset top wait time */
 		if (self->moveinfo.wait >= 0)
 			self->nextthink = level.time + self->moveinfo.wait;
 		return;
@@ -992,7 +992,7 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 	{
 		if (self->moveinfo.state == STATE_UP || self->moveinfo.state == STATE_TOP)
 		{
-			// trigger all paired doors
+			/* trigger all paired doors */
 			for (ent = self ; ent ; ent = ent->teamchain)
 			{
 				ent->message = NULL;
@@ -1003,7 +1003,7 @@ void door_use (edict_t *self, edict_t *other, edict_t *activator)
 		}
 	}
 	
-	// trigger all paired doors
+	/* trigger all paired doors */
 	for (ent = self ; ent ; ent = ent->teamchain)
 	{
 		ent->message = NULL;
@@ -1037,9 +1037,9 @@ void Think_CalcMoveSpeed (edict_t *self)
 	float	dist;
 
 	if (self->flags & FL_TEAMSLAVE)
-		return;		// only the team master does this
+		return;		/* only the team master does this */
 
-	// find the smallest distance any member of the team will be moving
+	/* find the smallest distance any member of the team will be moving */
 	min = fabs(self->moveinfo.distance);
 	for (ent = self->teamchain; ent; ent = ent->teamchain)
 	{
@@ -1050,7 +1050,7 @@ void Think_CalcMoveSpeed (edict_t *self)
 
 	time = min / self->moveinfo.speed;
 
-	// adjust speeds so they will all complete at the same time
+	/* adjust speeds so they will all complete at the same time */
 	for (ent = self; ent; ent = ent->teamchain)
 	{
 		newspeed = fabs(ent->moveinfo.distance) / time;
@@ -1073,7 +1073,7 @@ void Think_SpawnDoorTrigger (edict_t *ent)
 	vec3_t		mins, maxs;
 
 	if (ent->flags & FL_TEAMSLAVE)
-		return;		// only the team leader spawns a trigger
+		return;		/* only the team leader spawns a trigger */
 
 	VectorCopy (ent->absmin, mins);
 	VectorCopy (ent->absmax, maxs);
@@ -1084,7 +1084,7 @@ void Think_SpawnDoorTrigger (edict_t *ent)
 		AddPointToBounds (other->absmax, mins, maxs);
 	}
 
-	// expand 
+	/* expand */
 	mins[0] -= 60;
 	mins[1] -= 60;
 	maxs[0] += 60;
@@ -1111,9 +1111,9 @@ void door_blocked  (edict_t *self, edict_t *other)
 
 	if (!other->client)
 	{
-		// give it a chance to go away on it's own terms (like gibs)
+		/* give it a chance to go away on it's own terms (like gibs)*/
 		T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, 100000, 1, 0, MOD_CRUSH);
-		// if it's still there, nuke it
+		/* if it's still there, nuke it */
 		if (other)
 			BecomeExplosion1 (other);
 		return;
@@ -1125,8 +1125,8 @@ void door_blocked  (edict_t *self, edict_t *other)
 		return;
 
 
-// if a door has a negative wait, it would never come back if blocked,
-// so let it just squash the object to death real fast
+/* if a door has a negative wait, it would never come back if blocked,*/
+/* so let it just squash the object to death real fast */
 	if (self->moveinfo.wait >= 0)
 	{
 		if (self->moveinfo.state == STATE_DOWN)
@@ -1205,7 +1205,7 @@ void SP_func_door (edict_t *ent)
 	if (!ent->dmg)
 		ent->dmg = 2;
 
-	// calculate second position
+	/* calculate second position */
 	VectorCopy (ent->s.origin, ent->pos1);
 	abs_movedir[0] = fabs(ent->movedir[0]);
 	abs_movedir[1] = fabs(ent->movedir[1]);
@@ -1213,7 +1213,7 @@ void SP_func_door (edict_t *ent)
 	ent->moveinfo.distance = abs_movedir[0] * ent->size[0] + abs_movedir[1] * ent->size[1] + abs_movedir[2] * ent->size[2] - st.lip;
 	VectorMA (ent->pos1, ent->moveinfo.distance, ent->movedir, ent->pos2);
 
-	// if it starts open, switch the positions
+	/* if it starts open, switch the positions */
 	if (ent->spawnflags & DOOR_START_OPEN)
 	{
 		VectorCopy (ent->pos2, ent->s.origin);
@@ -1249,7 +1249,7 @@ void SP_func_door (edict_t *ent)
 	if (ent->spawnflags & 64)
 		ent->s.effects |= EF_ANIM_ALLFAST;
 
-	// to simplify logic elsewhere, make non-teamed doors into a team of one
+	/* to simplify logic elsewhere, make non-teamed doors into a team of one */
 	if (!ent->team)
 		ent->teammaster = ent;
 
@@ -1263,7 +1263,7 @@ void SP_func_door (edict_t *ent)
 }
 
 
-/*QUAKED func_door_rotating (0 .5 .8) ? START_OPEN REVERSE CRUSHER NOMONSTER ANIMATED TOGGLE X_AXIS Y_AXIS
+/* QUAKED func_door_rotating (0 .5 .8) ? START_OPEN REVERSE CRUSHER NOMONSTER ANIMATED TOGGLE X_AXIS Y_AXIS
 TOGGLE causes the door to wait in both the start and end states for a trigger event.
 
 START_OPEN	the door to moves to its destination when spawned, and operate in reverse.  It is used to temporarily or permanently close off an area when triggered (not useful for touch or takedamage doors).
@@ -1296,16 +1296,16 @@ void SP_func_door_rotating (edict_t *ent)
 {
 	VectorClear (ent->s.angles);
 
-	// set the axis of rotation
+	/* set the axis of rotation */
 	VectorClear(ent->movedir);
 	if (ent->spawnflags & DOOR_X_AXIS)
 		ent->movedir[2] = 1.0;
 	else if (ent->spawnflags & DOOR_Y_AXIS)
 		ent->movedir[0] = 1.0;
-	else // Z_AXIS
+	else /* Z_AXIS */
 		ent->movedir[1] = 1.0;
 
-	// check for reverse rotation
+	/* check for reverse rotation */
 	if (ent->spawnflags & DOOR_REVERSE)
 		VectorNegate (ent->movedir, ent->movedir);
 
@@ -1345,7 +1345,7 @@ void SP_func_door_rotating (edict_t *ent)
 		ent->moveinfo.sound_end = gi.soundindex  ("doors/dr1_end.wav");
 	}
 
-	// if it starts open, switch the positions
+	/* if it starts open, switch the positions */
 	if (ent->spawnflags & DOOR_START_OPEN)
 	{
 		VectorCopy (ent->pos2, ent->s.angles);
@@ -1380,7 +1380,7 @@ void SP_func_door_rotating (edict_t *ent)
 	if (ent->spawnflags & 16)
 		ent->s.effects |= EF_ANIM_ALL;
 
-	// to simplify logic elsewhere, make non-teamed doors into a team of one
+	/* to simplify logic elsewhere, make non-teamed doors into a team of one */
 	if (!ent->team)
 		ent->teammaster = ent;
 
@@ -1394,7 +1394,7 @@ void SP_func_door_rotating (edict_t *ent)
 }
 
 
-/*QUAKED func_water (0 .5 .8) ? START_OPEN
+/* QUAKED func_water (0 .5 .8) ? START_OPEN
 func_water is a moveable water brush.  It must be targeted to operate.  Use a non-water texture at your own risk.
 
 START_OPEN causes the water to move to its destination when spawned and operate in reverse.
@@ -1423,18 +1423,18 @@ void SP_func_water (edict_t *self)
 		default:
 			break;
 
-		case 1: // water
+		case 1: /* water */
 			self->moveinfo.sound_start = gi.soundindex  ("world/mov_watr.wav");
 			self->moveinfo.sound_end = gi.soundindex  ("world/stp_watr.wav");
 			break;
 
-		case 2: // lava
+		case 2: /* lava */
 			self->moveinfo.sound_start = gi.soundindex  ("world/mov_watr.wav");
 			self->moveinfo.sound_end = gi.soundindex  ("world/stp_watr.wav");
 			break;
 	}
 
-	// calculate second position
+	/* calculate second position */
 	VectorCopy (self->s.origin, self->pos1);
 	abs_movedir[0] = fabs(self->movedir[0]);
 	abs_movedir[1] = fabs(self->movedir[1]);
@@ -1442,7 +1442,7 @@ void SP_func_water (edict_t *self)
 	self->moveinfo.distance = abs_movedir[0] * self->size[0] + abs_movedir[1] * self->size[1] + abs_movedir[2] * self->size[2] - st.lip;
 	VectorMA (self->pos1, self->moveinfo.distance, self->movedir, self->pos2);
 
-	// if it starts open, switch the positions
+	/* if it starts open, switch the positions */
 	if (self->spawnflags & DOOR_START_OPEN)
 	{
 		VectorCopy (self->pos2, self->s.origin);
@@ -1480,7 +1480,7 @@ void SP_func_water (edict_t *self)
 #define TRAIN_TOGGLE		2
 #define TRAIN_BLOCK_STOPS	4
 
-/*QUAKED func_train (0 .5 .8) ? START_ON TOGGLE BLOCK_STOPS
+/* QUAKED func_train (0 .5 .8) ? START_ON TOGGLE BLOCK_STOPS
 Trains are moving platforms that players can ride.
 The targets origin specifies the min point of the train at each corner.
 The train spawns at the first target it is pointing at.
@@ -1496,9 +1496,9 @@ void train_blocked (edict_t *self, edict_t *other)
 {
 	if (!other->client)
 	{
-		// give it a chance to go away on it's own terms (like gibs)
+		/* give it a chance to go away on it's own terms (like gibs)*/
 		T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, 100000, 1, 0, MOD_CRUSH);
-		// if it's still there, nuke it
+		/* if it's still there, nuke it */
 		if (other)
 			BecomeExplosion1 (other);
 		return;
@@ -1526,7 +1526,7 @@ void train_wait (edict_t *self)
 		G_UseTargets (ent, self->activator);
 		ent->target = savetarget;
 
-		// make sure we didn't get killed by a killtarget
+		/* make sure we didn't get killed by a killtarget */
 		if (!self->inuse)
 			return;
 	}
@@ -1538,7 +1538,7 @@ void train_wait (edict_t *self)
 			self->nextthink = level.time + self->moveinfo.wait;
 			self->think = train_next;
 		}
-		else if (self->spawnflags & TRAIN_TOGGLE)  // && wait < 0
+		else if (self->spawnflags & TRAIN_TOGGLE)  /* && wait < 0*/
 		{
 			train_next (self);
 			self->spawnflags &= ~TRAIN_START_ON;
@@ -1570,7 +1570,7 @@ void train_next (edict_t *self)
 again:
 	if (!self->target)
 	{
-//		gi.dprintf ("train_next: no next target\n");
+/*		gi.dprintf ("train_next: no next target\n");*/
 		return;
 	}
 
@@ -1583,7 +1583,7 @@ again:
 
 	self->target = ent->target;
 
-	// check for a teleport path_corner
+	/* check for a teleport path_corner */
 	if (ent->spawnflags & 1)
 	{
 		if (!first)
@@ -1651,7 +1651,7 @@ void func_train_find (edict_t *self)
 	VectorSubtract (ent->s.origin, self->mins, self->s.origin);
 	gi.linkentity (self);
 
-	// if not triggered, start immediately
+	/* if not triggered, start immediately */
 	if (!self->targetname)
 		self->spawnflags |= TRAIN_START_ON;
 
@@ -1715,8 +1715,8 @@ void SP_func_train (edict_t *self)
 
 	if (self->target)
 	{
-		// start trains on the second frame, to make sure their targets have had
-		// a chance to spawn
+		/* start trains on the second frame, to make sure their targets have had */
+		/* a chance to spawn */
 		self->nextthink = level.time + FRAMETIME;
 		self->think = func_train_find;
 	}
@@ -1727,7 +1727,7 @@ void SP_func_train (edict_t *self)
 }
 
 
-/*QUAKED trigger_elevator (0.3 0.1 0.6) (-8 -8 -8) (8 8 8)
+/* QUAKED trigger_elevator (0.3 0.1 0.6) (-8 -8 -8) (8 8 8)
 */
 void trigger_elevator_use (edict_t *self, edict_t *other, edict_t *activator)
 {
@@ -1735,7 +1735,7 @@ void trigger_elevator_use (edict_t *self, edict_t *other, edict_t *activator)
 
 	if (self->movetarget->nextthink)
 	{
-//		gi.dprintf("elevator busy\n");
+/*		gi.dprintf("elevator busy\n");*/
 		return;
 	}
 
@@ -1787,7 +1787,7 @@ void SP_trigger_elevator (edict_t *self)
 }
 
 
-/*QUAKED func_timer (0.3 0.1 0.6) (-8 -8 -8) (8 8 8) START_ON
+/* QUAKED func_timer (0.3 0.1 0.6) (-8 -8 -8) (8 8 8) START_ON
 "wait"			base time between triggering all targets, default is 1
 "random"		wait variance, default is 0
 
@@ -1811,14 +1811,14 @@ void func_timer_use (edict_t *self, edict_t *other, edict_t *activator)
 {
 	self->activator = activator;
 
-	// if on, turn it off
+	/* if on, turn it off */
 	if (self->nextthink)
 	{
 		self->nextthink = 0;
 		return;
 	}
 
-	// turn it on
+	/* turn it on */
 	if (self->delay)
 		self->nextthink = level.time + self->delay;
 	else
@@ -1849,7 +1849,7 @@ void SP_func_timer (edict_t *self)
 }
 
 
-/*QUAKED func_conveyor (0 .5 .8) ? START_ON TOGGLE
+/* QUAKED func_conveyor (0 .5 .8) ? START_ON TOGGLE
 Conveyors are stationary brushes that move what's on them.
 The brush should be have a surface with at least one current content enabled.
 speed	default 100
@@ -1891,7 +1891,7 @@ void SP_func_conveyor (edict_t *self)
 }
 
 
-/*QUAKED func_door_secret (0 .5 .8) ? always_shoot 1st_left 1st_down
+/* QUAKED func_door_secret (0 .5 .8) ? always_shoot 1st_left 1st_down
 A secret door.  Slide back and then to the side.
 
 open_once		doors never closes
@@ -1918,7 +1918,7 @@ void door_secret_done (edict_t *self);
 
 void door_secret_use (edict_t *self, edict_t *other, edict_t *activator)
 {
-	// make sure we're not already moving
+	/* make sure we're not already moving */
 	if (!VectorCompare(self->s.origin, vec3_origin))
 		return;
 
@@ -1975,9 +1975,9 @@ void door_secret_blocked  (edict_t *self, edict_t *other)
 {
 	if (!other->client)
 	{
-		// give it a chance to go away on it's own terms (like gibs)
+		/* give it a chance to go away on it's own terms (like gibs)*/
 		T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, 100000, 1, 0, MOD_CRUSH);
-		// if it's still there, nuke it
+		/* if it's still there, nuke it */
 		if (other)
 			BecomeExplosion1 (other);
 		return;
@@ -2031,7 +2031,7 @@ void SP_func_door_secret (edict_t *ent)
 	ent->moveinfo.decel =
 	ent->moveinfo.speed = 50;
 
-	// calculate positions
+	/* calculate positions */
 	AngleVectors (ent->s.angles, forward, right, up);
 	VectorClear (ent->s.angles);
 	side = 1.0 - (ent->spawnflags & SECRET_1ST_LEFT);
@@ -2064,7 +2064,7 @@ void SP_func_door_secret (edict_t *ent)
 }
 
 
-/*QUAKED func_killbox (1 0 0) ?
+/* QUAKED func_killbox (1 0 0) ?
 Kills everything inside when fired, irrespective of protection.
 */
 void use_killbox (edict_t *self, edict_t *other, edict_t *activator)

@@ -70,7 +70,7 @@ void PMenu_Update(edict_t *ent)
 
 	for (i = 0, p = hnd->entries; i < hnd->num; i++, p++) {
 		if (!p->text || !*(p->text))
-			continue; // blank line
+			continue; /* blank line */
 		t = p->text;
 		if (*t == '*') {
 			alt = true;
@@ -114,7 +114,7 @@ void PMenu_Next(edict_t *ent)
 	hnd = ent->client->menu;
 
 	if (hnd->cur < 0)
-		return; // no selectable entries
+		return; /* no selectable entries */
 
 	i = hnd->cur;
 	p = hnd->entries + hnd->cur;
@@ -146,7 +146,7 @@ void PMenu_Prev(edict_t *ent)
 	hnd = ent->client->menu;
 
 	if (hnd->cur < 0)
-		return; // no selectable entries
+		return; /* no selectable entries */
 
 	i = hnd->cur;
 	p = hnd->entries + hnd->cur;
@@ -179,7 +179,7 @@ void PMenu_Select(edict_t *ent)
 	hnd = ent->client->menu;
 
 	if (hnd->cur < 0)
-		return; // no selectable entries
+		return; /* no selectable entries */
 
 	p = hnd->entries + hnd->cur;
 

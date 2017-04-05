@@ -46,7 +46,7 @@ qboolean Jet_AvoidGround(edict_t *ent)
 	trace_t       trace;
 	qboolean      success;
 
-	/*Check if there is enough room above us before we change origin[2]*/
+	/* Check if there is enough room above us before we change origin[2]*/
 	new_origin[0] = ent->s.origin[0];
 	new_origin[1] = ent->s.origin[1];
 	new_origin[2] = ent->s.origin[2] + 0.5;
@@ -187,7 +187,7 @@ void Jet_ApplyJet(edict_t *ent, usercmd_t *ucmd)
 		ent->velocity[1] = (float)((int)(ent->velocity[1]*8))/8;
 		ent->velocity[2] = (float)((int)(ent->velocity[2]*8))/8;
 
-		for (i=0 ; i<2 ; i++) /*allow z-velocity to be greater*/
+		for (i=0 ; i<2 ; i++) /* allow z-velocity to be greater */
 		{
 			if (ent->velocity[i] > 300)
 				ent->velocity[i] = 300;
@@ -252,54 +252,54 @@ void ShowScanner(edict_t *ent,char *layout)
 	if (ent->client->scanneractive >= 19)
 		ent->client->scanneractive = 1;
 	
-	// Main scanner graphic draw
+	/* Main scanner graphic draw */
 	SAFE_STRCAT(layout,stats,LAYOUT_MAX_LENGTH);
 
-	// Players dots
+	/* Players dots */
 	for (i=0 ; i < game.maxclients ; i++)
 	{
 		float	len;
 		int		hd;
 
-		// move to player edict
+		/* move to player edict */
 		player++;
 
-		// in use 
+		/* in use */
 		if (!player->inuse || !player->client || (player == ent) || (player -> health <= 0))
 			continue;
 
 		if (player->client->fakedeath == 1)
 			continue;
 
-		// calc player to enemy vector
+		/* calc player to enemy vector */
 		VectorSubtract (ent->s.origin, player->s.origin, v);
 
-		// save height differential
+		/* save height differential */
 		hd = v[2] / SCANNER_UNIT;
 
-		// remove height component
+		/* remove height component */
 		v[2] = 0;
 
-		// calc length of distance from top down view (no z)
+		/* calc length of distance from top down view (no z)*/
 		len = VectorLength (v) / SCANNER_UNIT;
 
-		// in range ?
+		/* in range ?*/
 		if (len <= SCANNER_RANGE)
 		{
 			int		sx,sy;
 			vec3_t  dp;
 			vec3_t  normal = {0,0,-1};
 
-			// normal vector to enemy
+			/* normal vector to enemy */
 			VectorNormalize(v);
 
-			// rotate round player view angle (yaw)
+			/* rotate round player view angle (yaw)*/
 			RotatePointAroundVector( dp, normal, v, ent->s.angles[1]);
 
-			// scale to fit scanner range (60 = pixel range of scanner)
+			/* scale to fit scanner range (60 = pixel range of scanner)*/
 			VectorScale(dp,len*60/SCANNER_RANGE,dp);
 
-			// calc screen (x,y) (2 = half dot width)
+			/* calc screen (x,y) (2 = half dot width)*/
 			sx = (-60 + dp[1]) - 2;
 			sy = (60 + dp[0]) - 2;
 
@@ -312,7 +312,7 @@ void ShowScanner(edict_t *ent,char *layout)
 
 			SAFE_STRCAT(layout,stats,LAYOUT_MAX_LENGTH);
 
-			// clear stats
+			/* clear stats */
 			*stats = 0;
 		}
 	}
@@ -353,7 +353,7 @@ void Grapple_DrawCable (edict_t *ent)
 
 	VectorSubtract (start, ent->s.origin, dir);
 	distance = VectorLength(dir);
-	// don't draw cable if close
+	/* don't draw cable if close */
 	if (distance < 64)
 		return;
 
@@ -372,7 +372,7 @@ void Grapple_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *s
 {
 	vec3_t	offset, start;
 	vec3_t	forward, right;
-	vec3_t	chainvec;		// chain's vector
+	vec3_t	chainvec;		/* chain's vector */
 
 	if (surf && (surf->flags & SURF_SKY))
 	{
@@ -395,17 +395,17 @@ void Grapple_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *s
 	gi.multicast (ent->s.origin, MULTICAST_PVS);
 
 	
-	// derive start point of chain
+	/* derive start point of chain */
 	AngleVectors (ent->owner->client->v_angle, forward, right, NULL);
 	VectorSet(offset, 8, 8, ent->owner->viewheight-8);
 	P_ProjectSource2 (ent->owner->client, ent->owner->s.origin, offset, forward, right, start);
 
-	// member angle is used to store the length of the chain
+	/* member angle is used to store the length of the chain */
 	_VectorSubtract(ent->s.origin,start,chainvec);
 	ent->angle = VectorLength (chainvec);	
 	
 	VectorCopy (other->velocity,ent->velocity);
-	ent->owner->client->grapple_state = GRAPPLE_STARTSHRINK;	//Start with shrink
+	ent->owner->client->grapple_state = GRAPPLE_STARTSHRINK;	/* Start with shrink */
 
 	ent->enemy = other;
 	ent->touch = NULL;
@@ -418,9 +418,9 @@ void Grapple_Think (edict_t *ent)
 {
 	vec3_t	offset, start, dir, f, r, playerv;
 	vec_t len;
-	float f1, f2;			// restrainment forces
+	float f1, f2;			/* restrainment forces */
 
-	if (ent->owner->client->grapple_state > 1)	// Grapple is attached
+	if (ent->owner->client->grapple_state > 1)	/* Grapple is attached */
 	{
 		if ((!ent->enemy) || (ent->enemy->solid == SOLID_NOT) ||	(ent->owner->deadflag) || (ent->owner->s.event == EV_PLAYER_TELEPORT))
 		{
@@ -430,7 +430,7 @@ void Grapple_Think (edict_t *ent)
 
 		VectorCopy (ent->enemy->velocity,ent->velocity);
 
-		// auto shrink after launch
+		/* auto shrink after launch */
 		if (ent->owner->client->grapple_state == GRAPPLE_STARTSHRINK && ent->angle > 40)
 		{
 			ent->angle -= 80;
@@ -442,31 +442,31 @@ void Grapple_Think (edict_t *ent)
 			}
 		}
 
-		// derive start point of chain
+		/* derive start point of chain */
 		AngleVectors (ent->owner->client->v_angle, f, r, NULL);
 		VectorSet(offset, 8, 8, ent->owner->viewheight-8);
 		P_ProjectSource2 (ent->owner->client, ent->owner->s.origin, offset, f, r, start);
 
-		// get info about chain
+		/* get info about chain */
 		VectorSubtract (ent->s.origin, start, dir);
 		len = VectorLength (dir);
 
-		if (len > ent->angle)	//out of current chainlen	
+		if (len > ent->angle)	/* out of current chainlen	*/
 		{	 
 			VectorScale (dir, DotProduct (ent->owner->velocity, dir) / DotProduct (dir, dir), playerv);
 			
-			// restrainment default force 
+			/* restrainment default force */
 			f2 = (len - ent->angle) * 5;
 
-			// if player's velocity heading is away from the hook
+			/* if player's velocity heading is away from the hook */
 			if (DotProduct (ent->owner->velocity, dir) < 0)
 			{
 				if (len > ent->angle + 10)
-					// remove player's velocity component moving away from hook
+					/* remove player's velocity component moving away from hook */
 					VectorSubtract(ent->owner->velocity, playerv, ent->owner->velocity);
 				f1 = f2;
 			}
-			else  // if player's velocity heading is towards the hook
+			else  /* if player's velocity heading is towards the hook */
 			{
 				if (VectorLength (playerv) < f2)
 					f1 = f2 - VectorLength (playerv);
@@ -480,7 +480,7 @@ void Grapple_Think (edict_t *ent)
 		VectorNormalize (dir);
 		VectorMA (ent->owner->velocity, f1, dir, ent->owner->velocity);
 	}
-	else	//grapple is inair
+	else	/* grapple is inair */
 	{
 		VectorSubtract (ent->s.origin, ent->owner->s.origin, dir);
 		len = VectorLength (dir);
@@ -502,7 +502,7 @@ void Grapple_Fire (edict_t *ent)
 	edict_t *hook;
 	vec3_t	offset, start, f, r;
 	
-	//get start point
+	/* get start point */
 	AngleVectors (ent->client->v_angle, f, r, NULL);
 	VectorSet(offset, 8, 8, ent->viewheight-8);
 	P_ProjectSource2 (ent->client, ent->s.origin, offset, f, r, start);
@@ -562,14 +562,14 @@ void Cmd_Hook_f (edict_t *ent)
 			gi.sound(ent, CHAN_AUTO, gi.soundindex("misc/grapple/shrink.wav"), 1, ATTN_NORM, 0);
 		}
 	}
-	else // switch on off
+	else /* switch on off */
 	{
 		if (ent->client->grapple_state == GRAPPLE_OFF)
 		{
 			Grapple_Fire (ent);
 			return;
 		}
-		else if (ent->client->grapple_state > 2)	//grow or shrink
+		else if (ent->client->grapple_state > 2)	/* grow or shrink */
 		{
 			ent->client->grapple_state = GRAPPLE_ATTACHED;
 		}

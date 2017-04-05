@@ -4,7 +4,7 @@
 
 vec3_t vec3_origin = {0,0,0};
 
-//============================================================================
+/*============================================================================*/
 
 #ifdef _WIN32
 #pragma optimize( "", off )
@@ -75,7 +75,7 @@ void AngleVectors (vec3_t angles, vec3_t forward, vec3_t right, vec3_t up)
 {
 	float		angle;
 	static float		sr, sp, sy, cr, cp, cy;
-	// static to help MS compiler fp bugs
+	/* static to help MS compiler fp bugs */
 
 	angle = angles[YAW] * (M_PI*2 / 360);
 	sy = sin(angle);
@@ -226,7 +226,7 @@ void R_ConcatTransforms (float in1[3][4], float in2[3][4], float out[3][4])
 }
 
 
-//============================================================================
+/*============================================================================*/
 
 
 float Q_fabs (float f)
@@ -287,7 +287,7 @@ float	anglemod(float a)
 	vec3_t	corners[2];
 
 
-// this is the slow, general version
+/* this is the slow, general version */
 int BoxOnPlaneSide2 (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 {
 	int		i;
@@ -332,7 +332,7 @@ int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 	float	dist1, dist2;
 	int		sides;
 
-// fast axial cases
+/* fast axial cases */
 	if (p->type < 3)
 	{
 		if (p->dist <= emins[p->type])
@@ -342,7 +342,7 @@ int BoxOnPlaneSide (vec3_t emins, vec3_t emaxs, struct cplane_s *p)
 		return 3;
 	}
 	
-// general case
+/* general case */
 	switch (p->signbits)
 	{
 	case 0:
@@ -378,7 +378,7 @@ dist1 = p->normal[0]*emins[0] + p->normal[1]*emins[1] + p->normal[2]*emins[2];
 dist2 = p->normal[0]*emaxs[0] + p->normal[1]*emaxs[1] + p->normal[2]*emaxs[2];
 		break;
 	default:
-		dist1 = dist2 = 0;		// shut up compiler
+		dist1 = dist2 = 0;		/* shut up compiler */
 		assert( 0 );
 		break;
 	}
@@ -664,7 +664,7 @@ vec_t VectorNormalize (vec3_t v)
 	float	length, ilength;
 
 	length = v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
-	length = sqrt (length);		// FIXME
+	length = sqrt (length);		/* FIXME */
 
 	if (length)
 	{
@@ -683,7 +683,7 @@ vec_t VectorNormalize2 (vec3_t v, vec3_t out)
 	float	length, ilength;
 
 	length = v[0]*v[0] + v[1]*v[1] + v[2]*v[2];
-	length = sqrt (length);		// FIXME
+	length = sqrt (length);		/* FIXME */
 
 	if (length)
 	{
@@ -748,7 +748,7 @@ vec_t VectorLength(vec3_t v)
 	length = 0;
 	for (i=0 ; i< 3 ; i++)
 		length += v[i]*v[i];
-	length = sqrt (length);		// FIXME
+	length = sqrt (length);		/* FIXME */
 
 	return length;
 }
@@ -778,7 +778,7 @@ int Q_log2(int val)
 
 
 
-//====================================================================================
+/*====================================================================================*/
 
 /*
 ============
@@ -888,16 +888,16 @@ COM_DefaultExtension
 void COM_DefaultExtension (char *path, char *extension)
 {
 	char    *src;
-//
-// if path doesn't have a .EXT, append extension
-// (extension should include the .)
-//
+/**/
+/* if path doesn't have a .EXT, append extension */
+/* (extension should include the .)*/
+/**/
 	src = path + strlen(path) - 1;
 
 	while (*src != '/' && src != path)
 	{
 		if (*src == '.')
-			return;                 // it has an extension
+			return;                 /* it has an extension */
 		src--;
 	}
 
@@ -914,8 +914,8 @@ void COM_DefaultExtension (char *path, char *extension)
 
 qboolean	bigendien;
 
-// can't just use function pointers, or dll linkage can
-// mess up when qcommon is included in multiple places
+/* can't just use function pointers, or dll linkage can */
+/* mess up when qcommon is included in multiple places */
 short	(*_BigShort) (short l);
 short	(*_LittleShort) (short l);
 int		(*_BigLong) (int l);
@@ -993,7 +993,7 @@ void Swap_Init (void)
 {
 	byte	swaptest[2] = {1,0};
 
-// set the byte swapping variables in a portable manner	
+/* set the byte swapping variables in a portable manner	*/
 	if ( *(short *)swaptest == 1)
 	{
 		bigendien = false;
@@ -1066,7 +1066,7 @@ char *COM_Parse (char **data_p)
 		return "";
 	}
 		
-// skip whitespace
+/* skip whitespace */
 skipwhite:
 	while ( (c = *data) <= ' ')
 	{
@@ -1078,7 +1078,7 @@ skipwhite:
 		data++;
 	}
 	
-// skip // comments
+/* skip // comments */
 	if (c=='/' && data[1] == '/')
 	{
 		while (*data && *data != '\n')
@@ -1087,7 +1087,7 @@ skipwhite:
 	}
 	
 
-// handle quoted strings specially
+/* handle quoted strings specially */
 	if (c == '\"')
 	{
 		data++;
@@ -1108,7 +1108,7 @@ skipwhite:
 		}
 	}
 
-// parse a regular word
+/* parse a regular word */
 	do
 	{
 		if (len < MAX_TOKEN_CHARS)
@@ -1122,7 +1122,7 @@ skipwhite:
 
 	if (len == MAX_TOKEN_CHARS)
 	{
-//		Com_Printf ("Token exceeded %i chars, discarded.\n", MAX_TOKEN_CHARS);
+/*		Com_Printf ("Token exceeded %i chars, discarded.\n", MAX_TOKEN_CHARS);*/
 		len = 0;
 	}
 	com_token[len] = 0;
@@ -1158,7 +1158,7 @@ void Com_PageInMemory (byte *buffer, int size)
 ============================================================================
 */
 
-// FIXME: replace all Q_stricmp with Q_strcasecmp
+/* FIXME: replace all Q_stricmp with Q_strcasecmp */
 int Q_stricmp (char *s1, char *s2)
 {
 #if defined(WIN32)
@@ -1179,7 +1179,7 @@ int Q_strncasecmp (char *s1, char *s2, int n)
 		c2 = *s2++;
 
 		if (!n--)
-			return 0;		// strings are equal until end point
+			return 0;		/* strings are equal until end point */
 		
 		if (c1 != c2)
 		{
@@ -1188,11 +1188,11 @@ int Q_strncasecmp (char *s1, char *s2, int n)
 			if (c2 >= 'a' && c2 <= 'z')
 				c2 -= ('a' - 'A');
 			if (c1 != c2)
-				return -1;		// strings not equal
+				return -1;		/* strings not equal */
 		}
 	} while (c1);
 	
-	return 0;		// strings are equal
+	return 0;		/* strings are equal */
 }
 
 int Q_strcasecmp (char *s1, char *s2)
@@ -1235,8 +1235,8 @@ key and returns the associated value, or an empty string.
 char *Info_ValueForKey (char *s, char *key)
 {
 	char	pkey[512];
-	static	char value[2][512];	// use two buffers so compares
-								// work without stomping on each other
+	static	char value[2][512];	/* use two buffers so compares */
+								/* work without stomping on each other */
 	static	int	valueindex;
 	char	*o;
 	
@@ -1283,7 +1283,7 @@ void Info_RemoveKey (char *s, char *key)
 
 	if (strstr (key, "\\"))
 	{
-//		Com_Printf ("Can't use a key with a \\\n");
+/*		Com_Printf ("Can't use a key with a \\\n");*/
 		return;
 	}
 
@@ -1313,7 +1313,7 @@ void Info_RemoveKey (char *s, char *key)
 
 		if (!strcmp (key, pkey) )
 		{
-			strcpy (start, s);	// remove this part
+			strcpy (start, s);	/* remove this part */
 			return;
 		}
 
@@ -1382,19 +1382,19 @@ void Info_SetValueForKey (char *s, char *key, char *value)
 		return;
 	}
 
-	// only copy ascii values
+	/* only copy ascii values */
 	s += strlen(s);
 	v = newi;
 	while (*v)
 	{
 		c = *v++;
-		c &= 127;		// strip high bits
+		c &= 127;		/* strip high bits */
 		if (c >= 32 && c < 127)
 			*s++ = c;
 	}
 	*s = 0;
 }
 
-//====================================================================
+/*====================================================================*/
 
 

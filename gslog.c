@@ -53,10 +53,10 @@ void sl_GameStart( game_import_t    *gi,
 {
     if( sl_Logging( gi, pPatch ) )
     {
-        // log name of map
+        /* log name of map */
         sl_LogMapName( gi, level.level_name );
 
-        // start counting frags
+        /* start counting frags */
         sl_LogGameStart( gi, level.time );
     }
 }
@@ -195,7 +195,7 @@ void sl_WriteStdLogDeath( game_import_t     *gi,
             {
                 /* Kills */
 
-                // self->enemy = attacker;
+                /* self->enemy = attacker;*/
                 if( attacker && attacker->client )
                 {
                     switch (mod)
@@ -404,7 +404,7 @@ void sl_LogPlayerDisconnect( game_import_t      *gi,
                              level_locals_t      level,
                              edict_t            *ent )
 {
-    // GSLogMod Start: Player disconnected
+    /* GSLogMod Start: Player disconnected */
     if( sl_Logging( gi, pPatch ) )
     {
         sl_LogPlayerLeft( gi,

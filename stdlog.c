@@ -307,7 +307,7 @@ static int _sl_MaybeOpenFile( game_import_t  *gi )
             cvar_t   *filename  = gi->cvar( "stdlogname", "StdLog.log", CVAR_SERVERINFO );
             char     *pName     = "StdLog.log";
            
-            // Open File
+            /* Open File */
             if( filename )
                 pName = filename->string;
             

@@ -41,7 +41,7 @@
 char	*chat_text[NUM_CHATSECTIONS][MAX_LINES_PER_SECTION];
 int		chat_linecount[NUM_CHATSECTIONS];
  
-//Quake 2 functions
+/* Quake 2 functions */
 void SelectSpawnPoint(edict_t *ent, vec3_t origin, vec3_t angles);
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 qboolean ClientConnect (edict_t *ent, char *userinfo);
@@ -54,7 +54,7 @@ void Use_Plat (edict_t *ent, edict_t *other, edict_t *activator);
 void trigger_elevator_use (edict_t *self, edict_t *other, edict_t *activator);
 void door_use (edict_t *self, edict_t *other, edict_t *activator);
 
-//Bot functions
+/* Bot functions */
 void Svcmd_addbots_f(void);
 void Svcmd_killbot_f(char *name);
 

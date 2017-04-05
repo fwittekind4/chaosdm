@@ -8,7 +8,7 @@
 #ifndef __STDLOG_H__
 #define __STDLOG_H__
 
-// #include "g_local.h"
+/* #include "g_local.h"*/
 
 
 #define __STDLOG_ID__ "$Id: stdlog.h,v 1.7 1999/05/22 22:32:12 major Exp $"

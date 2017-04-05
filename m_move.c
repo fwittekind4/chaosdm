@@ -1,4 +1,4 @@
-// m_move.c -- monster movement
+/* m_move.c -- monster movement */
 
 #include "g_local.h"
 
@@ -21,11 +21,11 @@ qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink)
 	trace_t		trace;
 	float		stepsize;
 
-// try the move	
+/* try the move	*/
 	VectorCopy (ent->s.origin, oldorg);
 	VectorAdd (ent->s.origin, move, neworg);
 
-// push down from a step height above the wished position
+/* push down from a step height above the wished position */
 	
 	stepsize = STEPSIZE;
 	
@@ -48,7 +48,7 @@ qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink)
 
 	if (trace.fraction == 1)
 	{
-	// if monster had the ground pulled out, go ahead and fall
+	/* if monster had the ground pulled out, go ahead and fall */
 		if ( ent->flags & FL_PARTIALGROUND )
 		{
 			VectorAdd (ent->s.origin, move, ent->s.origin);
@@ -61,15 +61,15 @@ qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink)
 			return true;
 		}
 	
-		return false;		// walked off an edge
+		return false;		/* walked off an edge */
 	}
 
-// check point traces down for dangling corners
+/* check point traces down for dangling corners */
 	VectorCopy (trace.endpos, ent->s.origin);
 	
 	if ( ent->flags & FL_PARTIALGROUND )
-	{	// entity had floor mostly pulled out from underneath it
-		// and is trying to correct
+	{	/* entity had floor mostly pulled out from underneath it */
+		/* and is trying to correct */
 		if (relink)
 		{
 			gi.linkentity (ent);
@@ -87,7 +87,7 @@ qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink)
 	ent->groundentity = trace.ent;
 	ent->groundentity_linkcount = trace.ent->linkcount;
 
-// the move is ok
+/* the move is ok */
 	if (relink)
 	{
 		gi.linkentity (ent);
@@ -97,7 +97,7 @@ qboolean SV_movestep (edict_t *ent, vec3_t move, qboolean relink)
 }
 
 
-//============================================================================
+/*============================================================================*/
 
 /*
 ===============

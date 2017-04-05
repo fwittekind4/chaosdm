@@ -1,6 +1,6 @@
 
 
-// Basic functions
+/* Basic functions */
 
 void T_RadiusDamage2 (edict_t *attacker,vec3_t position, float damage, float radius, int mod);
 void FlashLightThink(edict_t *ent);
@@ -13,13 +13,13 @@ qboolean TouchingLadder(edict_t *self);
 void		Bot_InitNodes(void);
 qboolean	Bot_LoadNodes(void);
 qboolean	Bot_SaveNodes(void);
-void ShowGun(edict_t *ent);	//vwep
+void ShowGun(edict_t *ent);	/* vwep */
 void CreateCamera(edict_t *ent);
 void CamNext(edict_t *ent);
 void CamPrev(edict_t *ent);
 void CameraThink(edict_t *ent, usercmd_t *ucmd);
 
-// Weapon banning console variables
+/* Weapon banning console variables */
 
 cvar_t	*ban_sword, *ban_chainsaw, *ban_supershotgun,
 		*ban_crossbow,*ban_airgun, *ban_grenadelauncher,
@@ -27,7 +27,7 @@ cvar_t	*ban_sword, *ban_chainsaw, *ban_supershotgun,
 		*ban_railgun, *ban_buzzsaw, *ban_vortex, *ban_defenceturret,
 		*ban_rocketturret, *ban_bfg;
 
-// Item banning console variables
+/* Item banning console variables */
 
 cvar_t	*ban_grapple, *ban_bodyarmor, *ban_combatarmor, *ban_jacketarmor, 
 		*ban_armorshard, *ban_powerscreen, *ban_powershield,
@@ -43,14 +43,14 @@ cvar_t	*ban_grapple, *ban_bodyarmor, *ban_combatarmor, *ban_jacketarmor,
 		*ban_adrenaline, *ban_health, *ban_health_small,
 		*ban_health_large, *ban_health_mega;
 
-// Startup weapon console variables
+/* Startup weapon console variables */
 
 cvar_t	*start_sword, *start_chainsaw, *start_supershotgun, *start_crossbow,
 		*start_airgun, *start_grenadelauncher, *start_proxylauncher,
 		*start_rocketlauncher, *start_hyperblaster, *start_railgun,
 		*start_buzzsaw, *start_bfg;
 
-// Startup item console variables
+/* Startup item console variables */
 
 cvar_t	*start_grapple, *start_defenceturret, *start_rocketturret, 
 		*start_autosentry, *start_gravityvortex, *start_bodyarmor,
@@ -66,7 +66,7 @@ cvar_t	*start_grapple, *start_defenceturret, *start_rocketturret,
 		*start_jetpack, *start_invulnerability, *start_silencer,
 		*start_rebreather, *start_environmentsuit;
 
-// Item definitions
+/* Item definitions */
 
 gitem_t	*it_shells, *it_eshells, *it_cells, *it_arrows, *it_rockets, 
 		*it_homings, *it_slugs, *it_buzzes, *it_grenades,

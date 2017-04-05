@@ -1,4 +1,4 @@
-// g_utils.c -- misc utility functions for game module
+/* g_utils.c -- misc utility functions for game module */
 
 #include "g_local.h"
 
@@ -155,12 +155,12 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 {
 	edict_t		*t;
 
-//
-// check for a delay
-//
+/**/
+/* check for a delay */
+/**/
 	if (ent->delay)
 	{
-	// create a temp object to fire at a later time
+	/* create a temp object to fire at a later time */
 		t = G_Spawn();
 		t->classname = "DelayedUse";
 		t->nextthink = level.time + ent->delay;
@@ -175,9 +175,9 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 	}
 	
 	
-//
-// print the message
-//
+/**/
+/* print the message */
+/**/
 	if (ent->message)
 	{
 		if (strcmp(activator->classname,"bot") != 0)
@@ -188,9 +188,9 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 			gi.sound (activator, CHAN_AUTO, gi.soundindex ("misc/talk1.wav"), 1, ATTN_NORM, 0);
 	}
 
-//
-// kill killtargets
-//
+/**/
+/* kill killtargets */
+/**/
 	if (ent->killtarget)
 	{
 		t = NULL;
@@ -205,17 +205,17 @@ void G_UseTargets (edict_t *ent, edict_t *activator)
 		}
 	}
 
-//	gi.dprintf("TARGET: activating %s\n", ent->target);
+/*	gi.dprintf("TARGET: activating %s\n", ent->target);*/
 
-//
-// fire targets
-//
+/**/
+/* fire targets */
+/**/
 	if (ent->target)
 	{
 		t = NULL;
 		while ((t = G_Find (t, FOFS(targetname), ent->target)))
 		{
-			// doors fire area portals in a specific way
+			/* doors fire area portals in a specific way */
 			if (!Q_stricmp(t->classname, "func_areaportal") &&
 				(!Q_stricmp(ent->classname, "func_door") || !Q_stricmp(ent->classname, "func_door_rotating")))
 				continue;
@@ -253,8 +253,8 @@ float	*tv (float x, float y, float z)
 	static	vec3_t	vecs[8];
 	float	*v;
 
-	// use an array so that multiple tempvectors won't collide
-	// for a while
+	/* use an array so that multiple tempvectors won't collide */
+	/* for a while */
 	v = vecs[index];
 	index = (index + 1)&7;
 
@@ -280,7 +280,7 @@ char	*vtos (vec3_t v)
 	static	char	str[8][32];
 	char	*s;
 
-	// use an array so that multiple vtos won't collide
+	/* use an array so that multiple vtos won't collide */
 	s = str[index];
 	index = (index + 1)&7;
 
@@ -398,8 +398,8 @@ edict_t *G_Spawn (void)
 	e = &g_edicts[(int)maxclients->value+1];
 	for ( i=maxclients->value+1 ; i<globals.num_edicts ; i++, e++)
 	{
-		// the first couple seconds of server time can involve a lot of
-		// freeing and allocating, so relax the replacement policy
+		/* the first couple seconds of server time can involve a lot of */
+		/* freeing and allocating, so relax the replacement policy */
 		if (!e->inuse && ( e->freetime < 2 || level.time - e->freetime > 0.5 ) )
 		{
 			G_InitEdict (e);
@@ -424,11 +424,11 @@ Marks the edict as free
 */
 void G_FreeEdict (edict_t *ed)
 {
-	gi.unlinkentity (ed);		// unlink from world
+	gi.unlinkentity (ed);		/* unlink from world */
 
 	if ((ed - g_edicts) <= (maxclients->value + BODY_QUEUE_SIZE))
 	{
-//		gi.dprintf("tried to free special edict\n");
+/*		gi.dprintf("tried to free special edict\n");*/
 		return;
 	}
 
@@ -450,15 +450,15 @@ void	G_TouchTriggers (edict_t *ent)
 	int			i, num;
 	edict_t		*touch[MAX_EDICTS], *hit;
 
-	// dead things don't activate triggers!
+	/* dead things don't activate triggers!*/
 	if ((ent->client) && (ent->health <= 0))
 		return;
 
 	num = gi.BoxEdicts (ent->absmin, ent->absmax, touch
 		, MAX_EDICTS, AREA_TRIGGERS);
 
-	// be careful, it is possible to have an entity in this
-	// list removed before we get to it (killtriggered)
+	/* be careful, it is possible to have an entity in this */
+	/* list removed before we get to it (killtriggered)*/
 	for (i=0 ; i<num ; i++)
 	{
 		hit = touch[i];
@@ -486,8 +486,8 @@ void	G_TouchSolids (edict_t *ent)
 	num = gi.BoxEdicts (ent->absmin, ent->absmax, touch
 		, MAX_EDICTS, AREA_SOLID);
 
-	// be careful, it is possible to have an entity in this
-	// list removed before we get to it (killtriggered)
+	/* be careful, it is possible to have an entity in this */
+	/* list removed before we get to it (killtriggered)*/
 	for (i=0 ; i<num ; i++)
 	{
 		hit = touch[i];
@@ -529,13 +529,13 @@ qboolean KillBox (edict_t *ent)
 		if (!tr.ent)
 			break;
 
-		// nail it
+		/* nail it */
 		T_Damage (tr.ent, ent, ent, vec3_origin, ent->s.origin, vec3_origin, 100000, 0, DAMAGE_NO_PROTECTION, MOD_TELEFRAG);
 
-		// if we didn't kill it, fail
+		/* if we didn't kill it, fail */
 		if (tr.ent->solid)
 			return false;
 	}
 
-	return true;		// all clear
+	return true;		/* all clear */
 }

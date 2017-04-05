@@ -13,20 +13,20 @@ void InitTrigger (edict_t *self)
 }
 
 
-// the wait time has passed, so set back up for another activation
+/* the wait time has passed, so set back up for another activation */
 void multi_wait (edict_t *ent)
 {
 	ent->nextthink = 0;
 }
 
 
-// the trigger was just activated
-// ent->activator should be set to the activator so it can be held through a delay
-// so wait for the delay time before firing
+/* the trigger was just activated */
+/* ent->activator should be set to the activator so it can be held through a delay */
+/* so wait for the delay time before firing */
 void multi_trigger (edict_t *ent)
 {
 	if (ent->nextthink)
-		return;		// already been triggered
+		return;		/* already been triggered */
 
 	G_UseTargets (ent, ent->activator);
 
@@ -36,8 +36,8 @@ void multi_trigger (edict_t *ent)
 		ent->nextthink = level.time + ent->wait;
 	}
 	else
-	{	// we can't just remove (self) here, because this is a touch function
-		// called while looping through area links...
+	{	/* we can't just remove (self) here, because this is a touch function */
+		/* called while looping through area links...*/
 		ent->touch = NULL;
 		ent->nextthink = level.time + FRAMETIME;
 		ent->think = G_FreeEdict;
@@ -78,7 +78,7 @@ void Touch_Multi (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 	multi_trigger (self);
 }
 
-/*QUAKED trigger_multiple (.5 .5 .5) ? MONSTER NOT_PLAYER TRIGGERED
+/* QUAKED trigger_multiple (.5 .5 .5) ? MONSTER NOT_PLAYER TRIGGERED
 Variable sized repeatable trigger.  Must be targeted at one or more entities.
 If "delay" is set, the trigger waits some time after activating before firing.
 "wait" : Seconds between triggerings. (.2 default)
@@ -131,7 +131,7 @@ void SP_trigger_multiple (edict_t *ent)
 }
 
 
-/*QUAKED trigger_once (.5 .5 .5) ? x x TRIGGERED
+/* QUAKED trigger_once (.5 .5 .5) ? x x TRIGGERED
 Triggers once, then removes itself.
 You must set the key "target" to the name of another object in the level that has a matching "targetname".
 
@@ -148,8 +148,8 @@ sounds
 
 void SP_trigger_once(edict_t *ent)
 {
-	// make old maps work because I messed up on flag assignments here
-	// triggered was on bit 1 when it should have been on bit 4
+	/* make old maps work because I messed up on flag assignments here */
+	/* triggered was on bit 1 when it should have been on bit 4*/
 	if (ent->spawnflags & 1)
 	{
 		vec3_t	v;
@@ -164,7 +164,7 @@ void SP_trigger_once(edict_t *ent)
 	SP_trigger_multiple (ent);
 }
 
-/*QUAKED trigger_relay (.5 .5 .5) (-8 -8 -8) (8 8 8)
+/* QUAKED trigger_relay (.5 .5 .5) (-8 -8 -8) (8 8 8)
 This fixed size trigger cannot be touched, it can only be fired by other events.
 */
 void trigger_relay_use (edict_t *self, edict_t *other, edict_t *activator)
@@ -186,7 +186,7 @@ trigger_key
 ==============================================================================
 */
 
-/*QUAKED trigger_key (.5 .5 .5) (-8 -8 -8) (8 8 8)
+/* QUAKED trigger_key (.5 .5 .5) (-8 -8 -8) (8 8 8)
 A relay trigger that only fires it's targets if player has the proper key.
 Use "item" to specify the required key, for example "key_data_cd"
 */
@@ -297,7 +297,7 @@ trigger_counter
 ==============================================================================
 */
 
-/*QUAKED trigger_counter (.5 .5 .5) ? nomessage
+/* QUAKED trigger_counter (.5 .5 .5) ? nomessage
 Acts as an intermediary for an action that takes multiple inputs.
 
 If nomessage is not set, t will print "1 more.. " etc when triggered and "sequence complete" when finished.
@@ -351,12 +351,12 @@ trigger_always
 ==============================================================================
 */
 
-/*QUAKED trigger_always (.5 .5 .5) (-8 -8 -8) (8 8 8)
+/* QUAKED trigger_always (.5 .5 .5) (-8 -8 -8) (8 8 8)
 This trigger will always fire.  It is activated by the world.
 */
 void SP_trigger_always (edict_t *ent)
 {
-	// we must have some delay to make sure our use targets are present
+	/* we must have some delay to make sure our use targets are present */
 	if (ent->delay < 0.2)
 		ent->delay = 0.2;
 	G_UseTargets(ent, ent);
@@ -387,7 +387,7 @@ void trigger_push_touch (edict_t *self, edict_t *other, cplane_t *plane, csurfac
 
 		if (other->client)
 		{
-			// don't take falling damage immediately from this
+			/* don't take falling damage immediately from this */
 			VectorCopy (other->velocity, other->client->oldvelocity);
 			if (other->fly_sound_debounce_time < level.time)
 			{
@@ -401,7 +401,7 @@ void trigger_push_touch (edict_t *self, edict_t *other, cplane_t *plane, csurfac
 }
 
 
-/*QUAKED trigger_push (.5 .5 .5) ? PUSH_ONCE
+/* QUAKED trigger_push (.5 .5 .5) ? PUSH_ONCE
 Pushes the player
 "speed"		defaults to 1000
 */
@@ -424,7 +424,7 @@ trigger_hurt
 ==============================================================================
 */
 
-/*QUAKED trigger_hurt (.5 .5 .5) ? START_OFF TOGGLE SILENT NO_PROTECTION SLOW
+/* QUAKED trigger_hurt (.5 .5 .5) ? START_OFF TOGGLE SILENT NO_PROTECTION SLOW
 Any entity that touches this will be hurt.
 
 It does dmg points of damage each server frame
@@ -507,7 +507,7 @@ trigger_gravity
 ==============================================================================
 */
 
-/*QUAKED trigger_gravity (.5 .5 .5) ?
+/* QUAKED trigger_gravity (.5 .5 .5) ?
 Changes the touching entites gravity to
 the value of "gravity".  1.0 is standard
 gravity for the level.
@@ -541,7 +541,7 @@ trigger_monsterjump
 ==============================================================================
 */
 
-/*QUAKED trigger_monsterjump (.5 .5 .5) ?
+/* QUAKED trigger_monsterjump (.5 .5 .5) ?
 Walking monsters that touch this will jump in the direction of the trigger's angle
 "speed" default to 200, the speed thrown forward
 "height" default to 200, the speed thrown upwards
@@ -556,7 +556,7 @@ void trigger_monsterjump_touch (edict_t *self, edict_t *other, cplane_t *plane, 
 	if ( !(other->svflags & SVF_MONSTER))
 		return;
 
-// set XY even if not on ground, so the jump will clear lips
+/* set XY even if not on ground, so the jump will clear lips */
 	other->velocity[0] = self->movedir[0] * self->speed;
 	other->velocity[1] = self->movedir[1] * self->speed;
 	

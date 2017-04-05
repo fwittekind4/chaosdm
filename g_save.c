@@ -3,7 +3,7 @@
 #include "gslog.h"
 #include "c_base.h"
 
-//MATTHIAS
+/* MATTHIAS */
 void GetSettings(void);
 void ClearMaplist();
 
@@ -41,7 +41,7 @@ field_t fields[] = {
 	{"attenuation", FOFS(attenuation), F_FLOAT},
 	{"map", FOFS(map), F_LSTRING},
 
-	// temp spawn vars -- only valid when the spawn function is called
+	/* temp spawn vars -- only valid when the spawn function is called */
 	{"lip", STOFS(lip), F_INT, FFL_SPAWNTEMP},
 	{"distance", STOFS(distance), F_INT, FFL_SPAWNTEMP},
 	{"height", STOFS(height), F_INT, FFL_SPAWNTEMP},
@@ -94,7 +94,7 @@ void InitGame (void)
 {
 	int j;
 
-	sl_Logging( &gi, "chaos" );	// StdLog - Mark Davies (Only required to set patch name)
+	sl_Logging( &gi, "chaos" );	/* StdLog - Mark Davies (Only required to set patch name)*/
 
 	gi.dprintf ("====          InitGame          ====\n");
         gi.dprintf ("====   Chaos Deathmatch v1.14 Beta 4  ====\n");
@@ -103,16 +103,16 @@ void InitGame (void)
 	gun_y = gi.cvar ("gun_y", "0", 0);
 	gun_z = gi.cvar ("gun_z", "0", 0);
 
-	//FIXME: sv_ prefix is wrong for these
+	/* FIXME: sv_ prefix is wrong for these */
 	sv_rollspeed = gi.cvar ("sv_rollspeed", "200", 0);
 	sv_rollangle = gi.cvar ("sv_rollangle", "2", 0);
 	sv_maxvelocity = gi.cvar ("sv_maxvelocity", "2000", 0);
 	sv_gravity = gi.cvar ("sv_gravity", "800", 0);
 
-	// noset vars
+	/* noset vars */
 	dedicated = gi.cvar ("dedicated", "0", CVAR_NOSET);
 
-	// latched vars
+	/* latched vars */
 	sv_cheats = gi.cvar ("cheats", "0", CVAR_SERVERINFO|CVAR_LATCH);
 	gi.cvar ("gamename", GAMEVERSION , CVAR_SERVERINFO | CVAR_LATCH);
 	gi.cvar ("gamedate", __DATE__ , CVAR_SERVERINFO | CVAR_LATCH);
@@ -123,7 +123,7 @@ void InitGame (void)
 	skill = gi.cvar ("skill", "1", CVAR_LATCH);
 	maxentities = gi.cvar ("maxentities", "1024", CVAR_LATCH);
 
-	//MATTHIAS
+	/* MATTHIAS */
 	numbots		= 0;	
 	numplayers	= 0;
 	numturrets	= 0;
@@ -137,23 +137,23 @@ void InitGame (void)
 	ClearMaplist();
 	GetSettings();
 	
-	//clear path buffer
+	/* clear path buffer */
 	for (j = 0; j < 100; j++)
 	{
 		path_buffer[j] = -1;
 	}
 
-	//This game.dll only supports deathmatch
+	/* This game.dll only supports deathmatch */
 	if (!deathmatch->value) {
 		gi.dprintf("Forcing deathmatch.");
 		gi.cvar_set("deathmatch", "1");
 	}
-	//force coop off
+	/* force coop off */
 	if (coop->value)
 		gi.cvar_set("coop", "0");
 
 
-	// change anytime vars
+	/* change anytime vars */
 	dmflags = gi.cvar ("dmflags", "0", CVAR_SERVERINFO);
 	fraglimit = gi.cvar ("fraglimit", "0", CVAR_SERVERINFO);
 	timelimit = gi.cvar ("timelimit", "0", CVAR_SERVERINFO);
@@ -168,19 +168,19 @@ void InitGame (void)
 	bob_pitch = gi.cvar ("bob_pitch", "0.002", 0);
 	bob_roll = gi.cvar ("bob_roll", "0.002", 0);
 
-	// items
+	/* items */
 	InitItems ();
 
 	Com_sprintf (game.helpmessage1, sizeof(game.helpmessage1), "");
 	Com_sprintf (game.helpmessage2, sizeof(game.helpmessage2), "");
 
-	// initialize all entities for this game
+	/* initialize all entities for this game */
 	game.maxentities = maxentities->value;
 	g_edicts =  gi.TagMalloc (game.maxentities * sizeof(g_edicts[0]), TAG_GAME);
 	globals.edicts = g_edicts;
 	globals.max_edicts = game.maxentities;
 
-	// initialize all clients for this game
+	/* initialize all clients for this game */
 	game.maxclients = maxclients->value;
 	game.clients = gi.TagMalloc (game.maxclients * sizeof(game.clients[0]), TAG_GAME);
 	globals.num_edicts = game.maxclients+1;

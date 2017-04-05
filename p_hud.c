@@ -27,7 +27,7 @@ void MoveClientToIntermission (edict_t *ent)
 	ent->client->ps.blend[3] = 0;
 	ent->client->ps.rdflags &= ~RDF_UNDERWATER;
 
-	// clean up powerup info
+	/* clean up powerup info */
 	ent->client->quad_framenum = 0;
 	ent->client->invincible_framenum = 0;
 	ent->client->breather_framenum = 0;
@@ -44,7 +44,7 @@ void MoveClientToIntermission (edict_t *ent)
 	ent->s.sound = 0;
 	ent->solid = SOLID_NOT;
 
-	// add the layout
+	/* add the layout */
 
 	if (deathmatch->value || coop->value)
 	{
@@ -67,16 +67,16 @@ void BeginIntermission (edict_t *targ)
 	edict_t	*ent, *client;
 
 	if (level.intermissiontime)
-		return;		// allready activated
+		return;		/* allready activated */
 
-//ZOID
+/* ZOID */
 	if (deathmatch->value && ctf->value)
 		CTFCalcScores();
-//ZOID
+/* ZOID */
 
 	game.autosaved = false;
 
-	// respawn any dead clients
+	/* respawn any dead clients */
 	for (i=0 ; i<maxclients->value ; i++)
 	{
 		client = g_edicts + 1 + i;
@@ -119,7 +119,7 @@ void BeginIntermission (edict_t *targ)
 				client = g_edicts + 1 + i;
 				if (!client->inuse)
 					continue;
-				// strip players of all keys between units
+				/* strip players of all keys between units */
 				for (n = 0; n < MAX_ITEMS; n++)
 				{
 					if (itemlist[n].flags & IT_KEY)
@@ -132,28 +132,28 @@ void BeginIntermission (edict_t *targ)
 	{
 		if (!deathmatch->value)
 		{
-			level.exitintermission = 1;		// go immediately to the next level
+			level.exitintermission = 1;		/* go immediately to the next level */
 			return;
 		}
 	}
 
 	level.exitintermission = 0;
 
-	// find an intermission spot
+	/* find an intermission spot */
 	ent = G_Find (NULL, FOFS(classname), "info_player_intermission");
 	if (!ent)
-	{	// the map creator forgot to put in an intermission point...
+	{	/* the map creator forgot to put in an intermission point...*/
 		ent = G_Find (NULL, FOFS(classname), "info_player_start");
 		if (!ent)
 			ent = G_Find (NULL, FOFS(classname), "info_player_deathmatch");
 	}
 	else
-	{	// chose one of four spots
+	{	/* chose one of four spots */
 		i = rand() & 3;
 		while (i--)
 		{
 			ent = G_Find (ent, FOFS(classname), "info_player_intermission");
-			if (!ent)	// wrap around the list
+			if (!ent)	/* wrap around the list */
 				ent = G_Find (ent, FOFS(classname), "info_player_intermission");
 		}
 	}
@@ -161,13 +161,13 @@ void BeginIntermission (edict_t *targ)
 	VectorCopy (ent->s.origin, level.intermission_origin);
 	VectorCopy (ent->s.angles, level.intermission_angle);
 
-	// move all clients to the intermission point
+	/* move all clients to the intermission point */
 	for (i=0 ; i<maxclients->value ; i++)
 	{
 		client = g_edicts + 1 + i;
 		if (!client->inuse)
 			continue;
-		//if (Q_stricmp (client->classname, "bot") != 0)
+		/* if (Q_stricmp (client->classname, "bot") != 0)*/
 			MoveClientToIntermission (client);
 	}
 
@@ -216,7 +216,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 			return;
 		}
 
-		// sort the clients by score
+		/* sort the clients by score */
 		total = 0;
 		for (i=0 ; i<game.maxclients ; i++)
 		{
@@ -239,12 +239,12 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 			total++;
 		}
 
-		// print level name and exit rules
+		/* print level name and exit rules */
 		string[0] = 0;
 
 		stringlength = strlen(string);
 
-		// add the clients in sorted order
+		/* add the clients in sorted order */
 		if (total > 12)
 			total = 12;
 
@@ -257,7 +257,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 			x = (i>=6) ? 160 : 0;
 			y = 32 + 32 * (i%6);
 
-			// add a dogtag
+			/* add a dogtag */
 			if (cl_ent == ent)
 				tag = "tag1";
 			else if (cl_ent == killer)
@@ -275,7 +275,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 				stringlength += j;
 			}
 
-			// send the layout
+			/* send the layout */
 			Com_sprintf (entry, sizeof(entry),
 				"client %i %i %i %i %i %i ",
 				x, y, sorted[i], cl->resp.score, cl->ping, (level.framenum - cl->resp.enterframe)/600);
@@ -286,10 +286,10 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 			stringlength += j;
 		}
 	}
-    else	//MATTHIAS
+    else	/* MATTHIAS */
 		*string = 0;
 
-    // Scanner active ?
+    /* Scanner active ?*/
     if (ent->client->scanneractive > 0)
 		ShowScanner(ent,string);
 	
@@ -324,10 +324,10 @@ void Cmd_Score_f (edict_t *ent)
 {
 	ent->client->showinventory = false;
 	ent->client->showhelp = false;
-//ZOID
+/* ZOID */
 	if (ent->client->menu)
 		PMenu_Close(ent);
-//ZOID
+/* ZOID */
 
 	if (!deathmatch->value && !coop->value)
 		return;
@@ -365,13 +365,13 @@ void HelpComputer (edict_t *ent)
 	else
 		sk = "hard+";
 
-	// send the layout
+	/* send the layout */
 	Com_sprintf (string, sizeof(string),
-		"xv 32 yv 8 picn help "			// background
-		"xv 202 yv 12 string2 \"%s\" "		// skill
-		"xv 0 yv 24 cstring2 \"%s\" "		// level name
-		"xv 0 yv 54 cstring2 \"%s\" "		// help 1
-		"xv 0 yv 110 cstring2 \"%s\" "		// help 2
+		"xv 32 yv 8 picn help "			/* background */
+		"xv 202 yv 12 string2 \"%s\" "		/* skill */
+		"xv 0 yv 24 cstring2 \"%s\" "		/* level name */
+		"xv 0 yv 54 cstring2 \"%s\" "		/* help 1*/
+		"xv 0 yv 110 cstring2 \"%s\" "		/* help 2*/
 		"xv 50 yv 164 string2 \" kills     goals    secrets\" "
 		"xv 50 yv 172 string2 \"%3i/%3i     %i/%i       %i/%i\" ", 
 		sk,
@@ -398,13 +398,13 @@ Display the current help message
 void Cmd_Help_f (edict_t *ent)
 {
 
-  //FWP Avoid crashing if ent->classname undefined
+  /* FWP Avoid crashing if ent->classname undefined */
         if (!ent->classname)
 	   return;
 
-	// this is for backwards compatability
+	/* this is for backwards compatability */
 
-	if (strcmp(ent->classname, "bot") == 0) //MATTHIAS
+	if (strcmp(ent->classname, "bot") == 0) /* MATTHIAS */
 		return;
 
 	if (deathmatch->value)
@@ -428,7 +428,7 @@ void Cmd_Help_f (edict_t *ent)
 }
 
 
-//=======================================================================
+/*=======================================================================*/
 
 /*
 ===============
@@ -441,15 +441,15 @@ void G_SetStats (edict_t *ent)
 	int			index, cells;
 	int			power_armor_type;
 
-	//
-	// health
-	//
+	/**/
+	/* health */
+	/**/
 	ent->client->ps.stats[STAT_HEALTH_ICON] = level.pic_health;
 	ent->client->ps.stats[STAT_HEALTH] = ent->health;
 
-	//
-	// ammo
-	//
+	/**/
+	/* ammo */
+	/**/
 	if (!ent->client->ammo_index /* || !ent->client->pers.inventory[ent->client->ammo_index] */)
 	{
 		ent->client->ps.stats[STAT_AMMO_ICON] = 0;
@@ -462,15 +462,15 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_AMMO] = ent->client->pers.inventory[ent->client->ammo_index];
 	}
 	
-	//
-	// armor
-	//
+	/**/
+	/* armor */
+	/**/
 	power_armor_type = PowerArmorType (ent);
 	if (power_armor_type)
 	{
 		cells = ent->client->pers.inventory[ITEM_INDEX(FindItem ("cells"))];
 		if (cells == 0)
-		{	// ran out of cells for power armor
+		{	/* ran out of cells for power armor */
 			ent->flags &= ~FL_POWER_ARMOR;
 			gi.sound(ent, CHAN_ITEM, gi.soundindex("misc/power2.wav"), 1, ATTN_NORM, 0);
 			power_armor_type = 0;;
@@ -479,7 +479,7 @@ void G_SetStats (edict_t *ent)
 
 	index = ArmorIndex (ent);
 	if (power_armor_type && (!index || (level.framenum & 8) ) )
-	{	// flash between power armor and other armor icon
+	{	/* flash between power armor and other armor icon */
 		ent->client->ps.stats[STAT_ARMOR_ICON] = gi.imageindex ("i_powershield");
 		ent->client->ps.stats[STAT_ARMOR] = cells;
 	}
@@ -495,18 +495,18 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_ARMOR] = 0;
 	}
 
-	//
-	// pickup message
-	//
+	/**/
+	/* pickup message */
+	/**/
 	if (level.time > ent->client->pickup_msg_time)
 	{
 		ent->client->ps.stats[STAT_PICKUP_ICON] = 0;
 		ent->client->ps.stats[STAT_PICKUP_STRING] = 0;
 	}
 
-	//
-	// timers
-	//
+	/**/
+	/* timers */
+	/**/
     
 	if (Jet_Active(ent))
     {
@@ -549,9 +549,9 @@ void G_SetStats (edict_t *ent)
 		ent->client->ps.stats[STAT_TIMER] = 0;
 	}
 
-	//
-	// selected item
-	//
+	/**/
+	/* selected item */
+	/**/
 	if (ent->client->pers.selected_item == -1)
 		ent->client->ps.stats[STAT_SELECTED_ICON] = 0;
 	else
@@ -559,9 +559,9 @@ void G_SetStats (edict_t *ent)
 
 	ent->client->ps.stats[STAT_SELECTED_ITEM] = ent->client->pers.selected_item;
 
-	//
-	// layouts
-	//
+	/**/
+	/* layouts */
+	/**/
 	ent->client->ps.stats[STAT_LAYOUTS] = 0;
 
 	if (deathmatch->value)
@@ -580,14 +580,14 @@ void G_SetStats (edict_t *ent)
 			ent->client->ps.stats[STAT_LAYOUTS] |= 2;
 	}
 
-	//
-	// frags
-	//
+	/**/
+	/* frags */
+	/**/
 	ent->client->ps.stats[STAT_FRAGS] = ent->client->resp.score;
 
-	//
-	// help icon / current weapon if not shown
-	//
+	/**/
+	/* help icon / current weapon if not shown */
+	/**/
 	if (ent->client->resp.helpchanged && (level.framenum&8) )
 		ent->client->ps.stats[STAT_HELPICON] = gi.imageindex ("i_help");
 	else if ( (ent->client->pers.hand == CENTER_HANDED || ent->client->ps.fov > 91)
@@ -596,8 +596,8 @@ void G_SetStats (edict_t *ent)
 	else
 		ent->client->ps.stats[STAT_HELPICON] = 0;
 
-//ZOID
+/* ZOID */
 	SetCTFStats(ent);
-//ZOID
+/* ZOID */
 }
 

@@ -1,7 +1,7 @@
 #define	GRAPPLE_OFF			0
 #define	GRAPPLE_INAIR		1
-#define	GRAPPLE_ATTACHED	2		//attached without grow/shrink
-#define	GRAPPLE_STARTSHRINK	3	//start with shrink
+#define	GRAPPLE_ATTACHED	2		/* attached without grow/shrink */
+#define	GRAPPLE_STARTSHRINK	3	/* start with shrink */
 
 
 #define SCANNER_UNIT                   32

@@ -11,7 +11,7 @@ typedef struct
 } spawn_t;
 
 
-void PreCacheAll(void);	//MATTHIAS
+void PreCacheAll(void);	/* MATTHIAS */
 void LoadMOTD(void);
 void Load_BotChat(void);
 
@@ -122,10 +122,10 @@ spawn_t	spawns[] = {
 	{"info_player_deathmatch", SP_info_player_deathmatch},
 	{"info_player_coop", SP_info_player_coop},
 	{"info_player_intermission", SP_info_player_intermission},
-//ZOID
+/* ZOID */
 	{"info_player_team1", SP_info_player_team1},
 	{"info_player_team2", SP_info_player_team2},
-//ZOID
+/* ZOID */
 
 	{"func_plat", SP_func_plat},
 	{"func_button", SP_func_button},
@@ -169,7 +169,7 @@ spawn_t	spawns[] = {
 	{"target_crosslevel_target", SP_target_crosslevel_target},
 	{"target_laser", SP_target_laser},
 	{"target_help", SP_target_help},
-#if 0 // remove monster code
+#if 0 /* remove monster code */
 	{"target_actor", SP_target_actor},
 #endif
 	{"target_lightramp", SP_target_lightramp},
@@ -191,18 +191,18 @@ spawn_t	spawns[] = {
 
 	{"misc_explobox", SP_misc_explobox},
 	{"misc_banner", SP_misc_banner},
-//ZOID
+/* ZOID */
 	{"misc_ctf_banner", SP_misc_ctf_banner},
 	{"misc_ctf_small_banner", SP_misc_ctf_small_banner},
-//ZOID
+/* ZOID */
 	{"misc_satellite_dish", SP_misc_satellite_dish},
-#if 0 // remove monster code
+#if 0 /* remove monster code */
 	{"misc_actor", SP_misc_actor},
 #endif
 	{"misc_gib_arm", SP_misc_gib_arm},
 	{"misc_gib_leg", SP_misc_gib_leg},
 	{"misc_gib_head", SP_misc_gib_head},
-#if 0 // remove monster code
+#if 0 /* remove monster code */
 	{"misc_insane", SP_misc_insane},
 #endif
 	{"misc_deadsoldier", SP_misc_deadsoldier},
@@ -212,16 +212,16 @@ spawn_t	spawns[] = {
 	{"misc_strogg_ship", SP_misc_strogg_ship},
 	{"misc_teleporter", SP_misc_teleporter},
 	{"misc_teleporter_dest", SP_misc_teleporter_dest},
-//ZOID
+/* ZOID */
 	{"trigger_teleport", SP_trigger_teleport},
 	{"info_teleport_destination", SP_info_teleport_destination},
-//ZOID
+/* ZOID */
 	{"misc_blackhole", SP_misc_blackhole},
 	{"misc_eastertank", SP_misc_eastertank},
 	{"misc_easterchick", SP_misc_easterchick},
 	{"misc_easterchick2", SP_misc_easterchick2},
 
-#if 0 // remove monster code
+#if 0 /* remove monster code */
 	{"monster_berserk", SP_monster_berserk},
 	{"monster_gladiator", SP_monster_gladiator},
 	{"monster_gunner", SP_monster_gunner},
@@ -274,29 +274,29 @@ void ED_CallSpawn (edict_t *ent)
 		return;
 	}
 
-	// check item spawn functions
+	/* check item spawn functions */
 	for (i=0,item=itemlist ; i<game.num_items ; i++,item++)
 	{
 		if (!item->classname)
 			continue;
 		if (!strcmp(item->classname, ent->classname))
-		{	// found it
+		{	/* found it */
 			SpawnItem (ent, item);
 			return;
 		}
 	}
 
-	// check normal spawn functions
+	/* check normal spawn functions */
 	for (s=spawns ; s->name ; s++)
 	{
 		if (!strcmp(s->name, ent->classname))
-		{	// found it
+		{	/* found it */
 			s->spawn (ent);
 			return;
 		}
 	}
-	//MATTHIAS
-	//gi.dprintf ("%s doesn't have a spawn function\n", ent->classname);
+	/* MATTHIAS */
+	/* gi.dprintf ("%s doesn't have a spawn function\n", ent->classname);*/
 }
 
 /*
@@ -353,7 +353,7 @@ void ED_ParseField (char *key, char *value, edict_t *ent)
 	for (f=fields ; f->name ; f++)
 	{
 		if (!Q_stricmp(f->name, key))
-		{	// found it
+		{	/* found it */
 			if (f->flags & FFL_SPAWNTEMP)
 				b = (byte *)&st;
 			else
@@ -410,10 +410,10 @@ char *ED_ParseEdict (char *data, edict_t *ent)
 	init = false;
 	memset (&st, 0, sizeof(st));
 
-// go through all the dictionary pairs
+/* go through all the dictionary pairs */
 	while (1)
 	{	
-	// parse key
+	/* parse key */
 		com_token = COM_Parse (&data);
 		if (com_token[0] == '}')
 			break;
@@ -422,7 +422,7 @@ char *ED_ParseEdict (char *data, edict_t *ent)
 
 		strncpy (keyname, com_token, sizeof(keyname)-1);
 		
-	// parse value	
+	/* parse value	*/
 		com_token = COM_Parse (&data);
 		if (!data)
 			gi.error ("ED_ParseEntity: EOF without closing brace");
@@ -432,8 +432,8 @@ char *ED_ParseEdict (char *data, edict_t *ent)
 
 		init = true;	
 
-	// keynames with a leading underscore are used for utility comments,
-	// and are immediately discarded by quake
+	/* keynames with a leading underscore are used for utility comments,*/
+	/* and are immediately discarded by quake */
 		if (keyname[0] == '_')
 			continue;
 
@@ -499,10 +499,10 @@ void G_FindTeams (void)
 	gi.dprintf ("%i teams with %i entities\n", c, c2);
 }
 
-//MATTHIAS
+/* MATTHIAS */
 void NodeCheck (edict_t	*ent)
 {
-	if (numnodes >= MAX_NODES - 1)	//MAX_NODES = 512
+	if (numnodes >= MAX_NODES - 1)	/* MAX_NODES = 512*/
 		gi.cvar_set("dntg", "0");
 
 	if (dntg->value > 0)
@@ -543,7 +543,7 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 
 	SaveClientData ();
 
-	//MATTHIAS
+	/* MATTHIAS */
 
 	weapon_list		= NULL;
 	ammo_list		= NULL;
@@ -560,17 +560,17 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 
         gi.dprintf("Starting Map: %s\n", level.mapname);
 
-	// set client fields on player ents
+	/* set client fields on player ents */
 	for (i=0 ; i<game.maxclients ; i++)
 		g_edicts[i+1].client = game.clients + i;
 
 	ent = NULL;
 	inhibit = 0;
 
-// parse ents
+/* parse ents */
 	while (1)
 	{
-		// parse the opening brace	
+		/* parse the opening brace	*/
 		com_token = COM_Parse (&entities);
 		if (!entities)
 			break;
@@ -583,11 +583,11 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 			ent = G_Spawn ();
 		entities = ED_ParseEdict (entities, ent);
 		
-		// yet another map hack
+		/* yet another map hack */
 		if (!Q_stricmp(level.mapname, "command") && !Q_stricmp(ent->classname, "trigger_once") && !Q_stricmp(ent->model, "*27"))
 			ent->spawnflags &= ~SPAWNFLAG_NOT_HARD;
 
-		// remove things (except the world) from different skill levels or deathmatch
+		/* remove things (except the world) from different skill levels or deathmatch */
 		if (ent != g_edicts)
 		{
 			if ( ent->spawnflags & SPAWNFLAG_NOT_DEATHMATCH )
@@ -607,23 +607,23 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 
 	G_FindTeams ();
 
-	//MATTHIAS
+	/* MATTHIAS */
 	dummy = G_Spawn();
 	dummy->think = NodeCheck;
 	dummy->nextthink = level.time + 1.5;
 
-	//PlayerTrail_Init ();	//MATTHIAS
+	/* PlayerTrail_Init ();	//MATTHIAS */
 
-    sl_GameStart( &gi, level );	//	StdLog - Mark Davies
+    sl_GameStart( &gi, level );	/*	StdLog - Mark Davies */
 
 	CTFSetupTechSpawn();
 }
 
 
-//===================================================================
+/*===================================================================*/
 
 #if 0
-	// cursor positioning
+	/* cursor positioning */
 	xl <value>
 	xr <value>
 	yb <value>
@@ -631,13 +631,13 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 	xv <value>
 	yv <value>
 
-	// drawing
+	/* drawing */
 	statpic <name>
 	pic <stat>
 	num <fieldwidth> <stat>
 	string <stat>
 
-	// control
+	/* control */
 	if <stat>
 	ifeq <stat> <value>
 	ifbit <stat> <value>
@@ -648,13 +648,13 @@ void SpawnEntities (char *mapname, char *entities, char *spawnpoint)
 char *dm_statusbar =
 "yb	-24 "
 
-// health
+/* health */
 "xv	0 "
 "hnum "
 "xv	50 "
 "pic 0 "
 
-// ammo
+/* ammo */
 "if 2 "
 "	xv	100 "
 "	anum "
@@ -662,7 +662,7 @@ char *dm_statusbar =
 "	pic 2 "
 "endif "
 
-// armor
+/* armor */
 "if 4 "
 "	xv	200 "
 "	rnum "
@@ -670,7 +670,7 @@ char *dm_statusbar =
 "	pic 4 "
 "endif "
 
-// selected item
+/* selected item */
 "if 6 "
 "	xv	296 "
 "	pic 6 "
@@ -678,7 +678,7 @@ char *dm_statusbar =
 
 "yb	-50 "
 
-// picked up item
+/* picked up item */
 "if 7 "
 "	xv	0 "
 "	pic 7 "
@@ -688,7 +688,7 @@ char *dm_statusbar =
 "	yb	-50 "
 "endif "
 
-// timer
+/* timer */
 "if 9 "
   "xv 246 "
   "num 2 10 "
@@ -696,25 +696,25 @@ char *dm_statusbar =
   "pic 9 "
 "endif "
 
-//  help / weapon icon 
+/*  help / weapon icon */
 "if 11 "
   "xv 148 "
   "pic 11 "
 "endif "
 
-//  frags
+/*  frags */
 "yt 146 "
 "xr	-50 "
 "num 3 14 "
 
-//tech
+/* tech */
 "yt 120 "
 "if 26 "
   "xr -26 "
   "pic 26 "
 "endif "
 
-// id view state
+/* id view state */
 "if 27 "
   "xv 0 "
   "yb -58 "
@@ -725,7 +725,7 @@ char *dm_statusbar =
 ;
 
 
-/*QUAKED worldspawn (0 0 0) ?
+/* QUAKED worldspawn (0 0 0) ?
 
 Only used for the world.
 "sky"	environment map name
@@ -739,12 +739,12 @@ void SP_worldspawn (edict_t *ent)
 {
 	ent->movetype = MOVETYPE_PUSH;
 	ent->solid = SOLID_BSP;
-	ent->inuse = true;			// since the world doesn't use G_Spawn()
-	ent->s.modelindex = 1;		// world model is always index 1
+	ent->inuse = true;			/* since the world doesn't use G_Spawn()*/
+	ent->s.modelindex = 1;		/* world model is always index 1*/
 
-	//---------------
+	/*---------------*/
 
-	// reserve some spots for dead player bodies for coop / deathmatch
+	/* reserve some spots for dead player bodies for coop / deathmatch */
 	InitBodyQue ();
 
 	SetItemNames ();
@@ -752,7 +752,7 @@ void SP_worldspawn (edict_t *ent)
 	if (st.nextmap)
 		strcpy (level.nextmap, st.nextmap);
 
-	// make some data visible to the server
+	/* make some data visible to the server */
 
 	if (ent->message && ent->message[0])
 	{
@@ -776,12 +776,12 @@ void SP_worldspawn (edict_t *ent)
 
 	gi.configstring (CS_MAXCLIENTS, va("%i", (int)(maxclients->value) ) );
 
-	// status bar program
+	/* status bar program */
 	
 	if (ctf->value) 
 	{
 		gi.configstring (CS_STATUSBAR, ctf_statusbar);
-		//precaches
+		/* precaches */
 		gi.imageindex("sbctf1");
 		gi.imageindex("sbctf2");
 		gi.imageindex("i_ctf1");
@@ -795,10 +795,10 @@ void SP_worldspawn (edict_t *ent)
 	else
 		gi.configstring (CS_STATUSBAR, dm_statusbar);
 
-	//---------------
+	/*---------------*/
 
 
-	// help icon for statusbar
+	/* help icon for statusbar */
 	gi.imageindex ("i_help");
 	level.pic_health = gi.imageindex ("i_health");
 	gi.imageindex ("help");
@@ -809,7 +809,7 @@ void SP_worldspawn (edict_t *ent)
 	else
 		gi.cvar_set("sv_gravity", st.gravity);
 
-	snd_fry = gi.soundindex ("player/fry.wav");	// standing in lava / slime
+	snd_fry = gi.soundindex ("player/fry.wav");	/* standing in lava / slime */
 
 	PrecacheItem (FindItem ("AK42 Assault Pistol"));
 
@@ -821,19 +821,19 @@ void SP_worldspawn (edict_t *ent)
 
 	gi.soundindex ("misc/udeath.wav");
 
-	// gibs
+	/* gibs */
 	gi.soundindex ("items/respawn1.wav");
 
-	// sexed sounds
+	/* sexed sounds */
 	gi.soundindex ("*death1.wav");
 	gi.soundindex ("*death2.wav");
 	gi.soundindex ("*death3.wav");
 	gi.soundindex ("*death4.wav");
 	gi.soundindex ("*fall1.wav");
 	gi.soundindex ("*fall2.wav");	
-	gi.soundindex ("*gurp1.wav");		// drowning damage
+	gi.soundindex ("*gurp1.wav");		/* drowning damage */
 	gi.soundindex ("*gurp2.wav");	
-	gi.soundindex ("*jump1.wav");		// player jump
+	gi.soundindex ("*jump1.wav");		/* player jump */
 	gi.soundindex ("*pain25_1.wav");
 	gi.soundindex ("*pain25_2.wav");
 	gi.soundindex ("*pain50_1.wav");
@@ -843,22 +843,22 @@ void SP_worldspawn (edict_t *ent)
 	gi.soundindex ("*pain100_1.wav");
 	gi.soundindex ("*pain100_2.wav");
 
-	//-------------------
+	/*-------------------*/
 
-	gi.soundindex ("player/gasp1.wav");		// gasping for air
-	gi.soundindex ("player/gasp2.wav");		// head breaking surface, not gasping
+	gi.soundindex ("player/gasp1.wav");		/* gasping for air */
+	gi.soundindex ("player/gasp2.wav");		/* head breaking surface, not gasping */
 
-	gi.soundindex ("player/watr_in.wav");	// feet hitting water
-	gi.soundindex ("player/watr_out.wav");	// feet leaving water
+	gi.soundindex ("player/watr_in.wav");	/* feet hitting water */
+	gi.soundindex ("player/watr_out.wav");	/* feet leaving water */
 
-	gi.soundindex ("player/watr_un.wav");	// head going underwater
+	gi.soundindex ("player/watr_un.wav");	/* head going underwater */
 	
 	gi.soundindex ("player/u_breath1.wav");
 	gi.soundindex ("player/u_breath2.wav");
 
-	gi.soundindex ("items/pkup.wav");		// bonus item pickup
-	gi.soundindex ("world/land.wav");		// landing thud
-	gi.soundindex ("misc/h2ohit1.wav");		// landing splash
+	gi.soundindex ("items/pkup.wav");		/* bonus item pickup */
+	gi.soundindex ("world/land.wav");		/* landing thud */
+	gi.soundindex ("misc/h2ohit1.wav");		/* landing splash */
 
 	gi.soundindex ("items/damage.wav");
 	gi.soundindex ("items/protect.wav");
@@ -877,7 +877,7 @@ void SP_worldspawn (edict_t *ent)
 	gi.modelindex ("models/objects/gibs/chest/tris.md2");
 	gi.modelindex ("models/objects/gibs/skull/tris.md2");
 
-	// VWEP STUFF
+	/* VWEP STUFF */
 
 	gi.modelindex("#w_ak42.md2");
 	gi.modelindex("#w_sword.md2");
@@ -898,138 +898,138 @@ void SP_worldspawn (edict_t *ent)
 
 	if (lightsoff->value == 0)
     {
-		// 0 normal
+		/* 0 normal */
 		gi.configstring(CS_LIGHTS+0, "m");
 
-		// 1 FLICKER (first variety)
+		/* 1 FLICKER (first variety)*/
 		gi.configstring(CS_LIGHTS+1, "mmnmmommommnonmmonqnmmo");
 
-		// 2 SLOW STRONG PULSE
+		/* 2 SLOW STRONG PULSE */
 		gi.configstring(CS_LIGHTS+2, "abcdefghijklmnopqrstuvwxyzyxwvutsrqponmlkjihgfedcba");
 
-		// 3 CANDLE (first variety)
+		/* 3 CANDLE (first variety)*/
 		gi.configstring(CS_LIGHTS+3, "mmmmmaaaaammmmmaaaaaabcdefgabcdefg");
 
-		// 4 FAST STROBE
+		/* 4 FAST STROBE */
 		gi.configstring(CS_LIGHTS+4, "mamamamamama");
 
-		// 5 GENTLE PULSE 1
+		/* 5 GENTLE PULSE 1*/
 		gi.configstring(CS_LIGHTS+5,"jklmnopqrstuvwxyzyxwvutsrqponmlkj");
 
-		// 6 FLICKER (second variety)
+		/* 6 FLICKER (second variety)*/
 		gi.configstring(CS_LIGHTS+6, "nmonqnmomnmomomno");
 
-		// 7 CANDLE (second variety)
+		/* 7 CANDLE (second variety)*/
 		gi.configstring(CS_LIGHTS+7, "mmmaaaabcdefgmmmmaaaammmaamm");
 
-		// 8 CANDLE (third variety)
+		/* 8 CANDLE (third variety)*/
 		gi.configstring(CS_LIGHTS+8, "mmmaaammmaaammmabcdefaaaammmmabcdefmmmaaaa");
 
-		// 9 SLOW STROBE (fourth variety)
+		/* 9 SLOW STROBE (fourth variety)*/
 		gi.configstring(CS_LIGHTS+9, "aaaaaaaazzzzzzzz");
 
-		// 10 FLUORESCENT FLICKER
+		/* 10 FLUORESCENT FLICKER */
 		gi.configstring(CS_LIGHTS+10, "mmamammmmammamamaaamammma");
 
-		// 11 SLOW PULSE NOT FADE TO BLACK
+		/* 11 SLOW PULSE NOT FADE TO BLACK */
 		gi.configstring(CS_LIGHTS+11, "abcdefghijklmnopqrrqponmlkjihgfedcba");
 
-		//JR 3/26/98
-		//12 Wierd flashing
+		/* JR 3/26/98*/
+		/*12 Wierd flashing */
 		gi.configstring(CS_LIGHTS+12, "ahsbexcbkxerswaibldcwersxa");
 
 	}
     else if (lightsoff->value == 1)
     {
-		// 0 normal
+		/* 0 normal */
 		gi.configstring(CS_LIGHTS+0, "c");
 
-		// 1 FLICKER (first variety)
+		/* 1 FLICKER (first variety)*/
 		gi.configstring(CS_LIGHTS+1, "acacacccacccaccaccc");
 
-		// 2 SLOW STRONG PULSE
+		/* 2 SLOW STRONG PULSE */
 		gi.configstring(CS_LIGHTS+2, "aaacccaaacccaaaccc");
 
-		// 3 CANDLE (first variety)
+		/* 3 CANDLE (first variety)*/
 		gi.configstring(CS_LIGHTS+3, "ccccacccccccaccccaacacacac");
 
-		// 4 FAST STROBE
+		/* 4 FAST STROBE */
 		gi.configstring(CS_LIGHTS+4, "cacacacacacaca");
 
-		// 5 GENTLE PULSE 1
+		/* 5 GENTLE PULSE 1*/
 		gi.configstring(CS_LIGHTS+5,"cbacbcvacbacabcbacbac");
 
-		// 6 FLICKER (second variety)
+		/* 6 FLICKER (second variety)*/
 		gi.configstring(CS_LIGHTS+6, "cbacbacbacbacba");
 
-		// 7 CANDLE (second variety)
+		/* 7 CANDLE (second variety)*/
 		gi.configstring(CS_LIGHTS+7, "aaaaaaabbbccaaaaaaaacccbbb");
 
-		// 8 CANDLE (third variety)
+		/* 8 CANDLE (third variety)*/
 		gi.configstring(CS_LIGHTS+8, "aaaacccccbbbbbaaaaccccbbbbb");
 
-		// 9 SLOW STROBE (fourth variety)
+		/* 9 SLOW STROBE (fourth variety)*/
 		gi.configstring(CS_LIGHTS+9, "aaaaaaaaccccccccc");
 
-		// 10 FLUORESCENT FLICKER
+		/* 10 FLUORESCENT FLICKER */
 		gi.configstring(CS_LIGHTS+10, "ccaccaccaccaccaccacca");
 
-		// 11 SLOW PULSE NOT FADE TO BLACK
+		/* 11 SLOW PULSE NOT FADE TO BLACK */
 		gi.configstring(CS_LIGHTS+11, "bbcdbcbdcbdcbdbcbdcbdbc");
 
-		//JR 3/26/98
-		//12 Wierd flashing
+		/* JR 3/26/98*/
+		/*12 Wierd flashing */
 		gi.configstring(CS_LIGHTS+12, "bbcdedbcedbcedabcedbca");
 	}
 	else if (lightsoff->value == 2)
     {
-		// 0 normal
+		/* 0 normal */
 		gi.configstring(CS_LIGHTS+0, "a");
 
-		// 1 FLICKER (first variety)
+		/* 1 FLICKER (first variety)*/
 		gi.configstring(CS_LIGHTS+1, "a");
 
-		// 2 SLOW STRONG PULSE
+		/* 2 SLOW STRONG PULSE */
 		gi.configstring(CS_LIGHTS+2, "a");
 
-		// 3 CANDLE (first variety)
+		/* 3 CANDLE (first variety)*/
 		gi.configstring(CS_LIGHTS+3, "a");
 
-		// 4 FAST STROBE
+		/* 4 FAST STROBE */
 		gi.configstring(CS_LIGHTS+4, "a");
 
-		// 5 GENTLE PULSE 1
+		/* 5 GENTLE PULSE 1*/
 		gi.configstring(CS_LIGHTS+5,"a");
 
-		// 6 FLICKER (second variety)
+		/* 6 FLICKER (second variety)*/
 		gi.configstring(CS_LIGHTS+6, "a");
 
-		// 7 CANDLE (second variety)
+		/* 7 CANDLE (second variety)*/
 		gi.configstring(CS_LIGHTS+7, "a");
 
-		// 8 CANDLE (third variety)
+		/* 8 CANDLE (third variety)*/
 		gi.configstring(CS_LIGHTS+8, "a");
 
-		// 9 SLOW STROBE (fourth variety)
+		/* 9 SLOW STROBE (fourth variety)*/
 		gi.configstring(CS_LIGHTS+9, "a");
 
-		// 10 FLUORESCENT FLICKER
+		/* 10 FLUORESCENT FLICKER */
 		gi.configstring(CS_LIGHTS+10, "a");
 
-		// 11 SLOW PULSE NOT FADE TO BLACK
+		/* 11 SLOW PULSE NOT FADE TO BLACK */
 		gi.configstring(CS_LIGHTS+11, "a");
 
-		//JR 3/26/98
-		//12 Wierd flashing
+		/* JR 3/26/98*/
+		/*12 Wierd flashing */
 		gi.configstring(CS_LIGHTS+12, "a");
 	}
 
-	//PreCacheAll();
+	/* PreCacheAll();*/
 	LoadMOTD();
 	Load_BotChat();
 
-	Bot_InitNodes();		//init route table
+	Bot_InitNodes();		/* init route table */
 
-	if(!Bot_LoadNodes())	//try to load route table
-		Bot_InitNodes();	//init new route table if load not possible
+	if(!Bot_LoadNodes())	/* try to load route table */
+		Bot_InitNodes();	/* init new route table if load not possible */
 }

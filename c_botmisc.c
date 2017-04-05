@@ -7,16 +7,16 @@
 #include "stdlog.h"
 #include "gslog.h"
 
-///------------------------------------------------------------------------------------------
-/// Command handling
-///------------------------------------------------------------------------------------------
+/*/------------------------------------------------------------------------------------------*/
+/*/ Command handling */
+/*/------------------------------------------------------------------------------------------*/
 
-void Svcmd_addbots_f()	// adds "num" bots.
+void Svcmd_addbots_f()	/* adds "num" bots.*/
 {
 	int		i, num, skill, team;
 	char	name[64], model[128];
 
-	// sv addbots <amount> <skill> <team> <name> <model/skin>
+	/* sv addbots <amount> <skill> <team> <name> <model/skin>*/
 
 	num = atoi(gi.argv(2));
 	skill = atoi(gi.argv(3));
@@ -26,7 +26,7 @@ void Svcmd_addbots_f()	// adds "num" bots.
 	if(skill == 0)
 		skill = 3;
 
-	if (num == 0)	// spawn 0 bots ???
+	if (num == 0)	/* spawn 0 bots ???*/
 		return;
 	else if (num == 1)
 	{
@@ -36,7 +36,7 @@ void Svcmd_addbots_f()	// adds "num" bots.
 			return;
 		}
 
-		// set the model
+		/* set the model */
 		if (Q_stricmp(gi.argv(6), "") == 0)
 		{
 			sprintf(model, Get_RandomBotSkin());
@@ -44,7 +44,7 @@ void Svcmd_addbots_f()	// adds "num" bots.
 		else
 			sprintf(model, gi.argv(6));
 
-		// set the name
+		/* set the name */
 		if(Q_stricmp(name,"") == 0
 			|| Q_stricmp(name," ") == 0)
 		{
@@ -63,7 +63,7 @@ void Svcmd_addbots_f()	// adds "num" bots.
 				return;
 			}
 			
-			// set the model
+			/* set the model */
 			if (Q_stricmp(gi.argv(6), "") == 0)
 			{
 				sprintf(model, Get_RandomBotSkin());
@@ -71,10 +71,10 @@ void Svcmd_addbots_f()	// adds "num" bots.
 			else
 				sprintf(model, gi.argv(6));
 
-			// set the name
+			/* set the name */
 			strcpy(name,(strchr(model, '/')+1));
 
-			//char *_strupr( char *string );
+			/* char *_strupr( char *string );*/
 
 			Bot_Create(skill, team, name, model);
 		}
@@ -87,7 +87,7 @@ void Svcmd_killbot_f(char *name)
 
 	count = numplayers + 1;
 
-	if(Q_stricmp(name, "all") == 0)	//kill all bots
+	if(Q_stricmp(name, "all") == 0)	/* kill all bots */
 	{
 		for (i = 0; i < count; i++)
 		{
@@ -106,7 +106,7 @@ void Svcmd_killbot_f(char *name)
 			}
 		}
 	}
-	else	//kill a specific bot
+	else	/* kill a specific bot */
 	{
 		for (i = 0; i < count; i++)
 		{
@@ -124,9 +124,9 @@ void Svcmd_killbot_f(char *name)
 	}
 }
 
-///------------------------------------------------------------------------------------------
-/// bot create/spawn/respawn/die
-///------------------------------------------------------------------------------------------
+/*/------------------------------------------------------------------------------------------*/
+/*/ bot create/spawn/respawn/die */
+/*/------------------------------------------------------------------------------------------*/
 
 void Bot_Create(int level, int team, char *name, char *skin)
 {
@@ -180,7 +180,7 @@ void Bot_Create(int level, int team, char *name, char *skin)
 	numplayers++;
 	numbots++;
 
-	//TEAMPLAY
+	/* TEAMPLAY */
 	if(ctf->value)
 	{
 		if ((team != 1) && (team != 2))
@@ -314,8 +314,8 @@ void Bot_Spawn(edict_t *ent)
 	ent->s.skinnum        = index;
 	ent->s.modelindex     = 255;
 
-	ShowGun(ent); //vwep
-	//ent->s.modelindex2    = 255;
+	ShowGun(ent); /* vwep */
+	/* ent->s.modelindex2    = 255;*/
 	ent->s.frame          = 0;
 	ent->enemy			  = NULL;
 	ent->client->b_currentnode	= -1;
@@ -347,10 +347,10 @@ void Bot_Respawn(edict_t *ent)
 	Bot_Spawn(ent);
 
 
-	// add a teleportation effect
+	/* add a teleportation effect */
 	ent->s.event = EV_PLAYER_TELEPORT;
 
-	// hold in place briefly
+	/* hold in place briefly */
 	ent->client->ps.pmove.pm_flags = PMF_TIME_TELEPORT;
 	ent->client->ps.pmove.pm_time = 14;
 }
@@ -362,8 +362,8 @@ void bot_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 	self->takedamage = DAMAGE_YES;
 	self->movetype = MOVETYPE_TOSS;
 
-	self->s.modelindex2 = 0;	// remove linked weapon model
-	self->s.modelindex3 = 0;	// remove linked ctf flag
+	self->s.modelindex2 = 0;	/* remove linked weapon model */
+	self->s.modelindex3 = 0;	/* remove linked ctf flag */
 
 	self->s.angles[0] = 0;
 	self->s.angles[2] = 0;
@@ -381,7 +381,7 @@ void bot_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 		self->client->ps.pmove.pm_type = PM_DEAD;
 		ClientObituary (self, inflictor, attacker);
 
-		sl_WriteStdLogDeath( &gi, level, self, inflictor, attacker);	// StdLog - Mark Davies
+		sl_WriteStdLogDeath( &gi, level, self, inflictor, attacker);	/* StdLog - Mark Davies */
 		
 		CTFFragBonuses(self, inflictor, attacker);
 		TossClientWeapon (self);
@@ -390,7 +390,7 @@ void bot_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 		CTFDeadDropTech(self);
 	}
 
-	// remove powerups
+	/* remove powerups */
 	self->client->quad_framenum = 0;
 	self->client->invincible_framenum = 0;
 	self->client->breather_framenum = 0;
@@ -405,14 +405,14 @@ void bot_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 		self->client->jet_framenum = 0;
     }
 
-	// clear inventory
+	/* clear inventory */
 	memset(self->client->pers.inventory, 0, sizeof(self->client->pers.inventory));
 
 	self->client->b_respawntime = level.time + 1.5;
 
-// check for gib
+/* check for gib */
 	if (self->health < -40)
-	{	// gib
+	{	/* gib */
 		gi.sound (self, CHAN_BODY, gi.soundindex ("misc/udeath.wav"), 1, ATTN_NORM, 0);
 		ThrowGib (self, "models/objects/gibs/sm_gib1/tris.md2", damage, GIB_ORGANIC);
 		ThrowGib (self, "models/objects/gibs/sm_gib2/tris.md2", damage, GIB_ORGANIC);
@@ -423,20 +423,20 @@ void bot_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 		ThrowGib (self, "models/objects/gibs/bone2/tris.md2", damage, GIB_ORGANIC);
 
 		ThrowClientHead (self, damage);
-//ZOID
+/* ZOID */
 		self->client->anim_priority = ANIM_DEATH;
 		self->client->anim_end = 0;
-//ZOID
+/* ZOID */
 		self->takedamage = DAMAGE_NO;
 	}
 	else
-	{	// normal death
+	{	/* normal death */
 		if (!self->deadflag)
 		{
 			static int i;
 
 			i = (i+1)%3;
-			// start a death animation
+			/* start a death animation */
 			self->client->anim_priority = ANIM_DEATH;
 			if (self->client->ps.pmove.pm_flags & PMF_DUCKED)
 			{
@@ -481,13 +481,13 @@ void bot_die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, 
 	gi.linkentity(self);
 }
 
-///------------------------------------------------------------------------------------------
-/// bot misc functions
-///------------------------------------------------------------------------------------------
+/*/------------------------------------------------------------------------------------------*/
+/*/ bot misc functions */
+/*/------------------------------------------------------------------------------------------*/
 
 float Bot_Fire_Freq(edict_t *ent)
 {
-	it_lturret = FindItem("automatic defence turret");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
 
 	if (ent->client->pers.weapon == it_ak42)
 		return AK42_FREQ;
@@ -547,10 +547,10 @@ void Bot_BestMidWeapon(edict_t *self)
 	client = self->client;
 	oldweapon = client->pers.weapon;
 
-	it_lturret = FindItem("automatic defence turret");	//bugfix
-	it_airfist = FindItem("airgun");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
+	it_airfist = FindItem("airgun");	/* bugfix */
 
-	// Is our enemy a turret ?
+	/* Is our enemy a turret ?*/
 	if (self->enemy
 		&& self->enemy->inuse
 		&& (self->enemy->health > 0)
@@ -559,161 +559,161 @@ void Bot_BestMidWeapon(edict_t *self)
 		turret = 1;
 	}
 
-	// Rocket Turret
+	/* Rocket Turret */
 	if (client->pers.inventory[ITEM_INDEX(it_rturret)])
 	{
 		if (oldweapon != it_rturret)
 			self->client->newweapon = it_rturret;
 		return;
 	}
-	// Laser Turret
+	/* Laser Turret */
 	if (client->pers.inventory[ITEM_INDEX(it_lturret)])
 	{
 		if (oldweapon != it_lturret)
 			self->client->newweapon = it_lturret;
 		return;
 	}
-	// Buzzsaw
+	/* Buzzsaw */
 	if ( client->pers.inventory[ITEM_INDEX(it_buzzes)] &&  client->pers.inventory[ITEM_INDEX(it_buzzsaw)])
 	{
 		if (oldweapon != it_buzzsaw)
 			self->client->newweapon = it_buzzsaw;
 		return;
 	}
-	// Railgun
+	/* Railgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_slugs)] &&  client->pers.inventory[ITEM_INDEX(it_railgun)])
 	{
 		if (oldweapon != it_railgun)
 			self->client->newweapon = it_railgun;
 		return;
 	}
-	// Rocket Launcher
+	/* Rocket Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_rockets)]	&&  client->pers.inventory[ITEM_INDEX(it_rocketlauncher)])
 	{
 		if (oldweapon != it_rocketlauncher)
 			self->client->newweapon = it_rocketlauncher;
 		return;
 	}
-	// Hyperblaster
+	/* Hyperblaster */
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] > 10) &&  client->pers.inventory[ITEM_INDEX(it_hyperblaster)])
 	{
 		if (oldweapon != it_hyperblaster)
 			self->client->newweapon = it_hyperblaster;
 		return;
 	}
-	// Vortex
+	/* Vortex */
 	if (client->pers.inventory[ITEM_INDEX(it_vortex)])
 	{
 		if (oldweapon != it_vortex)
 			self->client->newweapon = it_vortex;
 		return;
 	}
-	// BFG
+	/* BFG */
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_bfg)])
 	{
 		if (oldweapon != it_bfg)
 			self->client->newweapon = it_bfg;
 		return;
 	}
-	// Explosive Crossbow
+	/* Explosive Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_explosivecrossbow)] &&  client->pers.inventory[ITEM_INDEX(it_explosivearrows)])
 	{
 		if (oldweapon != it_explosivecrossbow)
 			self->client->newweapon = it_explosivecrossbow;
 		return;
 	}
-	// Proxymine Launcher
+	/* Proxymine Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_proxymines)]	&&  client->pers.inventory[ITEM_INDEX(it_proxyminelauncher)])
 	{
 		if (oldweapon != it_proxyminelauncher)
 			self->client->newweapon = it_proxyminelauncher;
 		return;
 	}
-	// Homing Missile Launcher
+	/* Homing Missile Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_homings)]	&&  client->pers.inventory[ITEM_INDEX(it_hominglauncher)])
 	{
 		if (oldweapon != it_hominglauncher)
 			self->client->newweapon = it_hominglauncher;
 		return;
 	}
-	// Poison Crossbow
+	/* Poison Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisoncrossbow)]	&&  client->pers.inventory[ITEM_INDEX(it_poisonarrows)])
 	{
 		if (oldweapon != it_poisonarrows)
 			self->client->newweapon = it_poisoncrossbow;
 		return;
 	}
-	// Crossbow
+	/* Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_crossbow)] &&  client->pers.inventory[ITEM_INDEX(it_arrows)])
 	{
 		if (oldweapon != it_crossbow)
 			self->client->newweapon = it_crossbow;
 		return;
 	}
-	// Explosive Super Shotgun
+	/* Explosive Super Shotgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_eshells)]	&&  client->pers.inventory[ITEM_INDEX(it_esupershotgun)])
 	{
 		if (oldweapon != it_esupershotgun)
 			self->client->newweapon = it_esupershotgun;
 		return;
 	}
-	// Super Shotgun
+	/* Super Shotgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_shells)] &&  client->pers.inventory[ITEM_INDEX(it_supershotgun)])
 	{
 		if (oldweapon != it_supershotgun)
 			self->client->newweapon = it_supershotgun;
 		return;
 	}
-	// Grenade Launcher
+	/* Grenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_grenades)] &&  client->pers.inventory[ITEM_INDEX(it_grenadelauncher)])
 	{
 		if (oldweapon != it_grenadelauncher)
 			self->client->newweapon = it_grenadelauncher;
 		return;
 	}
-	// Airfist
+	/* Airfist */
 	if ( client->pers.inventory[ITEM_INDEX(it_airfist)] && !turret)
 	{
 		if (oldweapon != it_airfist)
 			self->client->newweapon = it_airfist;
 		return;
 	}
-	// Flashgrenade Launcher
+	/* Flashgrenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_flashgrenades)] &&  client->pers.inventory[ITEM_INDEX(it_flashgrenadelauncher)] && !turret)
 	{
 		if (oldweapon != it_flashgrenadelauncher)
 			self->client->newweapon = it_flashgrenadelauncher;
 		return;
 	}
-	// Poisongrenade Launcher
+	/* Poisongrenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisongrenades)] &&  client->pers.inventory[ITEM_INDEX(it_poisongrenadelauncher)] && !turret)
 	{
 		if (oldweapon != it_poisongrenadelauncher)
 			self->client->newweapon = it_poisongrenadelauncher;
 		return;
 	}
-	// Sword
+	/* Sword */
 	if ( client->pers.inventory[ITEM_INDEX(it_sword)])
 	{
 		if (oldweapon != it_sword)
 			self->client->newweapon = it_sword;
 		return;
 	}
-	// Chainsaw
+	/* Chainsaw */
 	if ( client->pers.inventory[ITEM_INDEX(it_chainsaw)])
 	{
 		if (oldweapon != it_chainsaw)
 			self->client->newweapon = it_chainsaw;
 		return;
 	}
-	// Flash Grenades
+	/* Flash Grenades */
 	if ( client->pers.inventory[ITEM_INDEX(it_flashgrenades)] && !turret)
 	{
 		if (oldweapon != it_flashgrenades)
 			 self->client->newweapon = it_flashgrenades;
 		return;
 	}
-	// Poison Grenades
+	/* Poison Grenades */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisongrenades)] && !turret)
 	{
 		if (oldweapon != it_poisongrenades)
@@ -721,7 +721,7 @@ void Bot_BestMidWeapon(edict_t *self)
 		return;
 	}
 
-	// found nothing so use ak42
+	/* found nothing so use ak42*/
 	self->client->newweapon = it_ak42;
 }
 
@@ -734,10 +734,10 @@ void Bot_BestCloseWeapon(edict_t *self)
 	client = self->client;
 	oldweapon = client->pers.weapon;
 
-	it_lturret = FindItem("automatic defence turret");	//bugfix
-	it_airfist = FindItem("airgun");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
+	it_airfist = FindItem("airgun");	/* bugfix */
 
-	// Is our enemy a turret ?
+	/* Is our enemy a turret ?*/
 	if (self->enemy
 		&& self->enemy->inuse
 		&& (self->enemy->health > 0)
@@ -746,161 +746,161 @@ void Bot_BestCloseWeapon(edict_t *self)
 		turret = 1;
 	}
 
-	// Sword
+	/* Sword */
 	if ( client->pers.inventory[ITEM_INDEX(it_sword)])
 	{
 		if (oldweapon != it_sword)
 			self->client->newweapon = it_sword;
 		return;
 	}
-	// Chainsaw
+	/* Chainsaw */
 	if ( client->pers.inventory[ITEM_INDEX(it_chainsaw)])
 	{
 		if (oldweapon != it_chainsaw)
 			self->client->newweapon = it_chainsaw;
 		return;
 	}
-	// Buzzsaw
+	/* Buzzsaw */
 	if ( client->pers.inventory[ITEM_INDEX(it_buzzes)] &&  client->pers.inventory[ITEM_INDEX(it_buzzsaw)])
 	{
 		if (oldweapon != it_buzzsaw)
 			self->client->newweapon = it_buzzsaw;
 		return;
 	}
-	// Railgun
+	/* Railgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_slugs)] &&  client->pers.inventory[ITEM_INDEX(it_railgun)])
 	{
 		if (oldweapon != it_railgun)
 			self->client->newweapon = it_railgun;
 		return;
 	}
-	// Rocket Launcher
+	/* Rocket Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_rockets)]	&&  client->pers.inventory[ITEM_INDEX(it_rocketlauncher)])
 	{
 		if (oldweapon != it_rocketlauncher)
 			self->client->newweapon = it_rocketlauncher;
 		return;
 	}
-	// Hyperblaster
+	/* Hyperblaster */
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] > 10) &&  client->pers.inventory[ITEM_INDEX(it_hyperblaster)])
 	{
 		if (oldweapon != it_hyperblaster)
 			self->client->newweapon = it_hyperblaster;
 		return;
 	}
-	// Vortex
+	/* Vortex */
 	if (client->pers.inventory[ITEM_INDEX(it_vortex)])
 	{
 		if (oldweapon != it_vortex)
 			self->client->newweapon = it_vortex;
 		return;
 	}
-	// BFG
+	/* BFG */
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_bfg)])
 	{
 		if (oldweapon != it_bfg)
 			self->client->newweapon = it_bfg;
 		return;
 	}
-	// Poison Crossbow
+	/* Poison Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisoncrossbow)]	&&  client->pers.inventory[ITEM_INDEX(it_poisonarrows)])
 	{
 		if (oldweapon != it_poisonarrows)
 			self->client->newweapon = it_poisoncrossbow;
 		return;
 	}	
-	// Crossbow
+	/* Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_crossbow)] &&  client->pers.inventory[ITEM_INDEX(it_arrows)])
 	{
 		if (oldweapon != it_crossbow)
 			self->client->newweapon = it_crossbow;
 		return;
 	}
-	// Rocket Turret
+	/* Rocket Turret */
 	if (client->pers.inventory[ITEM_INDEX(it_rturret)])
 	{
 		if (oldweapon != it_rturret)
 			self->client->newweapon = it_rturret;
 		return;
 	}
-	// Laser Turret
+	/* Laser Turret */
 	if (client->pers.inventory[ITEM_INDEX(it_lturret)])
 	{
 		if (oldweapon != it_lturret)
 			self->client->newweapon = it_lturret;
 		return;
 	}
-	// Proxymine Launcher
+	/* Proxymine Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_proxymines)]	&&  client->pers.inventory[ITEM_INDEX(it_proxyminelauncher)])
 	{
 		if (oldweapon != it_proxyminelauncher)
 			self->client->newweapon = it_proxyminelauncher;
 		return;
 	}
-	// Homing Missile Launcher
+	/* Homing Missile Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_homings)]	&&  client->pers.inventory[ITEM_INDEX(it_hominglauncher)])
 	{
 		if (oldweapon != it_hominglauncher)
 			self->client->newweapon = it_hominglauncher;
 		return;
 	}
-	// Explosive Crossbow
+	/* Explosive Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_explosivecrossbow)] &&  client->pers.inventory[ITEM_INDEX(it_explosivearrows)])
 	{
 		if (oldweapon != it_explosivecrossbow)
 			self->client->newweapon = it_explosivecrossbow;
 		return;
 	}
-	// Explosive Super Shotgun
+	/* Explosive Super Shotgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_eshells)]	&&  client->pers.inventory[ITEM_INDEX(it_esupershotgun)])
 	{
 		if (oldweapon != it_esupershotgun)
 			self->client->newweapon = it_esupershotgun;
 		return;
 	}
-	// Super Shotgun
+	/* Super Shotgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_shells)] &&  client->pers.inventory[ITEM_INDEX(it_supershotgun)])
 	{
 		if (oldweapon != it_supershotgun)
 			self->client->newweapon = it_supershotgun;
 		return;
 	}
-	// Grenade Launcher
+	/* Grenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_grenades)] &&  client->pers.inventory[ITEM_INDEX(it_grenadelauncher)])
 	{
 		if (oldweapon != it_grenadelauncher)
 			self->client->newweapon = it_grenadelauncher;
 		return;
 	}
-	// Airfist
+	/* Airfist */
 	if ( client->pers.inventory[ITEM_INDEX(it_airfist)] && !turret)
 	{
 		if (oldweapon != it_airfist)
 			self->client->newweapon = it_airfist;
 		return;
 	}
-	// Flashgrenade Launcher
+	/* Flashgrenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_flashgrenades)] &&  client->pers.inventory[ITEM_INDEX(it_flashgrenadelauncher)] && !turret)
 	{
 		if (oldweapon != it_flashgrenadelauncher)
 			self->client->newweapon = it_flashgrenadelauncher;
 		return;
 	}
-	// Poisongrenade Launcher
+	/* Poisongrenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisongrenades)] &&  client->pers.inventory[ITEM_INDEX(it_poisongrenadelauncher)] && !turret)
 	{
 		if (oldweapon != it_poisongrenadelauncher)
 			self->client->newweapon = it_poisongrenadelauncher;
 		return;
 	}
-	// Flash Grenades
+	/* Flash Grenades */
 	if ( client->pers.inventory[ITEM_INDEX(it_flashgrenades)] && !turret)
 	{
 		if (oldweapon != it_flashgrenades)
 			 self->client->newweapon = it_flashgrenades;
 		return;
 	}
-	// Poison Grenades
+	/* Poison Grenades */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisongrenades)] && !turret)
 	{
 		if (oldweapon != it_poisongrenades)
@@ -908,7 +908,7 @@ void Bot_BestCloseWeapon(edict_t *self)
 		return;
 	}
 
-	// found nothing so use ak42
+	/* found nothing so use ak42*/
 	self->client->newweapon = it_ak42;
 }
 
@@ -921,10 +921,10 @@ void Bot_BestFarWeapon(edict_t *self)
 	client = self->client;
 	oldweapon = client->pers.weapon;
 
-	it_lturret = FindItem("automatic defence turret");	//bugfix
-	it_airfist = FindItem("airgun");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
+	it_airfist = FindItem("airgun");	/* bugfix */
 
-	// Is our enemy a turret ?
+	/* Is our enemy a turret ?*/
 	if (self->enemy
 		&& self->enemy->inuse
 		&& (self->enemy->health > 0)
@@ -933,184 +933,184 @@ void Bot_BestFarWeapon(edict_t *self)
 		turret = 1;
 	}
 
-	// No enemy but we want to place some proxies or turrets
+	/* No enemy but we want to place some proxies or turrets */
 	if (!self->enemy)
 	{
 		if (self->client->pers.inventory[ITEM_INDEX(it_rturret)]
 			&& self->client->pers.weapon == it_rturret)
 		{
-			return;	//we have the rturret and no enemy...return;
+			return;	/* we have the rturret and no enemy...return;*/
 		}
 
 		if (self->client->pers.inventory[ITEM_INDEX(it_lturret)]
 			&& self->client->pers.weapon == it_lturret)
 		{
-			return;	//we have the lturret and no enemy...return;
+			return;	/* we have the lturret and no enemy...return;*/
 		}
 
 		if (self->client->pers.inventory[ITEM_INDEX(it_proxymines)]
 			&& self->client->pers.inventory[ITEM_INDEX(it_proxyminelauncher)]
 			&& self->client->pers.weapon == it_proxyminelauncher)
 		{
-			return;	//we have proxies and no enemy...return;
+			return;	/* we have proxies and no enemy...return;*/
 		}
 	}
 
-	// Railgun
+	/* Railgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_slugs)] &&  client->pers.inventory[ITEM_INDEX(it_railgun)])
 	{
 		if (oldweapon != it_railgun)
 			self->client->newweapon = it_railgun;
 		return;
 	}
-	// Buzzsaw
+	/* Buzzsaw */
 	if ( client->pers.inventory[ITEM_INDEX(it_buzzes)] &&  client->pers.inventory[ITEM_INDEX(it_buzzsaw)])
 	{
 		if (oldweapon != it_buzzsaw)
 			self->client->newweapon = it_buzzsaw;
 		return;
 	}
-	// BFG
+	/* BFG */
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] >= 50) &&  client->pers.inventory[ITEM_INDEX(it_bfg)])
 	{
 		if (oldweapon != it_bfg)
 			self->client->newweapon = it_bfg;
 		return;
 	}
-	// Explosive Crossbow
+	/* Explosive Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_explosivecrossbow)] &&  client->pers.inventory[ITEM_INDEX(it_explosivearrows)])
 	{
 		if (oldweapon != it_explosivecrossbow)
 			self->client->newweapon = it_explosivecrossbow;
 		return;
 	}
-	// Homing Missile Launcher
+	/* Homing Missile Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_homings)]	&&  client->pers.inventory[ITEM_INDEX(it_hominglauncher)])
 	{
 		if (oldweapon != it_hominglauncher)
 			self->client->newweapon = it_hominglauncher;
 		return;
 	}
-	// Hyperblaster
+	/* Hyperblaster */
 	if ((client->pers.inventory[ITEM_INDEX(it_cells)] > 10) &&  client->pers.inventory[ITEM_INDEX(it_hyperblaster)])
 	{
 		if (oldweapon != it_hyperblaster)
 			self->client->newweapon = it_hyperblaster;
 		return;
 	}
-	// Rocket Launcher
+	/* Rocket Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_rockets)]	&&  client->pers.inventory[ITEM_INDEX(it_rocketlauncher)])
 	{
 		if (oldweapon != it_rocketlauncher)
 			self->client->newweapon = it_rocketlauncher;
 		return;
 	}
-	// Poison Crossbow
+	/* Poison Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisoncrossbow)]	&&  client->pers.inventory[ITEM_INDEX(it_poisonarrows)])
 	{
 		if (oldweapon != it_poisonarrows)
 			self->client->newweapon = it_poisoncrossbow;
 		return;
 	}
-	// Crossbow
+	/* Crossbow */
 	if ( client->pers.inventory[ITEM_INDEX(it_crossbow)] &&  client->pers.inventory[ITEM_INDEX(it_arrows)])
 	{
 		if (oldweapon != it_crossbow)
 			self->client->newweapon = it_crossbow;
 		return;
 	}
-	// Rocket Turret
+	/* Rocket Turret */
 	if (client->pers.inventory[ITEM_INDEX(it_rturret)])
 	{
 		if (oldweapon != it_rturret)
 			self->client->newweapon = it_rturret;
 		return;
 	}
-	// Laser Turret
+	/* Laser Turret */
 	if (client->pers.inventory[ITEM_INDEX(it_lturret)])
 	{
 		if (oldweapon != it_lturret)
 			self->client->newweapon = it_lturret;
 		return;
 	}
-	// Explosive Super Shotgun
+	/* Explosive Super Shotgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_eshells)]	&&  client->pers.inventory[ITEM_INDEX(it_esupershotgun)])
 	{
 		if (oldweapon != it_esupershotgun)
 			self->client->newweapon = it_esupershotgun;
 		return;
 	}
-	// Super Shotgun
+	/* Super Shotgun */
 	if ( client->pers.inventory[ITEM_INDEX(it_shells)] &&  client->pers.inventory[ITEM_INDEX(it_supershotgun)])
 	{
 		if (oldweapon != it_supershotgun)
 			self->client->newweapon = it_supershotgun;
 		return;
 	}
-	// Vortex
+	/* Vortex */
 	if (client->pers.inventory[ITEM_INDEX(it_vortex)])
 	{
 		if (oldweapon != it_vortex)
 			self->client->newweapon = it_vortex;
 		return;
 	}
-	// Proxymine Launcher
+	/* Proxymine Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_proxymines)]	&&  client->pers.inventory[ITEM_INDEX(it_proxyminelauncher)])
 	{
 		if (oldweapon != it_proxyminelauncher)
 			self->client->newweapon = it_proxyminelauncher;
 		return;
 	}
-	// Grenade Launcher
+	/* Grenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_grenades)] &&  client->pers.inventory[ITEM_INDEX(it_grenadelauncher)])
 	{
 		if (oldweapon != it_grenadelauncher)
 			self->client->newweapon = it_grenadelauncher;
 		return;
 	}
-	// Airfist
+	/* Airfist */
 	if ( client->pers.inventory[ITEM_INDEX(it_airfist)] && !turret)
 	{
 		if (oldweapon != it_airfist)
 			self->client->newweapon = it_airfist;
 		return;
 	}
-	// Flashgrenade Launcher
+	/* Flashgrenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_flashgrenades)] &&  client->pers.inventory[ITEM_INDEX(it_flashgrenadelauncher)] && !turret)
 	{
 		if (oldweapon != it_flashgrenadelauncher)
 			self->client->newweapon = it_flashgrenadelauncher;
 		return;
 	}
-	// Poisongrenade Launcher
+	/* Poisongrenade Launcher */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisongrenades)] &&  client->pers.inventory[ITEM_INDEX(it_poisongrenadelauncher)] && !turret)
 	{
 		if (oldweapon != it_poisongrenadelauncher)
 			self->client->newweapon = it_poisongrenadelauncher;
 		return;
 	}
-	// Sword
+	/* Sword */
 	if ( client->pers.inventory[ITEM_INDEX(it_sword)])
 	{
 		if (oldweapon != it_sword)
 			self->client->newweapon = it_sword;
 		return;
 	}
-	// Chainsaw
+	/* Chainsaw */
 	if ( client->pers.inventory[ITEM_INDEX(it_chainsaw)])
 	{
 		if (oldweapon != it_chainsaw)
 			self->client->newweapon = it_chainsaw;
 		return;
 	}
-	// Flash Grenades
+	/* Flash Grenades */
 	if ( client->pers.inventory[ITEM_INDEX(it_flashgrenades)] && !turret)
 	{
 		if (oldweapon != it_flashgrenades)
 			 self->client->newweapon = it_flashgrenades;
 		return;
 	}
-	// Poison Grenades
+	/* Poison Grenades */
 	if ( client->pers.inventory[ITEM_INDEX(it_poisongrenades)] && !turret)
 	{
 		if (oldweapon != it_poisongrenades)
@@ -1118,7 +1118,7 @@ void Bot_BestFarWeapon(edict_t *self)
 		return;
 	}
 
-	// found nothing so use ak42
+	/* found nothing so use ak42*/
 	self->client->newweapon = it_ak42;
 }
 
@@ -1126,7 +1126,7 @@ qboolean Bot_CanPickupAmmo(edict_t *ent, edict_t *eitem)
 {
 	gitem_t	*item;
 	
-	it_lturret = FindItem("automatic defence turret");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
 
 	item = eitem->item;
 
@@ -1192,7 +1192,7 @@ qboolean Bot_CanPickupItem(edict_t *ent, edict_t *eitem)
 {
 	gitem_t	*item;
 	
-	it_lturret = FindItem("automatic defence turret");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
 
 	item = eitem->item;
 
@@ -1248,12 +1248,12 @@ int Bot_CanPickupArmor (edict_t *self, edict_t *ent)
 	else
 		return 0;
 
-	// get info on new armor
+	/* get info on new armor */
 	newinfo = (gitem_armor_t *)ent->item->info;
 
 	old_armor_index = ArmorIndex (self);
 
-	// handle armor shards specially
+	/* handle armor shards specially */
 	if (ent->item->tag == ARMOR_SHARD)
 	{
 		return 1;
@@ -1268,12 +1268,12 @@ int Bot_CanPickupArmor (edict_t *self, edict_t *ent)
 			oldinfo = &jacketarmor_info;
 		else if (old_armor_index == combat_armor_index)
 			oldinfo = &combatarmor_info;
-		else // (old_armor_index == body_armor_index)
+		else /* (old_armor_index == body_armor_index)*/
 			oldinfo = &bodyarmor_info;
 
 		if (newinfo->normal_protection > oldinfo->normal_protection)
 		{
-			// calc new armor values
+			/* calc new armor values */
 			salvage = oldinfo->normal_protection / newinfo->normal_protection;
 			salvagecount = salvage * client->pers.inventory[old_armor_index];
 			newcount = newinfo->base_count + salvagecount;
@@ -1284,14 +1284,14 @@ int Bot_CanPickupArmor (edict_t *self, edict_t *ent)
 		}
 		else
 		{
-			// calc new armor values
+			/* calc new armor values */
 			salvage = newinfo->normal_protection / oldinfo->normal_protection;
 			salvagecount = salvage * newinfo->base_count;
 			newcount = client->pers.inventory[old_armor_index] + salvagecount;
 			if (newcount > oldinfo->max_count)
 				newcount = oldinfo->max_count;
 
-			// if we're already maxed out then we don't need the new armor
+			/* if we're already maxed out then we don't need the new armor */
 			if (client->pers.inventory[old_armor_index] >= newcount)
 				return 0;
 
@@ -1306,41 +1306,41 @@ qboolean Bot_CanReachSpotDirectly(edict_t *ent, vec3_t target)
 {
 	vec3_t	dir, midpos, end_trace, mins;
 	trace_t	tr;
-	//float	dist, progressive_dist;
+	/* float	dist, progressive_dist;*/
 
-	// water
+	/* water */
 	if (ent->waterlevel && (gi.pointcontents (target) & MASK_WATER))
 		return true;
 
 	VectorAdd(ent->mins, tv(0,0,12), mins);
-	//VectorCopy(ent->s.origin, start);
+	/* VectorCopy(ent->s.origin, start);*/
 
 	VectorSubtract(target, ent->s.origin, dir);
 	VectorMA(ent->s.origin, 0.5, dir, midpos);
 	VectorSubtract(midpos, tv(0,0,40), end_trace);
 
-	// check if the way to target is free
+	/* check if the way to target is free */
 	tr = gi.trace(ent->s.origin, NULL, NULL, target, ent, MASK_SOLID);
 
 	if (tr.ent && Q_stricmp(tr.ent->classname, "func_door") == 0)
 	{
-		// we are standing in front of a door
+		/* we are standing in front of a door */
 	}
 	else if (tr.fraction != 1 || tr.startsolid)
 	{
 		return false;
 	}
 
-	// is the midpos is on ground
+	/* is the midpos is on ground */
 	tr = gi.trace(midpos, mins, ent->maxs, end_trace, ent, MASK_SOLID);
 
 	if (tr.fraction == 1)
 		return false;
 
-	//if ((dist = VectorLength(dir)) < 32)
+	/* if ((dist = VectorLength(dir)) < 32)*/
 		return true;
 }
-	/*VectorNormalize2(dir, dir);
+	/* VectorNormalize2(dir, dir);
 
 	inc = 12;		// do more thourough checking
 
@@ -1421,14 +1421,14 @@ void AddItemToList(edict_t *ent)
 	if (!ent->item->pickup)
 		return;
 
-	if(Q_stricmp(ent->classname, "item_armor_shard") == 0	//don't add armor shards to our list!!!
-		|| Q_stricmp(ent->classname, "item_flag_team1") == 0	//don't add ctf flags to our list!
+	if(Q_stricmp(ent->classname, "item_armor_shard") == 0	/* don't add armor shards to our list!!!*/
+		|| Q_stricmp(ent->classname, "item_flag_team1") == 0	/* don't add ctf flags to our list!*/
 		|| Q_stricmp(ent->classname, "item_flag_team2") == 0
 		|| Q_stricmp(ent->classname, "freed") == 0
-		|| Q_stricmp(ent->classname, "item_health_small") == 0) //don't add mini health packs to our list!	
+		|| Q_stricmp(ent->classname, "item_health_small") == 0) /* don't add mini health packs to our list!	*/
 		return;
 
-	//find the list head
+	/* find the list head */
 	if (ent->item->pickup == Pickup_Weapon
 		|| ent->item->pickup == Pickup_NoAmmoWeapon
 		|| Q_stricmp(ent->classname, "ammo_vortex") == 0
@@ -1436,52 +1436,52 @@ void AddItemToList(edict_t *ent)
 		|| Q_stricmp(ent->classname, "ammo_rocketturret") == 0
 		)
 	{
-		if(!weapon_list)	//list is empty so the first item becomes the head
+		if(!weapon_list)	/* list is empty so the first item becomes the head */
 		{
 			weapon_list = ent;
 			return;
 		}
 		else
-			current = weapon_list;	// start with the head
+			current = weapon_list;	/* start with the head */
 	}
 	else if (ent->item->pickup == Pickup_Health)
 	{
-		if(!health_list)	//list is empty so the first item becomes the head
+		if(!health_list)	/* list is empty so the first item becomes the head */
 		{
 			health_list = ent;
 			return;
 		}
 		else
-			current = health_list;	// start with the head
+			current = health_list;	/* start with the head */
 	}
 	else if (ent->item->pickup == Pickup_Ammo)
-		if(!ammo_list)	//list is empty so the first item becomes the head
+		if(!ammo_list)	/* list is empty so the first item becomes the head */
 		{
 			ammo_list = ent;
 			return;
 		}
 		else
-			current = ammo_list;	// start with the head
+			current = ammo_list;	/* start with the head */
 	else
 	{
-		if(!powerup_list)	//list is empty so the first item becomes the head
+		if(!powerup_list)	/* list is empty so the first item becomes the head */
 		{
 			powerup_list = ent;
 			return;
 		}
 		else
-			current = powerup_list;	// start with the head
+			current = powerup_list;	/* start with the head */
 	}
 
-	//go through all items in the list
+	/* go through all items in the list */
 	while (current)
 	{
-		if (current == ent) //items already is in the list
+		if (current == ent) /* items already is in the list */
 			return;
 
-		if (current->next_listitem)	//list go's on
-			current = current->next_listitem;	//go to next item in list
-		else	// next position is free so add current item there
+		if (current->next_listitem)	/* list go's on */
+			current = current->next_listitem;	/* go to next item in list */
+		else	/* next position is free so add current item there */
 		{
 			current->next_listitem = ent;
 			return;
@@ -1506,19 +1506,19 @@ void RemoveFromList(edict_t *ent)
 		|| Q_stricmp(ent->classname, "item_health_small") == 0)
 		return;
 
-	//find the list head
+	/* find the list head */
 	if (ent->item->pickup == Pickup_Weapon)
 	{
-		if(!weapon_list)	//list is empty
+		if(!weapon_list)	/* list is empty */
 		{
 			return;
 		}
 		else
-			current = weapon_list;	// start with the head
+			current = weapon_list;	/* start with the head */
 	}
 	else if (ent->item->pickup == Pickup_Health)
 	{
-		if(!health_list)	//list is empty
+		if(!health_list)	/* list is empty */
 		{
 			return;
 		}
@@ -1527,7 +1527,7 @@ void RemoveFromList(edict_t *ent)
 	}
 	else if (ent->item->pickup == Pickup_Ammo)
 	{
-		if(!ammo_list)	//list is empty so the first item becomes the head
+		if(!ammo_list)	/* list is empty so the first item becomes the head */
 		{
 			return;
 		}
@@ -1536,17 +1536,17 @@ void RemoveFromList(edict_t *ent)
 	}
 	else
 	{
-		if(!powerup_list)	//list is empty so the first item becomes the head
+		if(!powerup_list)	/* list is empty so the first item becomes the head */
 		{
 			return;
 		}
 		else
-			current = powerup_list;	// start with the head
+			current = powerup_list;	/* start with the head */
 	}
 
 	while (current)
 	{
-		if (current->next_listitem == ent)	//found it
+		if (current->next_listitem == ent)	/* found it */
 		{
 			break;
 		}
@@ -1597,7 +1597,7 @@ void Load_BotChat(void)
 	{
 		fscanf(fp, "%c", &buffer);
 
-		if (buffer == ';')	//comment, strip the rest of the line
+		if (buffer == ';')	/* comment, strip the rest of the line */
 		{
 			while (!feof(fp) && (buffer != '\n'))
 				fscanf(fp, "%c", &buffer);
@@ -1607,21 +1607,21 @@ void Load_BotChat(void)
 			fclose(fp);
 			return;
 		}
-		else if (buffer == '[')	//section
+		else if (buffer == '[')	/* section */
 		{
 			section++; line = -1;
 
-			while (!feof(fp) && (buffer != '\n'))	// read the end of the line
+			while (!feof(fp) && (buffer != '\n'))	/* read the end of the line */
 				fscanf(fp, "%c", &buffer);
 		}
-		else if (((buffer >= 'a') && (buffer <= 'z')) ||	// a chat line...read it
+		else if (((buffer >= 'a') && (buffer <= 'z')) ||	/* a chat line...read it */
 				 ((buffer >= 'A') && (buffer <= 'Z')) ||
 				 (buffer == '%'))
 		{
 			i = 0;
 			line++;
 
-			// allocate memory
+			/* allocate memory */
 
 			chat_text[section][line] = gi.TagMalloc(256, TAG_GAME);
 			memset(chat_text[section][line], 0, 256);
@@ -1635,9 +1635,9 @@ void Load_BotChat(void)
 
 			if (i > 0)
 			{
-				chat_text[section][line][i] = '\0';	//append ascii null
+				chat_text[section][line][i] = '\0';	/* append ascii null */
 			}
-			else	//empty line ?
+			else	/* empty line ?*/
 				line--;
 
 			chat_linecount[section] = line;

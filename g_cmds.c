@@ -2,7 +2,7 @@
 #include "m_player.h"
 #include "c_base.h"
 
-void ClientCommand2 (edict_t *ent);	//MATTHIAS
+void ClientCommand2 (edict_t *ent);	/* MATTHIAS */
 
 char *ClientTeam (edict_t *ent)
 {
@@ -25,7 +25,7 @@ char *ClientTeam (edict_t *ent)
 		return value;
 	}
 
-	// if ((int)(dmflags->value) & DF_SKINTEAMS)
+	/* if ((int)(dmflags->value) & DF_SKINTEAMS)*/
 	return ++p;
 }
 
@@ -54,7 +54,7 @@ void SelectNextItem (edict_t *ent, int itflags)
 
 	cl = ent->client;
 
-//Matthias
+/* Matthias */
 	if (cl->menu)
 	{
 		PMenu_Next(ent);
@@ -66,7 +66,7 @@ void SelectNextItem (edict_t *ent, int itflags)
 		return;
 	}
 
-	// scan  for the next valid one
+	/* scan  for the next valid one */
 	for (i=1 ; i<=MAX_ITEMS ; i++)
 	{
 		index = (cl->pers.selected_item + i)%MAX_ITEMS;
@@ -93,7 +93,7 @@ void SelectPrevItem (edict_t *ent, int itflags)
 
 	cl = ent->client;
 
-//Matthias
+/* Matthias */
 	if (cl->menu) 
 	{
 		PMenu_Prev(ent);
@@ -105,7 +105,7 @@ void SelectPrevItem (edict_t *ent, int itflags)
 		return;
 	}
 
-	// scan  for the next valid one
+	/* scan  for the next valid one */
 	for (i=1 ; i<=MAX_ITEMS ; i++)
 	{
 		index = (cl->pers.selected_item + MAX_ITEMS - i)%MAX_ITEMS;
@@ -131,13 +131,13 @@ void ValidateSelectedItem (edict_t *ent)
 	cl = ent->client;
 
 	if (cl->pers.inventory[cl->pers.selected_item])
-		return;		// valid
+		return;		/* valid */
 
 	SelectNextItem (ent, -1);
 }
 
 
-//=================================================================================
+/*=================================================================================*/
 
 /*
 ==================
@@ -257,7 +257,7 @@ void Cmd_Give_f (edict_t *ent)
 				continue;
 			if (it->flags & (IT_ARMOR|IT_WEAPON|IT_AMMO))
 				continue;
-			if(it == FindItem("Red Flag")  //MATTHIAS
+			if(it == FindItem("Red Flag")  /* MATTHIAS */
 				|| it == FindItem("Blue Flag") 
 				|| it == FindItem("Time Accel") 
 				|| it == FindItem("AutoDoc") 
@@ -276,7 +276,7 @@ void Cmd_Give_f (edict_t *ent)
 
 	it = FindItem (name);
 
-	if(it == FindItem("Red Flag")  //MATTHIAS
+	if(it == FindItem("Red Flag")  /* MATTHIAS */
 		|| it == FindItem("Blue Flag") 
 		|| it == FindItemByClassname ("weapon_machinegun")
 		|| it == FindItemByClassname ("weapon_shotgun")
@@ -461,12 +461,12 @@ void Cmd_Drop_f (edict_t *ent)
 	gitem_t		*it;
 	char		*s;
 
-//ZOID--special case for tech powerups
+/* ZOID--special case for tech powerups */
 	if (Q_stricmp(gi.args(), "tech") == 0 && (it = CTFWhat_Tech(ent)) != NULL) {
 		it->drop (ent, it);
 		return;
 	}
-//ZOID
+/* ZOID */
 
 	s = gi.args();
 	it = FindItem (s);
@@ -506,12 +506,12 @@ void Cmd_Inven_f (edict_t *ent)
 	cl->showscores = false;
 	cl->showhelp = false;
 
-//ZOID
+/* ZOID */
 	if (ent->client->menu) {
 		PMenu_Close(ent);
 		return;
 	}
-//ZOID
+/* ZOID */
 
 	if (cl->showinventory)
 	{
@@ -519,12 +519,12 @@ void Cmd_Inven_f (edict_t *ent)
 		return;
 	}
 
-//ZOID
+/* ZOID */
 	if (ctf->value && cl->resp.ctf_team == CTF_NOTEAM) {
 		CTFOpenJoinMenu(ent);
 		return;
 	}
-//ZOID
+/* ZOID */
 
 	cl->showinventory = true;
 
@@ -535,7 +535,7 @@ void Cmd_Inven_f (edict_t *ent)
 	}
 	gi.unicast (ent, true);
 
-	cl->scanneractive = 0;	//MATTHIAS
+	cl->scanneractive = 0;	/* MATTHIAS */
 }
 
 /*
@@ -547,12 +547,12 @@ void Cmd_InvUse_f (edict_t *ent)
 {
 	gitem_t		*it;
 
-//ZOID
+/* ZOID */
 	if (ent->client->menu) {
 		PMenu_Select(ent);
 		return;
 	}
-//ZOID
+/* ZOID */
 
 	ValidateSelectedItem (ent);
 
@@ -571,7 +571,7 @@ void Cmd_InvUse_f (edict_t *ent)
 	it->use (ent, it);
 }
 
-//ZOID
+/* ZOID */
 /*
 =================
 Cmd_LastWeap_f
@@ -588,7 +588,7 @@ void Cmd_LastWeap_f (edict_t *ent)
 
 	cl->pers.lastweapon->use (ent, cl->pers.lastweapon);
 }
-//ZOID
+/* ZOID */
 
 /*
 =================
@@ -612,7 +612,7 @@ void Cmd_WeapPrev_f (edict_t *ent)
 
 	selected_weapon = ITEM_INDEX(cl->pers.weapon);
 
-	// scan  for the next valid one
+	/* scan  for the next valid one */
 	for (i=1 ; i<=MAX_ITEMS ; i++)
 	{
 		index = (selected_weapon + i)%MAX_ITEMS;
@@ -625,7 +625,7 @@ void Cmd_WeapPrev_f (edict_t *ent)
 			continue;
 		it->use (ent, it);
 		if (cl->pers.weapon == it)
-			return;	// successful
+			return;	/* successful */
 	}
 }
 
@@ -651,7 +651,7 @@ void Cmd_WeapNext_f (edict_t *ent)
 
 	selected_weapon = ITEM_INDEX(cl->pers.weapon);
 
-	// scan  for the next valid one
+	/* scan  for the next valid one */
 	for (i=1 ; i<=MAX_ITEMS ; i++)
 	{
 		index = (selected_weapon + MAX_ITEMS - i)%MAX_ITEMS;
@@ -664,7 +664,7 @@ void Cmd_WeapNext_f (edict_t *ent)
 			continue;
 		it->use (ent, it);
 		if (cl->pers.weapon == it)
-			return;	// successful
+			return;	/* successful */
 	}
 }
 
@@ -735,10 +735,10 @@ Cmd_Kill_f
 */
 void Cmd_Kill_f (edict_t *ent)
 {
-//ZOID
+/* ZOID */
 	if (ent->solid == SOLID_NOT)
 		return;
-//ZOID
+/* ZOID */
 
 /*
  * Fix for invincible bug
@@ -758,7 +758,7 @@ void Cmd_Kill_f (edict_t *ent)
 	ent->health = 0;
 	meansOfDeath = MOD_SUICIDE;
 	player_die (ent, ent, ent, 100000, vec3_origin);
-	// don't even bother waiting for death frames
+	/* don't even bother waiting for death frames */
 	ent->deadflag = DEAD_DEAD;
 	respawn (ent);
 }
@@ -773,10 +773,10 @@ void Cmd_PutAway_f (edict_t *ent)
 	ent->client->showscores = false;
 	ent->client->showhelp = false;
 	ent->client->showinventory = false;
-//ZOID
+/* ZOID */
 	if (ent->client->menu)
 		PMenu_Close(ent);
-//ZOID
+/* ZOID */
 }
 
 
@@ -818,10 +818,10 @@ void Cmd_Players_f (edict_t *ent)
 			count++;
 		}
 
-	// sort by frags
+	/* sort by frags */
 	qsort (index, count, sizeof(index[0]), PlayerSort);
 
-	// print information
+	/* print information */
 	large[0] = 0;
 
 	for (i = 0 ; i < count ; i++)
@@ -830,7 +830,7 @@ void Cmd_Players_f (edict_t *ent)
 			game.clients[index[i]].ps.stats[STAT_FRAGS],
 			game.clients[index[i]].pers.netname);
 		if (strlen (small) + strlen(large) > sizeof(large) - 100 )
-		{	// can't print all of them in one packet
+		{	/* can't print all of them in one packet */
 			strcat (large, "...\n");
 			break;
 		}
@@ -854,7 +854,7 @@ void Cmd_Wave_f (edict_t *ent)
 
 	i = atoi (gi.argv(1));
 
-	// can't wave when ducked
+	/* can't wave when ducked */
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 		return;
 
@@ -935,7 +935,7 @@ void Cmd_Say_f (edict_t *ent, qboolean team, qboolean arg0)
 		strcat(text, p);
 	}
 
-	// don't let text be too long for malicious reasons
+	/* don't let text be too long for malicious reasons */
 	if (strlen(text) > 150)
 		text[150] = 0;
 
@@ -971,8 +971,8 @@ void ClientCommand (edict_t *ent)
 {
 	char	*cmd;
 
-	if (!ent->client || !ent->classname ) // FWP Check ent->classname too
-		return;		// not fully in game yet
+	if (!ent->client || !ent->classname ) /* FWP Check ent->classname too */
+		return;		/* not fully in game yet */
 
 	cmd = gi.argv(0);
 

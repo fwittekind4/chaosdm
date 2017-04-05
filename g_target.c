@@ -1,6 +1,6 @@
 #include "g_local.h"
 
-/*QUAKED target_temp_entity (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED target_temp_entity (1 0 0) (-8 -8 -8) (8 8 8)
 Fire an origin based temp entity event to the clients.
 "style"		type byte
 */
@@ -18,11 +18,11 @@ void SP_target_temp_entity (edict_t *ent)
 }
 
 
-//==========================================================
+/*==========================================================*/
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_speaker (1 0 0) (-8 -8 -8) (8 8 8) looped-on looped-off reliable
+/* QUAKED target_speaker (1 0 0) (-8 -8 -8) (8 8 8) looped-on looped-off reliable
 "noise"		wav file to play
 "attenuation"
 -1 = none, send to whole level
@@ -41,20 +41,20 @@ void Use_Target_Speaker (edict_t *ent, edict_t *other, edict_t *activator)
 	int		chan;
 
 	if (ent->spawnflags & 3)
-	{	// looping sound toggles
+	{	/* looping sound toggles */
 		if (ent->s.sound)
-			ent->s.sound = 0;	// turn it off
+			ent->s.sound = 0;	/* turn it off */
 		else
-			ent->s.sound = ent->noise_index;	// start it
+			ent->s.sound = ent->noise_index;	/* start it */
 	}
 	else
-	{	// normal sound
+	{	/* normal sound */
 		if (ent->spawnflags & 4)
 			chan = CHAN_VOICE|CHAN_RELIABLE;
 		else
 			chan = CHAN_VOICE;
-		// use a positioned_sound, because this entity won't normally be
-		// sent to any clients because it is invisible
+		/* use a positioned_sound, because this entity won't normally be */
+		/* sent to any clients because it is invisible */
 		gi.positioned_sound (ent->s.origin, ent, chan, ent->noise_index, ent->volume, ent->attenuation, 0);
 	}
 }
@@ -79,22 +79,22 @@ void SP_target_speaker (edict_t *ent)
 
 	if (!ent->attenuation)
 		ent->attenuation = 1.0;
-	else if (ent->attenuation == -1)	// use -1 so 0 defaults to 1
+	else if (ent->attenuation == -1)	/* use -1 so 0 defaults to 1*/
 		ent->attenuation = 0;
 
-	// check for prestarted looping sound
+	/* check for prestarted looping sound */
 	if (ent->spawnflags & 1)
 		ent->s.sound = ent->noise_index;
 
 	ent->use = Use_Target_Speaker;
 
-	// must link the entity so we get areas and clusters so
-	// the server can determine who to send updates to
+	/* must link the entity so we get areas and clusters so */
+	/* the server can determine who to send updates to */
 	gi.linkentity (ent);
 }
 
 
-//==========================================================
+/*==========================================================*/
 
 void Use_Target_Help (edict_t *ent, edict_t *other, edict_t *activator)
 {
@@ -106,13 +106,13 @@ void Use_Target_Help (edict_t *ent, edict_t *other, edict_t *activator)
 	game.helpchanged++;
 }
 
-/*QUAKED target_help (1 0 1) (-16 -16 -24) (16 16 24) help1
+/* QUAKED target_help (1 0 1) (-16 -16 -24) (16 16 24) help1
 When fired, the "message" key becomes the current personal computer string, and the message light will be set on all clients status bars.
 */
 void SP_target_help(edict_t *ent)
 {
 	if (deathmatch->value)
-	{	// auto-remove for deathmatch
+	{	/* auto-remove for deathmatch */
 		G_FreeEdict (ent);
 		return;
 	}
@@ -128,22 +128,22 @@ void SP_target_help(edict_t *ent)
 
 void SP_target_secret (edict_t *ent)
 {
-	// auto-remove for deathmatch
+	/* auto-remove for deathmatch */
 	G_FreeEdict (ent);
 	return;
 }
 
 void SP_target_goal (edict_t *ent)
 {
-	// auto-remove for deathmatch
+	/* auto-remove for deathmatch */
 	G_FreeEdict (ent);
 	return;
 }
 
-//==========================================================
+/*==========================================================*/
 
 
-/*QUAKED target_explosion (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED target_explosion (1 0 0) (-8 -8 -8) (8 8 8)
 Spawns an explosion temporary entity when used.
 
 "delay"		wait this long before going off
@@ -187,31 +187,31 @@ void SP_target_explosion (edict_t *ent)
 }
 
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_changelevel (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED target_changelevel (1 0 0) (-8 -8 -8) (8 8 8)
 Changes level to "map" when fired
 */
 void use_target_changelevel (edict_t *self, edict_t *other, edict_t *activator)
 {
 	if (level.intermissiontime)
-		return;		// allready activated
+		return;		/* allready activated */
 
-	// if noexit, do a ton of damage to other
+	/* if noexit, do a ton of damage to other */
 	if (deathmatch->value && !( (int)dmflags->value & DF_ALLOW_EXIT) && other != world)
 	{
 		T_Damage (other, self, self, vec3_origin, other->s.origin, vec3_origin, 10 * other->max_health, 1000, 0, MOD_EXIT);
 		return;
 	}
 
-	// if multiplayer, let everyone know who hit the exit
+	/* if multiplayer, let everyone know who hit the exit */
 	if (deathmatch->value)
 	{
 		if (activator && activator->client)
 			bprintf2 (PRINT_HIGH, "%s exited the level.\n", activator->client->pers.netname);
 	}
 
-	// if going to a new unit, clear cross triggers
+	/* if going to a new unit, clear cross triggers */
 	if (strstr(self->map, "*"))	
 		game.serverflags &= ~(SFL_CROSS_TRIGGER_MASK);
 
@@ -227,7 +227,7 @@ void SP_target_changelevel (edict_t *ent)
 		return;
 	}
 
-	// ugly hack because *SOMEBODY* screwed up their map
+	/* ugly hack because *SOMEBODY* screwed up their map */
    if((Q_stricmp(level.mapname, "fact1") == 0) && (Q_stricmp(ent->map, "fact3") == 0))
 	   ent->map = "fact3$secret1";
 
@@ -236,9 +236,9 @@ void SP_target_changelevel (edict_t *ent)
 }
 
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_splash (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED target_splash (1 0 0) (-8 -8 -8) (8 8 8)
 Creates a particle splash effect when used.
 
 Set "sounds" to one of the following:
@@ -280,9 +280,9 @@ void SP_target_splash (edict_t *self)
 }
 
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_spawner (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED target_spawner (1 0 0) (-8 -8 -8) (8 8 8)
 Set target to the type of entity you want spawned.
 Useful for spawning monsters and gibs in the factory levels.
 
@@ -323,9 +323,9 @@ void SP_target_spawner (edict_t *self)
 	}
 }
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_blaster (1 0 0) (-8 -8 -8) (8 8 8) NOTRAIL NOEFFECTS
+/* QUAKED target_blaster (1 0 0) (-8 -8 -8) (8 8 8) NOTRAIL NOEFFECTS
 Fires a blaster bolt in the set direction when triggered.
 
 dmg		default is 15
@@ -362,9 +362,9 @@ void SP_target_blaster (edict_t *self)
 }
 
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_crosslevel_trigger (.5 .5 .5) (-8 -8 -8) (8 8 8) trigger1 trigger2 trigger3 trigger4 trigger5 trigger6 trigger7 trigger8
+/* QUAKED target_crosslevel_trigger (.5 .5 .5) (-8 -8 -8) (8 8 8) trigger1 trigger2 trigger3 trigger4 trigger5 trigger6 trigger7 trigger8
 Once this trigger is touched/used, any trigger_crosslevel_target with the same trigger number is automatically used when a level is started within the same unit.  It is OK to check multiple triggers.  Message, delay, target, and killtarget also work.
 */
 void trigger_crosslevel_trigger_use (edict_t *self, edict_t *other, edict_t *activator)
@@ -379,7 +379,7 @@ void SP_target_crosslevel_trigger (edict_t *self)
 	self->use = trigger_crosslevel_trigger_use;
 }
 
-/*QUAKED target_crosslevel_target (.5 .5 .5) (-8 -8 -8) (8 8 8) trigger1 trigger2 trigger3 trigger4 trigger5 trigger6 trigger7 trigger8
+/* QUAKED target_crosslevel_target (.5 .5 .5) (-8 -8 -8) (8 8 8) trigger1 trigger2 trigger3 trigger4 trigger5 trigger6 trigger7 trigger8
 Triggered by a trigger_crosslevel elsewhere within a unit.  If multiple triggers are checked, all must be true.  Delay, target and
 killtarget also work.
 
@@ -404,9 +404,9 @@ void SP_target_crosslevel_target (edict_t *self)
 	self->nextthink = level.time + self->delay;
 }
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_laser (0 .5 .8) (-8 -8 -8) (8 8 8) START_ON RED GREEN BLUE YELLOW ORANGE FAT
+/* QUAKED target_laser (0 .5 .8) (-8 -8 -8) (8 8 8) START_ON RED GREEN BLUE YELLOW ORANGE FAT
 When triggered, fires a laser.  You can either set a target
 or a direction.
 */
@@ -421,7 +421,7 @@ void target_laser_think (edict_t *self)
 	vec3_t	last_movedir;
 	int		count;
 
-	if(strcmp(self->classname,"chaoslaser") == 0)	//MATTHIAS
+	if(strcmp(self->classname,"chaoslaser") == 0)	/* MATTHIAS */
 	{
 		if(level.time > self->delay)
 		{
@@ -468,12 +468,12 @@ void target_laser_think (edict_t *self)
 		if (!tr.ent)
 			break;
 
-		// hurt it if we can
+		/* hurt it if we can */
 		if ((tr.ent->takedamage) && !(tr.ent->flags & FL_IMMUNE_LASER))
 		{
 			T_Damage (tr.ent, self, self->activator, self->movedir, tr.endpos, vec3_origin, self->dmg, 1, DAMAGE_ENERGY, MOD_TARGET_LASER);
 			
-			if(strcmp(self->classname,"chaoslaser") == 0)	//MATTHIAS
+			if(strcmp(self->classname,"chaoslaser") == 0)	/* MATTHIAS */
 			{
 				T_RadiusDamage (self, self, 60, NULL, 60,MOD_TARGET_LASER);
 
@@ -491,7 +491,7 @@ void target_laser_think (edict_t *self)
 				return;
 			}
 		}
-		// if we hit something that's not a monster or player or is immune to lasers, we're done
+		/* if we hit something that's not a monster or player or is immune to lasers, we're done */
 		if (!tr.ent->client)
 		{
 			gi.WriteByte (svc_temp_entity);
@@ -546,15 +546,15 @@ void target_laser_start (edict_t *self)
 	self->movetype = MOVETYPE_NONE;
 	self->solid = SOLID_NOT;
 	self->s.renderfx |= RF_BEAM|RF_TRANSLUCENT;
-	self->s.modelindex = 1;			// must be non-zero
+	self->s.modelindex = 1;			/* must be non-zero */
 
-	// set the beam diameter
+	/* set the beam diameter */
 	if (self->spawnflags & 64)
 		self->s.frame = 16;
 	else
 		self->s.frame = 4;
 
-	// set the color
+	/* set the color */
 	if (self->spawnflags & 2)
 		self->s.skinnum = 0xf2f2f0f0;
 	else if (self->spawnflags & 4)
@@ -598,14 +598,14 @@ void target_laser_start (edict_t *self)
 
 void SP_target_laser (edict_t *self)
 {
-	// let everything else get spawned before we start firing
+	/* let everything else get spawned before we start firing */
 	self->think = target_laser_start;
 	self->nextthink = level.time + 1;
 }
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_lightramp (0 .5 .8) (-8 -8 -8) (8 8 8) TOGGLE
+/* QUAKED target_lightramp (0 .5 .8) (-8 -8 -8) (8 8 8) TOGGLE
 speed		How many seconds the ramping will take
 message		two letters; starting lightlevel and ending lightlevel
 */
@@ -639,7 +639,7 @@ void target_lightramp_use (edict_t *self, edict_t *other, edict_t *activator)
 	{
 		edict_t		*e;
 
-		// check all the targets
+		/* check all the targets */
 		e = NULL;
 		while (1)
 		{
@@ -700,9 +700,9 @@ void SP_target_lightramp (edict_t *self)
 	self->movedir[2] = (self->movedir[1] - self->movedir[0]) / (self->speed / FRAMETIME);
 }
 
-//==========================================================
+/*==========================================================*/
 
-/*QUAKED target_earthquake (1 0 0) (-8 -8 -8) (8 8 8)
+/* QUAKED target_earthquake (1 0 0) (-8 -8 -8) (8 8 8)
 When triggered, this initiates a level-wide earthquake.
 All players and monsters are affected.
 "speed"		severity of the quake (default:200)

@@ -3,7 +3,7 @@
 
 void pre_target_laser_think (edict_t *self);
 
-//Quake2 Functions:
+/* Quake2 Functions:*/
 
 void NoAmmoWeaponChange (edict_t *ent);
 void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf);

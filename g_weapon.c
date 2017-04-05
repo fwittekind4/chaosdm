@@ -17,7 +17,7 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	float		range;
 	vec3_t		dir;
 
-	//see if enemy is in range
+	/* see if enemy is in range */
 	VectorSubtract (self->enemy->s.origin, self->s.origin, dir);
 	range = VectorLength(dir);
 	if (range > aim[0])
@@ -25,12 +25,12 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 
 	if (aim[1] > self->mins[0] && aim[1] < self->maxs[0])
 	{
-		// the hit is straight on so back the range up to the edge of their bbox
+		/* the hit is straight on so back the range up to the edge of their bbox */
 		range -= self->enemy->maxs[0];
 	}
 	else
 	{
-		// this is a side hit so adjust the "right" value out to the edge of their bbox
+		/* this is a side hit so adjust the "right" value out to the edge of their bbox */
 		if (aim[1] < 0)
 			aim[1] = self->enemy->mins[0];
 		else
@@ -44,7 +44,7 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	{
 		if (!tr.ent->takedamage)
 			return false;
-		// if it will hit any client/monster then hit the one we wanted to hit
+		/* if it will hit any client/monster then hit the one we wanted to hit */
 		if ((tr.ent->svflags & SVF_MONSTER) || (tr.ent->client))
 			tr.ent = self->enemy;
 	}
@@ -55,13 +55,13 @@ qboolean fire_hit (edict_t *self, vec3_t aim, int damage, int kick)
 	VectorMA (point, aim[2], up, point);
 	VectorSubtract (point, self->enemy->s.origin, dir);
 
-	// do the damage
+	/* do the damage */
 	T_Damage (tr.ent, self, self, dir, point, vec3_origin, damage, kick/2, DAMAGE_NO_KNOCKBACK, MOD_HIT);
 
 	if (!(tr.ent->svflags & SVF_MONSTER) && (!tr.ent->client))
 		return false;
 
-	// do our special form of knockback here
+	/* do our special form of knockback here */
 	VectorMA (self->enemy->absmin, 0.5, self->enemy->size, v);
 	VectorSubtract (v, point, v);
 	VectorNormalize (v);
@@ -112,7 +112,7 @@ void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 
 		tr = gi.trace (start, NULL, NULL, end, self, content_mask);
 
-		// see if we hit water
+		/* see if we hit water */
 		if (tr.contents & MASK_WATER)
 		{
 			int		color;
@@ -147,7 +147,7 @@ void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 					gi.multicast (tr.endpos, MULTICAST_PVS);
 				}
 
-				// change bullet's course when it enters water
+				/* change bullet's course when it enters water */
 				VectorSubtract (end, start, dir);
 				vectoangles (dir, dir);
 				AngleVectors (dir, forward, right, up);
@@ -158,12 +158,12 @@ void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 				VectorMA (end, u, up, end);
 			}
 
-			// re-trace ignoring water this time
+			/* re-trace ignoring water this time */
 			tr = gi.trace (water_start, NULL, NULL, end, self, MASK_SHOT);
 		}
 	}
 
-	// send gun puff / flash
+	/* send gun puff / flash */
 	if (!((tr.surface) && (tr.surface->flags & SURF_SKY)))
 	{
 		if (tr.fraction < 1.0)
@@ -189,7 +189,7 @@ void fire_lead (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 		}
 	}
 
-	// if went through water, determine where the end and make a bubble trail
+	/* if went through water, determine where the end and make a bubble trail */
 	if (water)
 	{
 		vec3_t	pos;
@@ -276,7 +276,7 @@ void blaster_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *
 
 		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 60% blocked
+			/* 60% blocked */
 			if (random() < 0.6)
 			{
 				self->movetype = MOVETYPE_BOUNCE;
@@ -365,7 +365,7 @@ void Grenade_Explode (edict_t *ent)
 	if (ent->owner && ent->owner->client)
 		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
-	//FIXME: if we are onground then raise our Z just a bit since we are a point?
+	/* FIXME: if we are onground then raise our Z just a bit since we are a point?*/
 	if (ent->enemy)
 	{
 		float	points;
@@ -544,7 +544,7 @@ void rocket_touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 	if (ent->owner && ent->owner->client)
 		PlayerNoise(ent->owner, ent->s.origin, PNOISE_IMPACT);
 
-	// calculate position for the explosion entity
+	/* calculate position for the explosion entity */
 	VectorMA (ent->s.origin, -0.02, ent->velocity, origin);
 
 	if (other->takedamage)
@@ -638,13 +638,13 @@ void fire_rail (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick
 		VectorCopy (tr.endpos, from);
 	}
 
-	// send gun puff / flash
+	/* send gun puff / flash */
 	gi.WriteByte (svc_temp_entity);
 	gi.WriteByte (TE_RAILTRAIL);
 	gi.WritePosition (start);
 	gi.WritePosition (tr.endpos);
 	gi.multicast (self->s.origin, MULTICAST_PHS);
-//	gi.multicast (start, MULTICAST_PHS);
+/*	gi.multicast (start, MULTICAST_PHS);*/
 	if (water)
 	{
 		gi.WriteByte (svc_temp_entity);
@@ -673,7 +673,7 @@ void bfg_explode (edict_t *self)
 
 	if (self->s.frame == 0)
 	{
-		// the BFG effect
+		/* the BFG effect */
 		ent = NULL;
 		while ((ent = findradius(ent, self->s.origin, self->dmg_radius)) != NULL)
 		{
@@ -722,7 +722,7 @@ void bfg_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf
 	if (self->owner->client)
 		PlayerNoise(self->owner, self->s.origin, PNOISE_IMPACT);
 
-	// core explosion - prevents firing it into the wall/floor
+	/* core explosion - prevents firing it into the wall/floor */
 	if (other->takedamage)
 		T_Damage (other, self, self->owner, self->velocity, self->s.origin, plane->normal, 200, 0, 0, MOD_BFG_BLAST);
 	T_RadiusDamage(self, self->owner, 200, other, 100, MOD_BFG_BLAST);
@@ -808,11 +808,11 @@ void bfg_think (edict_t *self)
 			if (!tr.ent)
 				break;
 
-			// hurt it if we can
+			/* hurt it if we can */
 			if ((tr.ent->takedamage) && !(tr.ent->flags & FL_IMMUNE_LASER) && (tr.ent != self->owner))
 				T_Damage (tr.ent, self, self->owner, dir, tr.endpos, vec3_origin, dmg, 1, DAMAGE_ENERGY, MOD_BFG_LASER);
 
-			// if we hit something that's not a monster or player we're done
+			/* if we hit something that's not a monster or player we're done */
 			if (!(tr.ent->svflags & SVF_MONSTER) && (!tr.ent->client))
 			{
 				gi.WriteByte (svc_temp_entity);

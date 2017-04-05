@@ -45,17 +45,17 @@ void	ServerCommand (void)
 		Svcmd_nextmap_f();
 	else if (Q_stricmp(cmd, "ml") == 0)
 	{
-		if (Q_stricmp(gi.argv(2), "0") == 0)	//maprotation off
+		if (Q_stricmp(gi.argv(2), "0") == 0)	/* maprotation off */
 		{
 			ClearMaplist();
-			maplist.mlflag = 0; //off
+			maplist.mlflag = 0; /* off */
 			gi.cprintf (NULL, PRINT_HIGH, "Map rotation OFF!\n\n");
 		}
-		else if (Q_stricmp(gi.argv(2), "1") == 0)	//start sequential rotation
+		else if (Q_stricmp(gi.argv(2), "1") == 0)	/* start sequential rotation */
 		{
-			if (maplist.nummaps > 0)  // does a maplist exist? 
+			if (maplist.nummaps > 0)  /* does a maplist exist? */
 			{
-				maplist.mlflag = 1; //sequential
+				maplist.mlflag = 1; /* sequential */
 				maplist.currentmap = -1;
 				gi.cprintf (NULL, PRINT_HIGH, "Sequential map rotation ON!\n\n");
                 EndDMLevel();
@@ -64,11 +64,11 @@ void	ServerCommand (void)
                  gi.cprintf (NULL, PRINT_HIGH, "You have to load a maplist first!\n\n");
 			
 		}
-		else if (Q_stricmp(gi.argv(2), "2") == 0)	//start random rotation
+		else if (Q_stricmp(gi.argv(2), "2") == 0)	/* start random rotation */
 		{
-			if (maplist.nummaps > 0)  // does a maplist exist? 
+			if (maplist.nummaps > 0)  /* does a maplist exist? */
 			{
-				maplist.mlflag = 2; //random
+				maplist.mlflag = 2; /* random */
 				maplist.currentmap = -1;
 				gi.cprintf (NULL, PRINT_HIGH, "Random map rotation ON!\n\n");
                 EndDMLevel();
@@ -76,7 +76,7 @@ void	ServerCommand (void)
             else 
                  gi.cprintf (NULL, PRINT_HIGH, "You have to load a maplist first!\n\n");
 		}
-		/*else if (Q_stricmp(gi.argv(2), "goto") == 0)	//jump to map X in list
+		/* else if (Q_stricmp(gi.argv(2), "goto") == 0)	//jump to map X in list
 		{
 			if (maplist.nummaps > 0)  // does a maplist exist? 
 			{
@@ -100,9 +100,9 @@ void	ServerCommand (void)
                  gi.cprintf (NULL, PRINT_HIGH, "You have to load a maplist first!\n\n");
 			
 		}*/
-		else if (Q_stricmp(gi.argv(2), "") == 0)	//print maplist
+		else if (Q_stricmp(gi.argv(2), "") == 0)	/* print maplist */
 		{
-			if (maplist.nummaps > 0)  // does a maplist exist? 
+			if (maplist.nummaps > 0)  /* does a maplist exist? */
 			{
 				int i;
 
@@ -118,7 +118,7 @@ void	ServerCommand (void)
                  gi.cprintf (NULL, PRINT_HIGH, "Load a maplist with <sv ml maplistname>!\n\n");
 			
 		}
-		else	//load maplist
+		else	/* load maplist */
 		{
 			ClearMaplist();
 			LoadMaplist(gi.argv(2));

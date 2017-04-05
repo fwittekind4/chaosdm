@@ -26,10 +26,10 @@ qboolean Bot_CanHearClient(edict_t *ent, edict_t *other)
 
 	VectorSubtract (other->s.origin, ent->s.origin, dist);
 
-	if (VectorLength(dist) > 1000)	// too far to hear
+	if (VectorLength(dist) > 1000)	/* too far to hear */
 		return false;
 
-	// check area portals - if they are different and not connected then we can't hear it
+	/* check area portals - if they are different and not connected then we can't hear it */
 	if (other->areanum != ent->areanum)
 		if (!gi.AreasConnected(ent->areanum, other->areanum))
 			return false;
@@ -42,9 +42,9 @@ edict_t *Bot_FindBestItem(edict_t *ent)
 	edict_t	*best = NULL;
 	int		did_weapons = 0, did_health = 0;
 	
-// let's look if we need something very special first:
+/* let's look if we need something very special first:*/
 
-	// we need health so go for a health pack
+	/* we need health so go for a health pack */
 	if (ent->health <= 40)
 	{
 		nprintf(PRINT_HIGH,"%s needs some health!\n", ent->client->pers.netname);
@@ -55,7 +55,7 @@ edict_t *Bot_FindBestItem(edict_t *ent)
 		did_health = 1;
 	}
 
-	// we need a better weapon so search one
+	/* we need a better weapon so search one */
 	if (ent->client->pers.weapon == it_ak42 || 
 		ent->client->pers.weapon == it_grenades || 
 		ent->client->pers.weapon == it_flashgrenades || 
@@ -70,30 +70,30 @@ edict_t *Bot_FindBestItem(edict_t *ent)
 		did_weapons = 1;
 	}
 
-// ok we need nothing special or we haven't found it so search other thingies:
+/* ok we need nothing special or we haven't found it so search other thingies:*/
 
-	if (random() > 0.3) // OPTIMZE: We do not ALWAYS search for POWER-UPS
+	if (random() > 0.3) /* OPTIMZE: We do not ALWAYS search for POWER-UPS */
 	{
-		// POWER-UPS
+		/* POWER-UPS */
 		if ((best = Bot_FindBestPowerup(ent)))
 			goto found;
 	}
 
-	// WEAPONS
+	/* WEAPONS */
 	if (!did_weapons)
 	{
 		if ((best = Bot_FindBestWeapon(ent)))
 			goto found;
 	}
 
-	// HEALTH
+	/* HEALTH */
 	if ((ent->health < (ent->max_health - 20)) && !did_health)
 	{
 		if ((best = Bot_FindBestHealth(ent)))
 			goto found;
 	}
 
-	// AMMO
+	/* AMMO */
 	best = Bot_FindBestAmmo(ent);
 
 found:
@@ -146,19 +146,19 @@ void Bot_Think(edict_t *ent)
 	usercmd_t   cmd;
 	vec3_t      angles = {0,0,0}, mins = {-16,-16,0},maxs = {16,16,10};
 
-	// init usercmd variable
+	/* init usercmd variable */
 	VectorCopy(ent->client->v_angle, angles);
 	VectorSet(ent->client->ps.pmove.delta_angles, 0, 0, 0);
 	memset(&cmd, 0, sizeof(usercmd_t));
 
-	//reset duckflag
+	/* reset duckflag */
 	ent->client->b_duck = 0;
 
-	// look for enemies
+	/* look for enemies */
 	if (!ent->enemy || random() < 0.1)
 		Bot_FindEnemy(ent);
 
-	// look for items close to our way
+	/* look for items close to our way */
 	if (!Bot_ValidCloseItem(ent))
 	{
 		if (ent->client->b_closeitem)
@@ -166,11 +166,11 @@ void Bot_Think(edict_t *ent)
 		ent->client->b_closeitem = Bot_FindCloseItem(ent);
 	}
 
-	// look wether our goalitem is valid or not
+	/* look wether our goalitem is valid or not */
 	if (ent->client->b_goalitem && (ent->client->b_goalitem->solid != SOLID_TRIGGER))
 		ent->client->b_goalitem = NULL;
 
-	// search a goalitem if we do not have an enemy
+	/* search a goalitem if we do not have an enemy */
 	if (!ent->client->b_goalitem && (ent->client->b_nextroam <= level.time) && !ent->enemy)
 	{
 		ent->client->b_nextroam = level.time + 2;
@@ -179,7 +179,7 @@ void Bot_Think(edict_t *ent)
 			ent->client->b_goalitem = Bot_FindBestItem(ent);
 	}
 
-	// randomly change the strafe direction
+	/* randomly change the strafe direction */
 	if (level.time >= ent->client->b_strafechange)
 	{
 		if (random() >= 0.5)
@@ -189,7 +189,7 @@ void Bot_Think(edict_t *ent)
 		ent->client->b_strafechange = level.time + 0.3 + random();
 	}
 
-	// randomly change the rundir for no-path-roaming
+	/* randomly change the rundir for no-path-roaming */
 	if (level.time >= ent->client->b_runchange)
 	{
 		if (random() >= 0.5)
@@ -204,13 +204,13 @@ void Bot_Think(edict_t *ent)
 		ent->client->b_currentnode = RecalculateCurrentNode(ent);
 	}
 
-// DEAD
+/* DEAD */
 	if (ent->deadflag == DEAD_DEAD)
 	{
 		if (level.time >= ent->client->b_respawntime)
 			cmd.buttons = BUTTON_ATTACK;
 	}
-// FLASHLIGHT
+/* FLASHLIGHT */
 	if (lightsoff->value > 0 && ent->client->flashlightactive == 0 && ent->health > 30)
 	{
 		vec3_t  start,forward,right,end;
@@ -243,12 +243,12 @@ void Bot_Think(edict_t *ent)
 			G_FreeEdict(ent->client->flashlight);
 		}
 	}
-// PAUSE (WAIT FOR SOMETHING LIKE WAVE ANIMATIONS)
+/* PAUSE (WAIT FOR SOMETHING LIKE WAVE ANIMATIONS)*/
 	else if (ent->client->b_pausetime > level.time)
 	{
 		goto finishmove;
 	}
-// ENEMY
+/* ENEMY */
 	else if (ent->enemy)
     {
 		vec3_t		forward,right,dir,oorigin,target;
@@ -261,14 +261,14 @@ void Bot_Think(edict_t *ent)
 			{
 				ent->enemy = NULL;
 			}
-			else if (ent->enemy->client && (ent->enemy->client->invisible_framenum > level.framenum) && random() < 0.1)	//invisible
+			else if (ent->enemy->client && (ent->enemy->client->invisible_framenum > level.framenum) && random() < 0.1)	/* invisible */
 			{
 				ent->enemy = NULL;
 			}
 			else
 			{
-				// pick best weapon
-				if (ent->client->b_nextwchange < level.time)	//not to often
+				/* pick best weapon */
+				if (ent->client->b_nextwchange < level.time)	/* not to often */
 				{
 					VectorSubtract(ent->enemy->s.origin, ent->s.origin, dir);
 					dist = VectorLength(dir);
@@ -280,18 +280,18 @@ void Bot_Think(edict_t *ent)
 						Bot_BestCloseWeapon (ent);
 				}
 
-				if (ent->client->b_closeitem != NULL)	//close item
+				if (ent->client->b_closeitem != NULL)	/* close item */
 				{
 					Bot_Aim(ent, ent->client->b_closeitem->s.origin, angles);
 					Bot_Move(ent, &cmd);
 				}
 				else
 				{
-					// strafe
+					/* strafe */
 					AngleVectors(ent->client->v_angle, forward, right, NULL);
 					VectorNormalize(right);
 
-					if (ent->client->b_strafedir == 0) //right
+					if (ent->client->b_strafedir == 0) /* right */
 						VectorMA(ent->s.origin, 32, right, dir);
 					else
 						VectorMA(ent->s.origin, -32, right, dir);
@@ -330,7 +330,7 @@ void Bot_Think(edict_t *ent)
 							ent->client->b_strafedir = 0;
 					}
 
-					//move to enemy or away
+					/* move to enemy or away */
 					VectorScale(ent->enemy->velocity, FRAMETIME, target);
 					VectorAdd (ent->enemy->s.origin, target, target);
 					Bot_Aim(ent, target, angles);
@@ -415,9 +415,9 @@ void Bot_Think(edict_t *ent)
 				}
 			}
 		}
-		else	//enemy not visible
+		else	/* enemy not visible */
 		{
-			//Try to get to the last position we know of the enemy
+			/* Try to get to the last position we know of the enemy */
 			
 			if (Bot_CalcPath (ent, ent->enemy->s.origin, ent->s.origin))
 			{
@@ -439,12 +439,12 @@ void Bot_Think(edict_t *ent)
 		}
     }
 
-// ON PLATFORM
+/* ON PLATFORM */
 	else if (Riding_Plat (ent))
 	{
 		vec3_t	center, dir;
 
-		// find center of plat
+		/* find center of plat */
 		if (ent->groundentity)
 		{
 			VectorSubtract(ent->groundentity->maxs, ent->groundentity->mins, dir);
@@ -460,7 +460,7 @@ void Bot_Think(edict_t *ent)
 			}
 			else
 			{
-				// look for enemies
+				/* look for enemies */
 				if (ent->client->b_strafedir == 0)
 				{
 					if (angles[YAW] < 360)
@@ -480,16 +480,16 @@ void Bot_Think(edict_t *ent)
 
 		ent->client->b_nodetime	= level.time + 3;
 	}
-// FOLLOW PATH
+/* FOLLOW PATH */
 	else if (ent->client->b_goalitem)
 	{
 		int		n;
 		vec3_t	dvec;
 		vec_t	dist;
 
-		it_lturret = FindItem("automatic defence turret");	//bugfix
+		it_lturret = FindItem("automatic defence turret");	/* bugfix */
 
-		// HAVE ROCKET TURRET
+		/* HAVE ROCKET TURRET */
 		if ((numturrets < 3)
 			&& ent->client->pers.inventory[ITEM_INDEX(it_rturret)]
 			&& (ent->client->b_nextshot < level.time)
@@ -506,7 +506,7 @@ void Bot_Think(edict_t *ent)
 				cmd.buttons = BUTTON_ATTACK;
 			}
 		}
-		// HAVE LASER TURRET
+		/* HAVE LASER TURRET */
 		if ((numturrets < 3)
 			&& ent->client->pers.inventory[ITEM_INDEX(it_lturret)]
 			&& (ent->client->b_nextshot < level.time)
@@ -523,7 +523,7 @@ void Bot_Think(edict_t *ent)
 				cmd.buttons = BUTTON_ATTACK;
 			}
 		}
-		// HAVE PROXIES
+		/* HAVE PROXIES */
 		if (ent->client
 			&& ent->client->pers.inventory[ITEM_INDEX(it_proxymines)]
 			&& ent->client->pers.inventory[ITEM_INDEX(it_proxyminelauncher)]
@@ -544,15 +544,15 @@ void Bot_Think(edict_t *ent)
 
 		n = ent->client->b_currentnode;
 
-		//duck if needed
+		/* duck if needed */
 		if (nodes[ent->client->b_path[n]].duckflag)
 		{
 			ent->client->b_duck = 1;
 		}
 		
-		if (n < 0)	//go for item
+		if (n < 0)	/* go for item */
 		{
-			if (level.time > ent->client->b_nodetime)	//forget that item
+			if (level.time > ent->client->b_nodetime)	/* forget that item */
 			{
 				ent->client->b_nodetime	= 0;
 				ent->client->b_goalitem->avoidtime = level.time + 15;
@@ -579,7 +579,7 @@ void Bot_Think(edict_t *ent)
 					Bot_Aim(ent, ent->client->b_goalitem->s.origin, angles);
 					Bot_Move(ent, &cmd);
 
-					//check for jumping out of water
+					/* check for jumping out of water */
 					if (ent->waterlevel)
 					{
 						if(gi.pointcontents (ent->client->b_goalitem->s.origin) & MASK_WATER)
@@ -628,7 +628,7 @@ void Bot_Think(edict_t *ent)
 
 				if (SaveMoveDir(ent, RUN_SPEED, 0, angles))
 				{
-					//check for jumping out of water
+					/* check for jumping out of water */
 					if (ent->waterlevel)
 					{
 						if(gi.pointcontents (ent->client->b_closeitem->s.origin) & MASK_WATER)
@@ -645,9 +645,9 @@ void Bot_Think(edict_t *ent)
 				else
 					ent->client->b_closeitem = NULL;
 			}
-			else if (dist > 30)	//go for node
+			else if (dist > 30)	/* go for node */
 			{
-				if (level.time > ent->client->b_nodetime)	//forget that item
+				if (level.time > ent->client->b_nodetime)	/* forget that item */
 				{
 					ent->client->b_nodetime	= 0;
 					ent->client->b_goalitem->avoidtime = level.time + 10;
@@ -664,11 +664,11 @@ void Bot_Think(edict_t *ent)
 				}
 				else if ((nodes[ent->client->b_path[n]].flag == PLAT_NODE)
 					&& dist < 100
-					&& visible2 (nodes[ent->client->b_path[n]].origin, ent->s.origin))	// next is a plat node
+					&& visible2 (nodes[ent->client->b_path[n]].origin, ent->s.origin))	/* next is a plat node */
 				{
 					edict_t *plat = NULL;
 
-					// check if we are standing under the plat
+					/* check if we are standing under the plat */
 					if (Bot_StandingUnderPlat(ent))
 					{
 						ent->client->b_nodetime	= 0;
@@ -678,14 +678,14 @@ void Bot_Think(edict_t *ent)
 					}
 					else
 					{
-						//nprintf(PRINT_HIGH,"Next node is a plat node!\n");
+						/* nprintf(PRINT_HIGH,"Next node is a plat node!\n");*/
 						
-						//find the plat
+						/* find the plat */
 						while ((plat = findradius2(plat, nodes[ent->client->b_path[n]].origin, 300)) != NULL)
 						{
 							if (Q_stricmp(plat->classname, "func_plat") == 0)
 							{
-								//nprintf(PRINT_HIGH,"Found plat!\n");
+								/* nprintf(PRINT_HIGH,"Found plat!\n");*/
 								break;
 							}
 						}
@@ -699,9 +699,9 @@ void Bot_Think(edict_t *ent)
 							}
 							else
 							{
-								//nprintf(PRINT_HIGH,"Waiting for plat!\n");
+								/* nprintf(PRINT_HIGH,"Waiting for plat!\n");*/
 
-								// look for enemies
+								/* look for enemies */
 								if (ent->client->b_strafedir == 0)
 								{
 									if (angles[YAW] < 360)
@@ -720,9 +720,9 @@ void Bot_Think(edict_t *ent)
 						}
 						else
 						{
-							//nprintf(PRINT_HIGH,"Waiting for plat!\n");
+							/* nprintf(PRINT_HIGH,"Waiting for plat!\n");*/
 							
-							// look for enemies
+							/* look for enemies */
 							if (ent->client->b_strafedir == 0)
 							{
 								if (angles[YAW] < 360)
@@ -741,7 +741,7 @@ void Bot_Think(edict_t *ent)
 					}
 				}
 				else if ((nodes[ent->client->b_path[n]].flag == LADDER_NODE)
-					&& visible2 (nodes[ent->client->b_path[n]].origin, ent->s.origin))	// next is a ladder node
+					&& visible2 (nodes[ent->client->b_path[n]].origin, ent->s.origin))	/* next is a ladder node */
 				{
 					if (TouchingLadder(ent))
 					{
@@ -753,7 +753,7 @@ void Bot_Think(edict_t *ent)
 						Bot_Move(ent, &cmd);
 					}
 				}
-				else	// normal node
+				else	/* normal node */
 				{
 					Bot_Aim(ent, nodes[ent->client->b_path[n]].origin, angles);
 
@@ -762,7 +762,7 @@ void Bot_Think(edict_t *ent)
 					{
 						Bot_Move(ent, &cmd);
 
-						//check for jumping out of water
+						/* check for jumping out of water */
 						if (ent->waterlevel)
 						{
 							if(gi.pointcontents (nodes[ent->client->b_path[n]].origin) & MASK_WATER)
@@ -811,14 +811,14 @@ void Bot_Think(edict_t *ent)
 			}
 			else
 			{
-				//bprintf2(PRINT_HIGH,"currentnode %d!\n",ent->client->b_currentnode);
+				/* bprintf2(PRINT_HIGH,"currentnode %d!\n",ent->client->b_currentnode);*/
 				ent->client->b_nodetime	= level.time + 3;
 
 				if (ent->client->b_currentnode > 0)
 				{
 					ent->client->b_currentnode = n - 1;
 				}
-				else	// reached last node
+				else	/* reached last node */
 				{
 					ent->client->b_nodetime	= level.time + 3;
 					ent->client->b_currentnode = -1;		
@@ -826,16 +826,16 @@ void Bot_Think(edict_t *ent)
 			}
 		}
 	}
-//NO-PATH ROAMING
+/* NO-PATH ROAMING */
 	else
 	{
 		vec3_t	forward, dir, oorigin, wallangles;
 		vec_t	dist;
 		trace_t	tr;
 
-		it_lturret = FindItem("automatic defence turret");	//bugfix
+		it_lturret = FindItem("automatic defence turret");	/* bugfix */
 
-		// HAVE ROCKET TURRET
+		/* HAVE ROCKET TURRET */
 		if ((numturrets < 3)
 			&& ent->client->pers.inventory[ITEM_INDEX(it_rturret)]
 			&& (ent->client->b_nextshot < level.time)
@@ -852,7 +852,7 @@ void Bot_Think(edict_t *ent)
 				cmd.buttons = BUTTON_ATTACK;
 			}
 		}
-		// HAVE LASER TURRET
+		/* HAVE LASER TURRET */
 		if ((numturrets < 3)
 			&& ent->client->pers.inventory[ITEM_INDEX(it_lturret)]
 			&& (ent->client->b_nextshot < level.time)
@@ -869,7 +869,7 @@ void Bot_Think(edict_t *ent)
 				cmd.buttons = BUTTON_ATTACK;
 			}
 		}
-		// HAVE PROXIES
+		/* HAVE PROXIES */
 		if (ent->client
 			&& ent->client->pers.inventory[ITEM_INDEX(it_proxymines)]
 			&& ent->client->pers.inventory[ITEM_INDEX(it_proxyminelauncher)]
@@ -889,7 +889,7 @@ void Bot_Think(edict_t *ent)
 		}
 
 
-		// ITEM
+		/* ITEM */
 		if (ent->client->b_nopathitem && visible(ent, ent->client->b_nopathitem))
 		{
 			if (gi.pointcontents(ent->client->b_nopathitem->s.origin) & (CONTENTS_LAVA | CONTENTS_SLIME)
@@ -1022,16 +1022,16 @@ edict_t *Bot_FindBestWeapon(edict_t *ent)
 	edict_t	*best = NULL;
 	int		dist, bonus = 0, best_dist = 999;
 
-	it_lturret = FindItem("automatic defence turret");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
 
-	// go through all weapons on the level
-	// find the closest weapon
+	/* go through all weapons on the level */
+	/* find the closest weapon */
 	while (current)
 	{
 		if (current->avoidtime > level.time)
 			goto next;
 
-		if (!current->solid == SOLID_TRIGGER)	// is it currently there
+		if (!current->solid == SOLID_TRIGGER)	/* is it currently there */
 			goto next;
 
 		if (!current->item)
@@ -1040,15 +1040,15 @@ edict_t *Bot_FindBestWeapon(edict_t *ent)
 		if (!Bot_FindPath (ent, current->s.origin, ent->s.origin))
 			goto next;
 
-		dist = first_pathnode;	// length of path to item
+		dist = first_pathnode;	/* length of path to item */
 
-		// add weapon bonuses to the dist
+		/* add weapon bonuses to the dist */
 		if (current->item == it_rturret
 			|| current->item == it_lturret
 			|| current->item == it_vortex
 			|| current->item == it_bfg)
 		{
-			// We really really want these !!!
+			/* We really really want these !!!*/
 			bonus = 6;
 
 			if ((current->item->tag == AMMO_RTURRET && ent->client->pers.inventory[ITEM_INDEX(it_rturret)] >= ent->client->pers.max_rturret)
@@ -1065,26 +1065,26 @@ edict_t *Bot_FindBestWeapon(edict_t *ent)
 			|| current->item == it_proxyminelauncher
 			|| current->item == it_sword)
 		{
-			// We really want these !!
+			/* We really want these !!*/
 			bonus = 4;
 		}
 		else if (current->item == it_hyperblaster
 			|| current->item == it_supershotgun
 			|| current->item == it_grenadelauncher)
 		{
-			// Not to bad !
+			/* Not to bad !*/
 			bonus = 2;
 		}
 
 		else if (current->item == it_chainsaw
 			|| current->item == it_airfist)
 		{
-			// Still better than the rest !
+			/* Still better than the rest !*/
 			bonus = 0;
 		}
 		else
 		{
-			// Not so good !
+			/* Not so good !*/
 			bonus = -2;
 		}
 
@@ -1097,7 +1097,7 @@ edict_t *Bot_FindBestWeapon(edict_t *ent)
 		}
 
 next:
-		// try the next weapon
+		/* try the next weapon */
 		current = current->next_listitem;
 	}
 	
@@ -1110,37 +1110,37 @@ edict_t *Bot_FindBestHealth(edict_t *ent)
 	edict_t	*best = NULL;
 	int		dist, bonus = 0, best_dist = 999;
 
-	// go through all health packs on the level
+	/* go through all health packs on the level */
 	while (current)
 	{
 		if (current->avoidtime > level.time)
 			goto next;
 
-		if (current->solid != SOLID_TRIGGER)	// is it currently there
+		if (current->solid != SOLID_TRIGGER)	/* is it currently there */
 			goto next;
 
 		if (!current->item)
 			goto next;
 
-		if (!Bot_FindPath (ent, current->s.origin, ent->s.origin))	//is there a path to that item
+		if (!Bot_FindPath (ent, current->s.origin, ent->s.origin))	/* is there a path to that item */
 			goto next;
 
-		dist = first_pathnode;	// length of path to item
+		dist = first_pathnode;	/* length of path to item */
 
-		// add bonuses to the dist
+		/* add bonuses to the dist */
 		if (current->item == it_health_mega)
 		{
-			// We really really want these !!!
+			/* We really really want these !!!*/
 			bonus = 6;
 		}
 		else if (it_health_large)
 		{
-			// We really want these !!
+			/* We really want these !!*/
 			bonus = 4;
 		}
 		else if (it_health)
 		{
-			// Not to bad !
+			/* Not to bad !*/
 			bonus = 0;
 		}
 
@@ -1153,7 +1153,7 @@ edict_t *Bot_FindBestHealth(edict_t *ent)
 		}
 
 next:
-		// try the next health pack
+		/* try the next health pack */
 		current = current->next_listitem;
 	}
 	return best;
@@ -1165,19 +1165,19 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 	edict_t	*best = NULL;
 	int		dist, bonus = 0, best_dist = 999;
 
-	// go through all powerups on the level
+	/* go through all powerups on the level */
 	while (current)
 	{
 		if (current->avoidtime > level.time)
 			goto next;
 
-		if (current->solid == SOLID_TRIGGER)	// is it currently there
+		if (current->solid == SOLID_TRIGGER)	/* is it currently there */
 			goto next;
 
 		if (!current->item)
 			goto next;
 
-		// don't go for stuff the bot can't use yet or that just isn't worth it
+		/* don't go for stuff the bot can't use yet or that just isn't worth it */
 		if (current->item != FindItemByClassname("item_quad")	
 			&& current->item != FindItemByClassname("item_invulnerability")
 			&& current->item != FindItemByClassname("item_tech1")
@@ -1195,7 +1195,7 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 		if ((ent->health < (ent->max_health - 20)) && FindItemByClassname("item_adrenaline"))
 			goto next;
 
-		// check if it's a tech and if we already have one
+		/* check if it's a tech and if we already have one */
 		if (current->item == FindItem("Power Amplifier")
 			|| current->item == FindItem("Time Accel")
 			|| current->item == FindItem("Autodoc")
@@ -1212,9 +1212,9 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 			goto next;
 
 		
-		dist = first_pathnode;	// length of path to item
+		dist = first_pathnode;	/* length of path to item */
 
-		// add bonuses to the dist
+		/* add bonuses to the dist */
 		if (current->item == FindItemByClassname("item_quad")
 			|| current->item == FindItemByClassname("item_invulnerability")
 			|| current->item == FindItemByClassname("item_invisibility")
@@ -1223,7 +1223,7 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 			|| current->item == FindItemByClassname("item_tech3")
 			|| current->item == FindItemByClassname("item_tech4"))
 		{
-			// We really really want these !!!
+			/* We really really want these !!!*/
 			bonus = 6;
 		}
 		else if (current->item == FindItemByClassname("item_power_shield")
@@ -1231,7 +1231,7 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 			|| current->item == FindItemByClassname("item_armor_jacket")
 			|| current->item == FindItemByClassname("item_armor_combat"))
 		{
-			// We really want these !!
+			/* We really want these !!*/
 			bonus = 4;
 		}
 		else if (current->item == FindItemByClassname("item_adrenaline")
@@ -1239,7 +1239,7 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 			|| current->item == FindItemByClassname("item_pack")
 			|| current->item == FindItemByClassname("item_jet"))
 		{
-			// Not to bad !
+			/* Not to bad !*/
 			bonus = 2;
 		}
 		else if (current->item == it_grapple
@@ -1247,11 +1247,11 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 			|| current->item == FindItemByClassname("item_breather")
 			|| current->item == FindItemByClassname("item_enviro"))
 		{
-			// ok !
+			/* ok !*/
 			bonus = 0;
 		}
 		else
-			bonus = -999; //don't go for other stuff
+			bonus = -999; /* don't go for other stuff */
 
 		dist = dist - bonus;
 
@@ -1262,7 +1262,7 @@ edict_t *Bot_FindBestPowerup(edict_t *ent)
 		}
 
 next:
-		// try the next powerup
+		/* try the next powerup */
 		current = current->next_listitem;
 	}
 	return best;
@@ -1274,19 +1274,19 @@ edict_t *Bot_FindBestAmmo(edict_t *ent)
 	edict_t	*best = NULL;
 	int		dist, best_dist = 999;
 
-	// go through all ammo packs on the level
+	/* go through all ammo packs on the level */
 	while (current)
 	{
 		if (current->avoidtime > level.time)
 			goto next;
 
-		if (current->solid == SOLID_TRIGGER)	// is it currently there
+		if (current->solid == SOLID_TRIGGER)	/* is it currently there */
 			goto next;
 
 		if (!current->item)
 			goto next;
 
-		if (current->item->tag == AMMO_SHELLS	// some ammo isn't worth calculating a path it can be picked up as a closeitem
+		if (current->item->tag == AMMO_SHELLS	/* some ammo isn't worth calculating a path it can be picked up as a closeitem */
 			|| current->item->tag == AMMO_EXPLOSIVESHELLS
 			|| current->item->tag == AMMO_BULLETS
 			|| current->item->tag == AMMO_LASERGRENADES)
@@ -1298,7 +1298,7 @@ edict_t *Bot_FindBestAmmo(edict_t *ent)
 		if (!Bot_FindPath (ent, current->s.origin, ent->s.origin))
 			goto next;
 
-		dist = first_pathnode;	// length of path to item
+		dist = first_pathnode;	/* length of path to item */
 
 		if (dist < best_dist)
 		{
@@ -1307,7 +1307,7 @@ edict_t *Bot_FindBestAmmo(edict_t *ent)
 		}
 
 next:
-		// try the next ammo pack
+		/* try the next ammo pack */
 		current = current->next_listitem;
 	}
 	return best;
@@ -1317,7 +1317,7 @@ int Bot_CalcPath (edict_t *ent, vec3_t target, vec3_t source)
 {
 	int sn, tn, i;
 
-	// can't reach our current target
+	/* can't reach our current target */
 	if( ( tn = Bot_FindNodeAtEnt(target) ) < 0)
 	{
 		ent->client->b_currentnode = -1;
@@ -1334,9 +1334,9 @@ int Bot_CalcPath (edict_t *ent, vec3_t target, vec3_t source)
 			for (i = 0; i < 100;i++)
 				ent->client->b_path[i] = path_buffer[i];
 
-			//nprintf(PRINT_HIGH,"Found path from %d to %d! %d is the first node!\n", sn, tn, path_buffer[first_pathnode]);
+			/* nprintf(PRINT_HIGH,"Found path from %d to %d! %d is the first node!\n", sn, tn, path_buffer[first_pathnode]);*/
 		}
-		else // can't reach our current target
+		else /* can't reach our current target */
 		{
 			ent->client->b_currentnode = -1;
 			return 0;
@@ -1349,7 +1349,7 @@ int Bot_FindPath (edict_t *ent, vec3_t target, vec3_t source)
 {
 	int sn, tn;
 
-	// can't reach our current target
+	/* can't reach our current target */
 	if( ( tn = Bot_FindNodeAtEnt(target) ) < 0)
 	   return 0;
 
@@ -1434,7 +1434,7 @@ void Bot_Attack(edict_t *ent, usercmd_t *cmd, vec3_t angles, vec3_t target)
 	
 	if (ent->enemy)
 	{	
-		// fire
+		/* fire */
 		if (level.time >= ent->client->b_nextshot)
 		{
 			weapon = ent->client->pers.weapon;
@@ -1487,7 +1487,7 @@ void bot_pain(edict_t *ent, edict_t *other, float kickback, int damage)
 {
 	if ((ent != other))
 	{
-		if (other->client && (other->client->invisible_framenum > level.framenum) && random() < 0.3)	//invisible
+		if (other->client && (other->client->invisible_framenum > level.framenum) && random() < 0.3)	/* invisible */
 		{
 			ent->enemy = other;
 		}
@@ -1577,7 +1577,7 @@ void Bot_FindEnemy(edict_t *self)
 		}
 	}
 
-	if (newenemy && (random() < 0.8))	//go for turrets first
+	if (newenemy && (random() < 0.8))	/* go for turrets first */
 	{
 		self->enemy = newenemy;
 		return;
@@ -1589,7 +1589,7 @@ void Bot_FindEnemy(edict_t *self)
 			continue;
 		if (players[i] == self)
 			continue;
-		if (players[i]->client->invincible_framenum > level.framenum)	//invincible
+		if (players[i]->client->invincible_framenum > level.framenum)	/* invincible */
 			continue;
 		if (!visible(self, players[i]))
 			continue;
@@ -1597,7 +1597,7 @@ void Bot_FindEnemy(edict_t *self)
 			continue;
 		if (players[i]->client->camera)
 			continue;
-		if ((players[i]->client->invisible_framenum > level.framenum) && random() > 0.01)	//invisible
+		if ((players[i]->client->invisible_framenum > level.framenum) && random() > 0.01)	/* invisible */
 			continue;
 
 		if (TeamMembers(self, players[i]))
@@ -1606,9 +1606,9 @@ void Bot_FindEnemy(edict_t *self)
 		VectorSubtract(players[i]->s.origin, self->s.origin, dir);
 		dist = VectorLength(dir);
 
-		if (dist >= 200)	//close enemies don't need to be infront
+		if (dist >= 200)	/* close enemies don't need to be infront */
 		{
-			if (!Bot_CanHearClient(self, players[i]))	//if we hear the enemy he does not have to be infront
+			if (!Bot_CanHearClient(self, players[i]))	/* if we hear the enemy he does not have to be infront */
 			{
 				if (lightsoff->value == 1)
 				{
@@ -1660,8 +1660,8 @@ edict_t *Bot_FindCloseItem(edict_t *ent)
 			continue;
 		if (newitem->avoidtime > level.time)
 			continue;
-		//if (!Bot_CanReachSpotDirectly(ent, newitem->s.origin))
-		//	continue;
+		/* if (!Bot_CanReachSpotDirectly(ent, newitem->s.origin))*/
+		/*	continue;*/
 
 		VectorSubtract(ent->s.origin, newitem->s.origin, dir);
 		dist = VectorLength(dir);
@@ -1799,7 +1799,7 @@ void Bot_ProjectileAvoidance (edict_t *self, usercmd_t *cmd, vec3_t angles)
 
 qboolean SaveMoveDir(edict_t *self, short forwardmove, short sidemove, vec3_t angles)
 {
-	vec3_t	new_origin;	//origin after move
+	vec3_t	new_origin;	/* origin after move */
 	vec3_t	forward, right, up;
 	vec3_t	trace_end;
 	vec3_t  mins = {-3, -3, -3},maxs = {3, 3, 3};
@@ -1840,7 +1840,7 @@ qboolean SaveMoveDir(edict_t *self, short forwardmove, short sidemove, vec3_t an
 
 qboolean Node_FallMove(edict_t *self, short forwardmove, short sidemove, vec3_t angles)
 {
-	vec3_t	new_origin;	//origin after move
+	vec3_t	new_origin;	/* origin after move */
 	vec3_t	forward, right, up;
 	vec3_t	trace_end;
 	vec3_t  mins = {-3, -3, -3},maxs = {3, 3, 3};
@@ -1877,7 +1877,7 @@ qboolean Node_FallMove(edict_t *self, short forwardmove, short sidemove, vec3_t 
 
 qboolean Node_LavaMove(edict_t *self, short forwardmove, short sidemove, vec3_t angles)
 {
-	vec3_t	new_origin;	//origin after move
+	vec3_t	new_origin;	/* origin after move */
 	vec3_t	forward, right, up;
 	vec3_t	trace_end;
 	vec3_t  mins = {-3, -3, -3},maxs = {3, 3, 3};
@@ -1914,9 +1914,9 @@ qboolean Node_LavaMove(edict_t *self, short forwardmove, short sidemove, vec3_t 
 
 qboolean CheckFall(edict_t *self, short forwardmove, short sidemove, vec3_t angles)
 {
-	vec3_t	new_origin;	//origin after move
+	vec3_t	new_origin;	/* origin after move */
 	vec3_t	forward, right, up;
-	vec3_t	drop_dest;	//drop destination
+	vec3_t	drop_dest;	/* drop destination */
 	vec3_t  mins = {0, 0, 0},maxs = {0, 0, 0};
 	trace_t	tr;
 
@@ -1970,7 +1970,7 @@ void Bot_Wave (edict_t *ent, int i, float time)
 	if (!ent->health > 0)
 		return;
 
-	// can't wave when ducked
+	/* can't wave when ducked */
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 		return;
 

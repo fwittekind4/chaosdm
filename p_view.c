@@ -11,8 +11,8 @@ static	vec3_t	forward, right, up;
 float	xyspeed;
 
 float	bobmove;
-int		bobcycle;		// odd cycles are right foot going forward
-float	bobfracsin;		// sin(bobfrac*M_PI)
+int		bobcycle;		/* odd cycles are right foot going forward */
+float	bobfracsin;		/* sin(bobfrac*M_PI)*/
 
 void ThrowUpNow(edict_t *self);
 
@@ -64,19 +64,19 @@ void P_DamageFeedback (edict_t *player)
 
 	client = player->client;
 
-	// flash the backgrounds behind the status numbers
+	/* flash the backgrounds behind the status numbers */
 	client->ps.stats[STAT_FLASHES] = 0;
 	if (client->damage_blood)
 		client->ps.stats[STAT_FLASHES] |= 1;
 	if (client->damage_armor && !(player->flags & FL_GODMODE) && (client->invincible_framenum <= level.framenum))
 		client->ps.stats[STAT_FLASHES] |= 2;
 
-	// total points of damage shot at the player this frame
+	/* total points of damage shot at the player this frame */
 	count = (client->damage_blood + client->damage_armor + client->damage_parmor);
 	if (count == 0)
-		return;		// didn't take any damage
+		return;		/* didn't take any damage */
 
-	// start a pain animation if still in the player model
+	/* start a pain animation if still in the player model */
 	if (client->anim_priority < ANIM_PAIN && player->s.modelindex == 255)
 	{
 		static int		i;
@@ -110,9 +110,9 @@ void P_DamageFeedback (edict_t *player)
 
 	realcount = count;
 	if (count < 10)
-		count = 10;	// allways make a visible effect
+		count = 10;	/* allways make a visible effect */
 
-	// play an apropriate pain sound
+	/* play an apropriate pain sound */
 	if ((level.time > player->pain_debounce_time) && !(player->flags & FL_GODMODE) && (client->invincible_framenum <= level.framenum))
 	{
 		r = 1 + (rand()&1);
@@ -128,17 +128,17 @@ void P_DamageFeedback (edict_t *player)
 		gi.sound (player, CHAN_VOICE, gi.soundindex(va("*pain%i_%i.wav", l, r)), 1, ATTN_NORM, 0);
 	}
 
-	// the total alpha of the blend is allways proportional to count
+	/* the total alpha of the blend is allways proportional to count */
 	if (client->damage_alpha < 0)
 		client->damage_alpha = 0;
 	client->damage_alpha += count*0.01;
 	if (client->damage_alpha < 0.2)
 		client->damage_alpha = 0.2;
 	if (client->damage_alpha > 0.6)
-		client->damage_alpha = 0.6;		// don't go too saturated
+		client->damage_alpha = 0.6;		/* don't go too saturated */
 
-	// the color of the blend will vary based on how much was absorbed
-	// by different armors
+	/* the color of the blend will vary based on how much was absorbed */
+	/* by different armors */
 	VectorClear (v);
 	if (client->damage_parmor)
 		VectorMA (v, (float)client->damage_parmor/realcount, power_color, v);
@@ -149,11 +149,11 @@ void P_DamageFeedback (edict_t *player)
 	VectorCopy (v, client->damage_blend);
 
 
-	//
-	// calculate view angle kicks
-	//
+	/**/
+	/* calculate view angle kicks */
+	/**/
 	kick = abs(client->damage_knockback);
-	if (kick && player->health > 0)	// kick of 0 means no view adjust at all
+	if (kick && player->health > 0)	/* kick of 0 means no view adjust at all */
 	{
 		kick = kick * 100 / player->health;
 
@@ -174,9 +174,9 @@ void P_DamageFeedback (edict_t *player)
 		client->v_dmg_time = level.time + DAMAGE_TIME;
 	}
 
-	//
-	// clear totals
-	//
+	/**/
+	/* clear totals */
+	/**/
 	client->damage_blood = 0;
 	client->damage_armor = 0;
 	client->damage_parmor = 0;
@@ -211,12 +211,12 @@ void SV_CalcViewOffset (edict_t *ent)
 	vec3_t		v;
 
 
-//===================================
+/*===================================*/
 
-	// base angles
+	/* base angles */
 	angles = ent->client->ps.kick_angles;
 
-	// if dead, fix the angle and don't add any kick
+	/* if dead, fix the angle and don't add any kick */
 	if (ent->deadflag)
 	{
 		VectorClear (angles);
@@ -227,11 +227,11 @@ void SV_CalcViewOffset (edict_t *ent)
 	}
 	else
 	{
-		// add angles based on weapon kick
+		/* add angles based on weapon kick */
 
 		VectorCopy (ent->client->kick_angles, angles);
 
-		// add angles based on damage kick
+		/* add angles based on damage kick */
 
 		ratio = (ent->client->v_dmg_time - level.time) / DAMAGE_TIME;
 		if (ratio < 0)
@@ -243,14 +243,14 @@ void SV_CalcViewOffset (edict_t *ent)
 		angles[PITCH] += ratio * ent->client->v_dmg_pitch;
 		angles[ROLL] += ratio * ent->client->v_dmg_roll;
 
-		// add pitch based on fall kick
+		/* add pitch based on fall kick */
 
 		ratio = (ent->client->fall_time - level.time) / FALL_TIME;
 		if (ratio < 0)
 			ratio = 0;
 		angles[PITCH] += ratio * ent->client->fall_value;
 
-		// add angles based on velocity
+		/* add angles based on velocity */
 
 		delta = DotProduct (ent->velocity, forward);
 		angles[PITCH] += delta*run_pitch->value;
@@ -258,51 +258,51 @@ void SV_CalcViewOffset (edict_t *ent)
 		delta = DotProduct (ent->velocity, right);
 		angles[ROLL] += delta*run_roll->value;
 
-		// add angles based on bob
+		/* add angles based on bob */
 
 		delta = bobfracsin * bob_pitch->value * xyspeed;
 		if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-			delta *= 6;		// crouching
+			delta *= 6;		/* crouching */
 		angles[PITCH] += delta;
 		delta = bobfracsin * bob_roll->value * xyspeed;
 		if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
-			delta *= 6;		// crouching
+			delta *= 6;		/* crouching */
 		if (bobcycle & 1)
 			delta = -delta;
 		angles[ROLL] += delta;
 	}
 
-//===================================
+/*===================================*/
 
-	// base origin
+	/* base origin */
 
 	VectorClear (v);
 
-	// add view height
+	/* add view height */
 
 	v[2] += ent->viewheight;
 
-	// add fall height
+	/* add fall height */
 
 	ratio = (ent->client->fall_time - level.time) / FALL_TIME;
 	if (ratio < 0)
 		ratio = 0;
 	v[2] -= ratio * ent->client->fall_value * 0.4;
 
-	// add bob height
+	/* add bob height */
 
 	bob = bobfracsin * xyspeed * bob_up->value;
 	if (bob > 6)
 		bob = 6;
-	//gi.DebugGraph (bob *2, 255);
+	/* gi.DebugGraph (bob *2, 255);*/
 	v[2] += bob;
 
-	// add kick offset
+	/* add kick offset */
 
 	VectorAdd (v, ent->client->kick_origin, v);
 
-	// absolutely bound offsets
-	// so the view can never be outside the player box
+	/* absolutely bound offsets */
+	/* so the view can never be outside the player box */
 
 	if (v[0] < -14)
 		v[0] = -14;
@@ -330,7 +330,7 @@ void SV_CalcGunOffset (edict_t *ent)
 	int		i;
 	float	delta;
 
-	// gun angles from bobbing
+	/* gun angles from bobbing */
 	ent->client->ps.gunangles[ROLL] = xyspeed * bobfracsin * 0.005;
 	ent->client->ps.gunangles[YAW] = xyspeed * bobfracsin * 0.01;
 	if (bobcycle & 1)
@@ -341,7 +341,7 @@ void SV_CalcGunOffset (edict_t *ent)
 
 	ent->client->ps.gunangles[PITCH] = xyspeed * bobfracsin * 0.005;
 
-	// gun angles from delta movement
+	/* gun angles from delta movement */
 	for (i=0 ; i<3 ; i++)
 	{
 		delta = ent->client->oldviewangles[i] - ent->client->ps.viewangles[i];
@@ -358,11 +358,11 @@ void SV_CalcGunOffset (edict_t *ent)
 		ent->client->ps.gunangles[i] += 0.2 * delta;
 	}
 
-	// gun height
+	/* gun height */
 	VectorClear (ent->client->ps.gunoffset);
-//	ent->ps->gunorigin[2] += bob;
+/*	ent->ps->gunorigin[2] += bob;*/
 
-	// gun_x / gun_y / gun_z are development tools
+	/* gun_x / gun_y / gun_z are development tools */
 	for (i=0 ; i<3 ; i++)
 	{
 		ent->client->ps.gunoffset[i] += forward[i]*(gun_y->value);
@@ -383,8 +383,8 @@ void SV_AddBlend (float r, float g, float b, float a, float *v_blend)
 
 	if (a <= 0)
 		return;
-	a2 = v_blend[3] + (1-v_blend[3])*a;	// new total alpha
-	a3 = v_blend[3]/a2;		// fraction of color from old
+	a2 = v_blend[3] + (1-v_blend[3])*a;	/* new total alpha */
+	a3 = v_blend[3]/a2;		/* fraction of color from old */
 
 	v_blend[0] = v_blend[0]*a3 + r*(1-a3);
 	v_blend[1] = v_blend[1]*a3 + g*(1-a3);
@@ -407,7 +407,7 @@ void SV_CalcBlend (edict_t *ent)
 	ent->client->ps.blend[0] = ent->client->ps.blend[1] = 
 		ent->client->ps.blend[2] = ent->client->ps.blend[3] = 0;
 
-	// add for contents
+	/* add for contents */
 	VectorAdd (ent->s.origin, ent->client->ps.viewoffset, vieworg);
 	contents = gi.pointcontents (vieworg);
 	if (contents & (CONTENTS_LAVA|CONTENTS_SLIME|CONTENTS_WATER) )
@@ -422,7 +422,7 @@ void SV_CalcBlend (edict_t *ent)
 	else if (contents & CONTENTS_WATER)
 		SV_AddBlend (0.5, 0.3, 0.2, 0.4, ent->client->ps.blend);
 
-//FLASHGRENADE
+/* FLASHGRENADE */
 	if (ent->client->BlindTime > 0)
     {
 		if (strcmp(ent->classname,"player") == 0)
@@ -445,7 +445,7 @@ void SV_CalcBlend (edict_t *ent)
 			ent->client->BlindTime = 0;
 	}
 
-//POISONGRENADE
+/* POISONGRENADE */
 	if (ent->client->PoisonTime >= 1)
     {
 		static float blend = 0.4;
@@ -495,7 +495,7 @@ void SV_CalcBlend (edict_t *ent)
 		}
 	}
 	
-//KAMIKAZE MODE
+/* KAMIKAZE MODE */
 	if(ent->client->kamikazetime > 1)
 	{
 		static float	r = 0;
@@ -521,7 +521,7 @@ void SV_CalcBlend (edict_t *ent)
 		SV_AddBlend (r, 0, 0, 0.6, ent->client->ps.blend);
 	}
 
-//JETPACK
+/* JETPACK */
 	if (Jet_Active(ent))
     {
 		ent->client->jet_remaining = ent->client->jet_framenum - level.framenum;
@@ -533,7 +533,7 @@ void SV_CalcBlend (edict_t *ent)
 			gi.sound (ent, CHAN_AUTO, gi.soundindex("misc/jetpack.wav"), 0.9, ATTN_NORM, 0);
 	}
 
-	// add for powerups
+	/* add for powerups */
 	if (ent->client->invisible_framenum > level.framenum)
 	{
 		remaining = ent->client->invisible_framenum - level.framenum;
@@ -543,7 +543,7 @@ void SV_CalcBlend (edict_t *ent)
 	else if (ent->client->quad_framenum > level.framenum)
 	{
 		remaining = ent->client->quad_framenum - level.framenum;
-		if (remaining == 30)	// beginning to fade
+		if (remaining == 30)	/* beginning to fade */
 			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/damage2.wav"), 1, ATTN_NORM, 0);
 		if (remaining > 30 || (remaining & 4) )
 			SV_AddBlend (0, 0, 1, 0.08, ent->client->ps.blend);
@@ -551,7 +551,7 @@ void SV_CalcBlend (edict_t *ent)
 	else if (ent->client->invincible_framenum > level.framenum)
 	{
 		remaining = ent->client->invincible_framenum - level.framenum;
-		if (remaining == 30)	// beginning to fade
+		if (remaining == 30)	/* beginning to fade */
 			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/protect2.wav"), 1, ATTN_NORM, 0);
 		if (remaining > 30 || (remaining & 4) )
 			SV_AddBlend (1, 1, 0, 0.08, ent->client->ps.blend);
@@ -559,7 +559,7 @@ void SV_CalcBlend (edict_t *ent)
 	else if (ent->client->enviro_framenum > level.framenum)
 	{
 		remaining = ent->client->enviro_framenum - level.framenum;
-		if (remaining == 30)	// beginning to fade
+		if (remaining == 30)	/* beginning to fade */
 			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/airout.wav"), 1, ATTN_NORM, 0);
 		if (remaining > 30 || (remaining & 4) )
 			SV_AddBlend (0, 1, 0, 0.08, ent->client->ps.blend);
@@ -567,13 +567,13 @@ void SV_CalcBlend (edict_t *ent)
 	else if (ent->client->breather_framenum > level.framenum)
 	{
 		remaining = ent->client->breather_framenum - level.framenum;
-		if (remaining == 30)	// beginning to fade
+		if (remaining == 30)	/* beginning to fade */
 			gi.sound(ent, CHAN_ITEM, gi.soundindex("items/airout.wav"), 1, ATTN_NORM, 0);
 		if (remaining > 30 || (remaining & 4) )
 			SV_AddBlend (0.4, 1, 0.4, 0.04, ent->client->ps.blend);
 	}
 
-	// add for damage
+	/* add for damage */
 	if (ent->client->damage_alpha > 0)
 		SV_AddBlend (ent->client->damage_blend[0],ent->client->damage_blend[1]
 		,ent->client->damage_blend[2], ent->client->damage_alpha, ent->client->ps.blend);
@@ -581,12 +581,12 @@ void SV_CalcBlend (edict_t *ent)
 	if (ent->client->bonus_alpha > 0)
 		SV_AddBlend (0.85, 0.7, 0.3, ent->client->bonus_alpha, ent->client->ps.blend);
 
-	// drop the damage value
+	/* drop the damage value */
 	ent->client->damage_alpha -= 0.06;
 	if (ent->client->damage_alpha < 0)
 		ent->client->damage_alpha = 0;
 
-	// drop the bonus value
+	/* drop the bonus value */
 	ent->client->bonus_alpha -= 0.1;
 	if (ent->client->bonus_alpha < 0)
 		ent->client->bonus_alpha = 0;
@@ -605,7 +605,7 @@ void P_FallingDamage (edict_t *ent)
 	vec3_t	dir;
 
 	if (ent->s.modelindex != 255 && ent->client->invisible != true)
-		return;		// not in the player model
+		return;		/* not in the player model */
 
  	if (ent->movetype == MOVETYPE_NOCLIP)
 		return;
@@ -622,10 +622,10 @@ void P_FallingDamage (edict_t *ent)
 	}
 	delta = delta*delta * 0.0001;
 
-	// never take falling damage if completely underwater
+	/* never take falling damage if completely underwater */
 	if (ent->waterlevel == 3)
 		return;
-	if (!(ent->client->ps.pmove.pm_flags & PMF_ON_GROUND)) //MATTHIAS
+	if (!(ent->client->ps.pmove.pm_flags & PMF_ON_GROUND)) /* MATTHIAS */
         return;
 	if (ent->waterlevel == 2)
 		delta *= 0.25;
@@ -655,7 +655,7 @@ void P_FallingDamage (edict_t *ent)
 			else
 				ent->s.event = EV_FALL;
 		}
-		ent->pain_debounce_time = level.time;	// no normal pain sound
+		ent->pain_debounce_time = level.time;	/* no normal pain sound */
 		damage = (delta-30)/2;
 		if (damage < 1)
 			damage = 1;
@@ -686,7 +686,7 @@ void P_WorldEffects (void)
 
 	if (current_player->movetype == MOVETYPE_NOCLIP)
 	{
-		current_player->air_finished = level.time + 12;	// don't need air
+		current_player->air_finished = level.time + 12;	/* don't need air */
 		return;
 	}
 
@@ -697,9 +697,9 @@ void P_WorldEffects (void)
 	breather = current_client->breather_framenum > level.framenum;
 	envirosuit = current_client->enviro_framenum > level.framenum;
 
-	//
-	// if just entered a water volume, play a sound
-	//
+	/**/
+	/* if just entered a water volume, play a sound */
+	/**/
 	if (!old_waterlevel && waterlevel)
 	{
 		PlayerNoise(current_player, current_player->s.origin, PNOISE_SELF);
@@ -711,13 +711,13 @@ void P_WorldEffects (void)
 			gi.sound (current_player, CHAN_BODY, gi.soundindex("player/watr_in.wav"), 1, ATTN_NORM, 0);
 		current_player->flags |= FL_INWATER;
 
-		// clear damage_debounce, so the pain sound will play immediately
+		/* clear damage_debounce, so the pain sound will play immediately */
 		current_player->damage_debounce_time = level.time - 1;
 	}
 
-	//
-	// if just completely exited a water volume, play a sound
-	//
+	/**/
+	/* if just completely exited a water volume, play a sound */
+	/**/
 	if (old_waterlevel && ! waterlevel)
 	{
 		PlayerNoise(current_player, current_player->s.origin, PNOISE_SELF);
@@ -725,39 +725,39 @@ void P_WorldEffects (void)
 		current_player->flags &= ~FL_INWATER;
 	}
 
-	//
-	// check for head just going under water
-	//
+	/**/
+	/* check for head just going under water */
+	/**/
 	if (old_waterlevel != 3 && waterlevel == 3)
 	{
 		gi.sound (current_player, CHAN_BODY, gi.soundindex("player/watr_un.wav"), 1, ATTN_NORM, 0);
 	}
 
-	//
-	// check for head just coming out of water
-	//
+	/**/
+	/* check for head just coming out of water */
+	/**/
 	if (old_waterlevel == 3 && waterlevel != 3)
 	{
 		if (current_player->air_finished < level.time)
-		{	// gasp for air
+		{	/* gasp for air */
 			gi.sound (current_player, CHAN_VOICE, gi.soundindex("player/gasp1.wav"), 1, ATTN_NORM, 0);
 			PlayerNoise(current_player, current_player->s.origin, PNOISE_SELF);
 		}
 		else  if (current_player->air_finished < level.time + 11)
-		{	// just break surface
+		{	/* just break surface */
 			gi.sound (current_player, CHAN_VOICE, gi.soundindex("player/gasp2.wav"), 1, ATTN_NORM, 0);
 		}
 	}
 
-	//
-	// check for drowning
-	//
+	/**/
+	/* check for drowning */
+	/**/
 	if (waterlevel == 3)
 	{
-		if (Jet_Active(current_player))	//MATTHIAS
+		if (Jet_Active(current_player))	/* MATTHIAS */
 			T_Damage (current_player, world, world, vec3_origin, current_player->s.origin, vec3_origin, current_player->health+1, 0, DAMAGE_NO_ARMOR, MOD_SUICIDE);
 
-		// breather or envirosuit give air
+		/* breather or envirosuit give air */
 		if (breather || envirosuit)
 		{
 			current_player->air_finished = level.time + 10;
@@ -770,24 +770,24 @@ void P_WorldEffects (void)
 					gi.sound (current_player, CHAN_AUTO, gi.soundindex("player/u_breath2.wav"), 1, ATTN_NORM, 0);
 				current_client->breather_sound ^= 1;
 				PlayerNoise(current_player, current_player->s.origin, PNOISE_SELF);
-				//FIXME: release a bubble?
+				/* FIXME: release a bubble?*/
 			}
 		}
 
-		// if out of air, start drowning
+		/* if out of air, start drowning */
 		if (current_player->air_finished < level.time)
-		{	// drown!
+		{	/* drown!*/
 			if (current_player->client->next_drown_time < level.time 
 				&& current_player->health > 0)
 			{
 				current_player->client->next_drown_time = level.time + 1;
 
-				// take more damage the longer underwater
+				/* take more damage the longer underwater */
 				current_player->dmg += 2;
 				if (current_player->dmg > 15)
 					current_player->dmg = 15;
 
-				// play a gurp sound instead of a normal pain sound
+				/* play a gurp sound instead of a normal pain sound */
 				if (current_player->health <= current_player->dmg)
 					gi.sound (current_player, CHAN_VOICE, gi.soundindex("player/drown1.wav"), 1, ATTN_NORM, 0);
 				else if (rand()&1)
@@ -807,9 +807,9 @@ void P_WorldEffects (void)
 		current_player->dmg = 2;
 	}
 
-	//
-	// check for sizzle damage
-	//
+	/**/
+	/* check for sizzle damage */
+	/**/
 	if (waterlevel && (current_player->watertype&(CONTENTS_LAVA|CONTENTS_SLIME)) )
 	{
 		if (current_player->watertype & CONTENTS_LAVA)
@@ -825,7 +825,7 @@ void P_WorldEffects (void)
 				current_player->pain_debounce_time = level.time + 1;
 			}
 
-			if (envirosuit)	// take 1/3 damage with envirosuit
+			if (envirosuit)	/* take 1/3 damage with envirosuit */
 				T_Damage (current_player, world, world, vec3_origin, current_player->s.origin, vec3_origin, 1*waterlevel, 0, 0, MOD_LAVA);
 			else
 				T_Damage (current_player, world, world, vec3_origin, current_player->s.origin, vec3_origin, 3*waterlevel, 0, 0, MOD_LAVA);
@@ -834,7 +834,7 @@ void P_WorldEffects (void)
 		if (current_player->watertype & CONTENTS_SLIME)
 		{
 			if (!envirosuit)
-			{	// no damage from slime with envirosuit
+			{	/* no damage from slime with envirosuit */
 				T_Damage (current_player, world, world, vec3_origin, current_player->s.origin, vec3_origin, 1*waterlevel, 0, 0, MOD_SLIME);
 			}
 		}
@@ -872,14 +872,14 @@ void G_SetClientEffects (edict_t *ent)
 		}
 	}
 
-//ZOID
+/* ZOID */
 	CTFEffects(ent);
-//ZOID
+/* ZOID */
 
 	if (ent->client->quad_framenum > level.framenum
-//ZOID
+/* ZOID */
 		&& (level.framenum & 8)
-//ZOID
+/* ZOID */
 		)
 	{
 		remaining = ent->client->quad_framenum - level.framenum;
@@ -888,9 +888,9 @@ void G_SetClientEffects (edict_t *ent)
 	}
 
 	if (ent->client->invincible_framenum > level.framenum
-//ZOID
+/* ZOID */
 		&& (level.framenum & 8)
-//ZOID
+/* ZOID */
 		)
 	{
 		remaining = ent->client->invincible_framenum - level.framenum;
@@ -898,7 +898,7 @@ void G_SetClientEffects (edict_t *ent)
 			ent->s.effects |= EF_PENT;
 	}
 
-	// show cheaters!!!
+	/* show cheaters!!!*/
 	if (ent->flags & FL_GODMODE)
 	{
 		ent->s.effects |= EF_COLOR_SHELL;
@@ -939,7 +939,7 @@ void G_SetClientSound (edict_t *ent)
 		ent->client->resp.helpchanged = 1;
 	}
 
-	// help beep (no more than three times)
+	/* help beep (no more than three times)*/
 	if (ent->client->resp.helpchanged && ent->client->resp.helpchanged <= 3 && !(level.framenum&63) )
 	{
 		ent->client->resp.helpchanged++;
@@ -975,7 +975,7 @@ void G_SetClientFrame (edict_t *ent)
 	qboolean	duck, run;
 
 	if (ent->s.modelindex != 255)
-		return;		// not in the player model
+		return;		/* not in the player model */
 
 	client = ent->client;
 
@@ -984,7 +984,7 @@ void G_SetClientFrame (edict_t *ent)
 	else
 		duck = false;
 
-	//HAVOC
+	/* HAVOC */
 	if (Q_stricmp(ent->classname, "bot") == 0)
 		duck = ent->client->b_duck;
 
@@ -993,7 +993,7 @@ void G_SetClientFrame (edict_t *ent)
 	else
 		run = false;
 
-	// check for stand/duck and stop/go transitions
+	/* check for stand/duck and stop/go transitions */
 	if (duck != client->anim_duck && client->anim_priority < ANIM_DEATH)
 		goto newanim;
 	if (run != client->anim_run && client->anim_priority == ANIM_BASIC)
@@ -1001,7 +1001,7 @@ void G_SetClientFrame (edict_t *ent)
 	if (!ent->groundentity && client->anim_priority <= ANIM_WAVE)
 		goto newanim;
 
-//vwep
+/* vwep */
 	if(client->anim_priority == ANIM_REVERSE)
 	{
 		if(ent->s.frame > client->anim_end)
@@ -1010,19 +1010,19 @@ void G_SetClientFrame (edict_t *ent)
 			return;
 		}
 	}
-//vwep
+/* vwep */
 	else if (ent->s.frame < client->anim_end)
-	{	// continue an animation
+	{	/* continue an animation */
 		ent->s.frame++;
 		return;
 	}
 
 	if (client->anim_priority == ANIM_DEATH)
-		return;		// stay there
+		return;		/* stay there */
 	if (client->anim_priority == ANIM_JUMP)
 	{
 		if (!ent->groundentity)
-			return;		// stay there
+			return;		/* stay there */
 		ent->client->anim_priority = ANIM_WAVE;
 		ent->s.frame = FRAME_jump3;
 		ent->client->anim_end = FRAME_jump6;
@@ -1030,7 +1030,7 @@ void G_SetClientFrame (edict_t *ent)
 	}
 
 newanim:
-	// return to either a running or standing frame
+	/* return to either a running or standing frame */
 	client->anim_priority = ANIM_BASIC;
 	client->anim_duck = duck;
 	client->anim_run = run;
@@ -1043,7 +1043,7 @@ newanim:
 		client->anim_end = FRAME_jump2;
 	}
 	else if (run)
-	{	// running
+	{	/* running */
 		if (duck)
 		{
 			ent->s.frame = FRAME_crwalk1;
@@ -1056,7 +1056,7 @@ newanim:
 		}
 	}
 	else
-	{	// standing
+	{	/* standing */
 		if (duck)
 		{
 			ent->s.frame = FRAME_crstnd01;
@@ -1087,27 +1087,27 @@ void ClientEndServerFrame (edict_t *ent)
 	current_player = ent;
 	current_client = ent->client;
 
-	//
-	// If the origin or velocity have changed since ClientThink(),
-	// update the pmove values.  This will happen when the client
-	// is pushed by a bmodel or kicked by an explosion.
-	// 
-	// If it wasn't updated here, the view position would lag a frame
-	// behind the body position when pushed -- "sinking into plats"
-	//
+	/**/
+	/* If the origin or velocity have changed since ClientThink(),*/
+	/* update the pmove values.  This will happen when the client */
+	/* is pushed by a bmodel or kicked by an explosion.*/
+	/* */
+	/* If it wasn't updated here, the view position would lag a frame */
+	/* behind the body position when pushed -- "sinking into plats"*/
+	/**/
 	for (i=0 ; i<3 ; i++)
 	{
 		current_client->ps.pmove.origin[i] = ent->s.origin[i]*8.0;
 		current_client->ps.pmove.velocity[i] = ent->velocity[i]*8.0;
 	}
 
-	//
-	// If the end of unit layout is displayed, don't give
-	// the player any normal movement attributes
-	//
+	/**/
+	/* If the end of unit layout is displayed, don't give */
+	/* the player any normal movement attributes */
+	/**/
 	if (level.intermissiontime)
 	{
-		// FIXME: add view drifting here?
+		/* FIXME: add view drifting here?*/
 		current_client->ps.blend[3] = 0;
 		current_client->ps.fov = 90;
 		G_SetStats (ent);
@@ -1116,13 +1116,13 @@ void ClientEndServerFrame (edict_t *ent)
 
 	AngleVectors (ent->client->v_angle, forward, right, up);
 
-	// burn from lava, etc
+	/* burn from lava, etc */
 	P_WorldEffects ();
 
-	//
-	// set model angles from view angles so other things in
-	// the world can tell which direction you are looking
-	//
+	/**/
+	/* set model angles from view angles so other things in */
+	/* the world can tell which direction you are looking */
+	/**/
 	if (ent->client->v_angle[PITCH] > 180)
 		ent->s.angles[PITCH] = (-360 + ent->client->v_angle[PITCH])/3;
 	else
@@ -1131,19 +1131,19 @@ void ClientEndServerFrame (edict_t *ent)
 	ent->s.angles[ROLL] = 0;
 	ent->s.angles[ROLL] = SV_CalcRoll (ent->s.angles, ent->velocity)*4;
 
-	//
-	// calculate speed and cycle to be used for
-	// all cyclic walking effects
-	//
+	/**/
+	/* calculate speed and cycle to be used for */
+	/* all cyclic walking effects */
+	/**/
 	xyspeed = sqrt(ent->velocity[0]*ent->velocity[0] + ent->velocity[1]*ent->velocity[1]);
 
 	if (xyspeed < 5)
 	{
 		bobmove = 0;
-		current_client->bobtime = 0;	// start at beginning of cycle again
+		current_client->bobtime = 0;	/* start at beginning of cycle again */
 	}
 	else if (ent->groundentity)
-	{	// so bobbing only cycles when on ground
+	{	/* so bobbing only cycles when on ground */
 		if (xyspeed > 210)
 			bobmove = 0.25;
 		else if (xyspeed > 100)
@@ -1160,24 +1160,24 @@ void ClientEndServerFrame (edict_t *ent)
 	bobcycle = (int)bobtime;
 	bobfracsin = fabs(sin(bobtime*M_PI));
 
-	// detect hitting the floor
+	/* detect hitting the floor */
 	P_FallingDamage (ent);
 
-	// apply all the damage taken this frame
+	/* apply all the damage taken this frame */
 	if (Q_stricmp(ent->classname, "bot") != 0)
 		P_DamageFeedback (ent);
 
-	// determine the view offsets
+	/* determine the view offsets */
 	SV_CalcViewOffset (ent);
 
-	// determine the gun offsets
+	/* determine the gun offsets */
 	SV_CalcGunOffset (ent);
 
-	// determine the full screen color blend
-	// must be after viewoffset, so eye contents can be
-	// accurately determined
-	// FIXME: with client prediction, the contents
-	// should be determined by the client
+	/* determine the full screen color blend */
+	/* must be after viewoffset, so eye contents can be */
+	/* accurately determined */
+	/* FIXME: with client prediction, the contents */
+	/* should be determined by the client */
 	SV_CalcBlend (ent);
 
 	if (Q_stricmp(ent->classname, "bot") != 0)
@@ -1194,17 +1194,17 @@ void ClientEndServerFrame (edict_t *ent)
 	VectorCopy (ent->velocity, ent->client->oldvelocity);
 	VectorCopy (ent->client->ps.viewangles, ent->client->oldviewangles);
 
-	// clear weapon kicks
+	/* clear weapon kicks */
 	VectorClear (ent->client->kick_origin);
 	VectorClear (ent->client->kick_angles);
 
-	// if the scoreboard is up, update it
+	/* if the scoreboard is up, update it */
 	if (Q_stricmp(ent->classname, "bot") != 0)
 	{
 		if ((ent->client->showscores || ent->client->scanneractive > 0) && 
 			!(level.framenum & SCANNER_UPDATE_FREQ))
 		{
-	//ZOID
+	/* ZOID */
 			if (ent->client->menu) {
 				PMenu_Update(ent);
 			} else

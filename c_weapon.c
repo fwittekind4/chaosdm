@@ -65,21 +65,21 @@ void weapon_chainsaw_fire (edict_t *ent)
 
 void Weapon_Chainsaw (edict_t *ent)
 {
-	// 0 -11 :  putup:  Einschaltsequenz
-	// 12-19  cuton:  Hochfahren bzw vorstrecken zum Angriff
-	// 20-27   cut   :  vorgestreckter Angriff als beständiger Loop...aber beim stoppen immer noch bis fram 19 laufen lassen!
-	// 28-35    cutoff :  Säge zurück in Trageposition
-	// 36-55   idle  : rumdragen halt  pött-pött-pött  :)
-	// 56-60   putdown  : runternehmen
+	/* 0 -11 :  putup:  Einschaltsequenz */
+	/* 12-19  cuton:  Hochfahren bzw vorstrecken zum Angriff */
+	/* 20-27   cut   :  vorgestreckter Angriff als beständiger Loop...aber beim stoppen immer noch bis fram 19 laufen lassen!*/
+	/* 28-35    cutoff :  Säge zurück in Trageposition */
+	/* 36-55   idle  : rumdragen halt  pött-pött-pött  :)*/
+	/* 56-60   putdown  : runternehmen */
 
 
 	if (ent->client->weaponstate == WEAPON_ENDFIRE)
 	{
-		if (ent->client->ps.gunframe == 35) // FRAME_ENDFIRE_LAST
+		if (ent->client->ps.gunframe == 35) /* FRAME_ENDFIRE_LAST */
 		{
 			ent->client->weapon_sound = gi.soundindex("weapons/chainsw/chainidl.wav");
 			ent->client->weaponstate = WEAPON_READY;
-			ent->client->ps.gunframe = 36;//FRAME_IDLE_FIRST;
+			ent->client->ps.gunframe = 36;/* FRAME_IDLE_FIRST;*/
 		}
 
 		ent->client->ps.gunframe++;
@@ -88,7 +88,7 @@ void Weapon_Chainsaw (edict_t *ent)
 
 	if (ent->client->weaponstate == WEAPON_DROPPING)
 	{
-		if (ent->client->ps.gunframe == 60) // FRAME_DEACTIVATE_LAST
+		if (ent->client->ps.gunframe == 60) /* FRAME_DEACTIVATE_LAST */
 		{
 			ent->client->weapon_sound = 0;
 			ChangeWeapon (ent);
@@ -101,16 +101,16 @@ void Weapon_Chainsaw (edict_t *ent)
 
 	if (ent->client->weaponstate == WEAPON_ACTIVATING)
 	{
-		if (ent->client->ps.gunframe == 0) // FRAME_ACTIVATE_FIRST
+		if (ent->client->ps.gunframe == 0) /* FRAME_ACTIVATE_FIRST */
 		{
 			ent->client->weapon_sound = 0;
 			gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/chainsw/chainstr.wav"), 1, ATTN_NORM, 0);
 		}
-		else if (ent->client->ps.gunframe == 11) // FRAME_ACTIVATE_LAST
+		else if (ent->client->ps.gunframe == 11) /* FRAME_ACTIVATE_LAST */
 		{
 			ent->client->weapon_sound = gi.soundindex("weapons/chainsw/chainidl.wav");
 			ent->client->weaponstate = WEAPON_READY;
-			ent->client->ps.gunframe = 36;//FRAME_IDLE_FIRST;
+			ent->client->ps.gunframe = 36;/* FRAME_IDLE_FIRST;*/
 			return;
 		}
 
@@ -123,17 +123,17 @@ void Weapon_Chainsaw (edict_t *ent)
 		ent->client->weapon_sound = 0;
 		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/chainsw/chainend.wav"), 1, ATTN_NORM, 0);
 		ent->client->weaponstate = WEAPON_DROPPING;
-		ent->client->ps.gunframe = 56; //FRAME_DEACTIVATE_FIRST;
+		ent->client->ps.gunframe = 56; /* FRAME_DEACTIVATE_FIRST;*/
 		return;
 	}
 
 	if (ent->client->weaponstate == WEAPON_ENDFIRE)
 	{
-		if (ent->client->ps.gunframe == 35) // FRAME_ENDFIRE_LAST
+		if (ent->client->ps.gunframe == 35) /* FRAME_ENDFIRE_LAST */
 		{
 			ent->client->weapon_sound = gi.soundindex("weapons/chainsw/chainidl.wav");
 			ent->client->weaponstate = WEAPON_READY;
-			ent->client->ps.gunframe = 36;//FRAME_IDLE_FIRST;
+			ent->client->ps.gunframe = 36;/* FRAME_IDLE_FIRST;*/
 			return;
 		}
 
@@ -143,15 +143,15 @@ void Weapon_Chainsaw (edict_t *ent)
 
 	if (ent->client->weaponstate == WEAPON_STARTFIRE)
 	{
-		if (ent->client->ps.gunframe == 19) // FRAME_STARTFIRE_LAST
+		if (ent->client->ps.gunframe == 19) /* FRAME_STARTFIRE_LAST */
 		{
 			ent->client->weapon_sound = gi.soundindex("weapons/chainsw/chaincu2.wav");
 			
-			//PLAYERNOISE
+			/* PLAYERNOISE */
 			PlayerNoise(ent, ent->s.origin, PNOISE_WEAPON);
 
 			ent->client->weaponstate = WEAPON_FIRING;
-			ent->client->ps.gunframe = 20;//FRAME_FIRE_FIRST;
+			ent->client->ps.gunframe = 20;/* FRAME_FIRE_FIRST;*/
 			return;
 		}
 
@@ -169,10 +169,10 @@ void Weapon_Chainsaw (edict_t *ent)
 			{
 				ent->client->weapon_sound = 0;
 				gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/chainsw/chaincu1.wav"), 1, ATTN_NORM, 0);
-				ent->client->ps.gunframe = 12;//FRAME_STARTFIRE_FIRST;
+				ent->client->ps.gunframe = 12;/* FRAME_STARTFIRE_FIRST;*/
 				ent->client->weaponstate = WEAPON_STARTFIRE;
 
-				// start the animation
+				/* start the animation */
 				ent->client->anim_priority = ANIM_ATTACK;
 				if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 				{
@@ -198,9 +198,9 @@ void Weapon_Chainsaw (edict_t *ent)
 		}
 		else
 		{
-			if (ent->client->ps.gunframe == 55)//FRAME_IDLE_LAST)
+			if (ent->client->ps.gunframe == 55)/* FRAME_IDLE_LAST)*/
 			{
-				ent->client->ps.gunframe = 36;//FRAME_IDLE_FIRST;
+				ent->client->ps.gunframe = 36;/* FRAME_IDLE_FIRST;*/
 				return;
 			}
 
@@ -215,9 +215,9 @@ void Weapon_Chainsaw (edict_t *ent)
 		{
 			weapon_chainsaw_fire (ent);
 
-			if (ent->client->ps.gunframe == 27)//FRAME_FIRE_LAST)
+			if (ent->client->ps.gunframe == 27)/* FRAME_FIRE_LAST)*/
 			{
-				ent->client->ps.gunframe = 20;//FRAME_FIRE_FIRST;
+				ent->client->ps.gunframe = 20;/* FRAME_FIRE_FIRST;*/
 				return;
 			}
 			ent->client->ps.gunframe++;
@@ -227,14 +227,14 @@ void Weapon_Chainsaw (edict_t *ent)
 			ent->client->weapon_sound = 0;
 			gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/chainsw/chaincu3.wav"), 1, ATTN_NORM, 0);
 			ent->client->weaponstate = WEAPON_ENDFIRE;
-			ent->client->ps.gunframe = 28;//FRAME_ENDFIRE_FIRST;
+			ent->client->ps.gunframe = 28;/* FRAME_ENDFIRE_FIRST;*/
 		}
 	}
 }
 
-//----------------------------------------------------------------------------------------------
-// Automatic Turrets
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Automatic Turrets */
+/*----------------------------------------------------------------------------------------------*/
 
 void Turret_Rocket_Think (edict_t *ent)
 {
@@ -280,7 +280,7 @@ void Turret_Explode (edict_t *ent)
 	if (ent->other)
 		G_FreeEdict (ent->other);
 
-	//MATTHIAS
+	/* MATTHIAS */
 	for (i=0; i<numturrets; i++)
 		if (turrets[i] == ent)
 			break;
@@ -290,11 +290,11 @@ void Turret_Explode (edict_t *ent)
 		turrets[i-1] = turrets[i];
 
 	turrets[i-1] = NULL;
-	//MATTHIAS
+	/* MATTHIAS */
 	
 	numturrets--;
 
-	// FWP Don't free the ent till we're done with it
+	/* FWP Don't free the ent till we're done with it */
 
 	G_FreeEdict (ent);
 
@@ -402,7 +402,7 @@ void fire_lead3 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 
 		tr = gi.trace (start, NULL, NULL, end, self, content_mask);
 
-		// see if we hit water
+		/* see if we hit water */
 		if (tr.contents & MASK_WATER)
 		{
 			int		color;
@@ -437,7 +437,7 @@ void fire_lead3 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 					gi.multicast (tr.endpos, MULTICAST_PVS);
 				}
 
-				// change bullet's course when it enters water
+				/* change bullet's course when it enters water */
 				VectorSubtract (end, start, dir);
 				vectoangles (dir, dir);
 				AngleVectors (dir, forward, right, up);
@@ -448,12 +448,12 @@ void fire_lead3 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 				VectorMA (end, u, up, end);
 			}
 
-			// re-trace ignoring water this time
+			/* re-trace ignoring water this time */
 			tr = gi.trace (water_start, NULL, NULL, end, self, MASK_SHOT);
 		}
 	}
 
-	// send gun puff / flash
+	/* send gun puff / flash */
 	if (!((tr.surface) && (tr.surface->flags & SURF_SKY)))
 	{
 		if (tr.fraction < 1.0)
@@ -479,7 +479,7 @@ void fire_lead3 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 		}
 	}
 
-	// if went through water, determine where the end and make a bubble trail
+	/* if went through water, determine where the end and make a bubble trail */
 	if (water)
 	{
 		vec3_t	pos;
@@ -519,7 +519,7 @@ void LaserTurret_Think (edict_t *ent)
 		ent->think = Turret_Explode;
 	}
 
-	if (ent->count == -1)	//activate state
+	if (ent->count == -1)	/* activate state */
 	{
 		edict_t	*base;
 
@@ -559,12 +559,12 @@ void LaserTurret_Think (edict_t *ent)
 		else
 			ent->count = 1000;
 
-		ent->delay = level.time;	//for fire freq
+		ent->delay = level.time;	/* for fire freq */
 		ent->s.sound = gi.soundindex ("weapons/turret/online.wav");
 	}
 	else
 	{
-		//search enemy
+		/* search enemy */
 		while ((blip = findradius(blip, ent->s.origin, 1000)) != NULL)
 		{
 			if (blip->client 
@@ -586,7 +586,7 @@ void LaserTurret_Think (edict_t *ent)
 					continue;
 				if (TeamMembers(ent->owner, blip->owner))
 					continue;
-				if (blip->client && blip->client->invisible_framenum > level.framenum)	//invisible
+				if (blip->client && blip->client->invisible_framenum > level.framenum)	/* invisible */
 					continue;
 
 				VectorSubtract(tv(blip->s.origin[0],blip->s.origin[1], blip->s.origin[2] - 8), ent->s.origin, blipdir);
@@ -604,7 +604,7 @@ void LaserTurret_Think (edict_t *ent)
 		if(ent->enemy && ent->enemy->health < -40)
 			ent->enemy = NULL;
 
-		//shot at enemy
+		/* shot at enemy */
 		if (ent->enemy && (visible(ent, ent->enemy)))
 		{
 			VectorSubtract(ent->enemy->s.origin, ent->s.origin, blipdir);
@@ -637,7 +637,7 @@ void LaserTurret_Think (edict_t *ent)
 			else
 				fire_lead3 (ent, forigin, blipdir, 3, 3, TE_GUNSHOT, DEFAULT_BULLET_HSPREAD, DEFAULT_BULLET_VSPREAD, MOD_TURRET);
 			
-			// send muzzle flash
+			/* send muzzle flash */
 			gi.WriteByte (svc_muzzleflash);
 			gi.WriteShort (ent-g_edicts);
 			gi.WriteByte ((MZ_CHAINGUN1));
@@ -656,7 +656,7 @@ void LaserTurret_Think (edict_t *ent)
 				ent->enemy = 0;
 			}
 		}
-		else	//rotate
+		else	/* rotate */
 		{
 			ent->enemy = NULL;
 			ent->s.angles[YAW] += 8;
@@ -679,7 +679,7 @@ void RocketTurret_Think (edict_t *ent)
 		ent->think = Turret_Explode;
 	}
 
-	if (ent->count == -1)	//activate state
+	if (ent->count == -1)	/* activate state */
 	{
 		edict_t	*base;
 
@@ -717,12 +717,12 @@ void RocketTurret_Think (edict_t *ent)
 		else
 			ent->count = 90;
 
-		ent->delay = level.time;	//for fire freq
+		ent->delay = level.time;	/* for fire freq */
 		ent->s.sound = gi.soundindex ("weapons/turret/online.wav");
 	}
 	else
 	{
-		//search enemy
+		/* search enemy */
 		while ((blip = findradius(blip, ent->s.origin, 1000)) != NULL)
 		{
 			if (blip->client 
@@ -744,7 +744,7 @@ void RocketTurret_Think (edict_t *ent)
 					continue;
 				if (TeamMembers(ent->owner, blip->owner))
 					continue;
-				if (blip->client && blip->client->invisible_framenum > level.framenum)	//invisible
+				if (blip->client && blip->client->invisible_framenum > level.framenum)	/* invisible */
 					continue;
 
 				VectorSubtract(tv(blip->s.origin[0],blip->s.origin[1], blip->s.origin[2] - 10) , ent->s.origin, blipdir);
@@ -762,7 +762,7 @@ void RocketTurret_Think (edict_t *ent)
 		if(ent->enemy && ent->enemy->health < -40)
 			ent->enemy = NULL;
 
-		//shot at enemy
+		/* shot at enemy */
 		if (ent->enemy && (visible(ent, ent->enemy)))
 		{
   			if (level.time > ent->delay)
@@ -809,7 +809,7 @@ void RocketTurret_Think (edict_t *ent)
 				}
 			}
 		}
-		else	//rotate
+		else	/* rotate */
 		{
 			ent->enemy = NULL;
 			ent->s.angles[YAW] += 8;
@@ -833,7 +833,7 @@ void Turret_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *su
 	{
 		VectorClear(ent->velocity);
 		ent->movetype = MOVETYPE_NONE;
-		ent->count	= -1;	//state
+		ent->count	= -1;	/* state */
 		ent->nextthink = level.time + 1;
 		if (Q_stricmp(ent->classname, "laser_turret") == 0)
 			ent->think = LaserTurret_Think;
@@ -868,7 +868,7 @@ void fire_lturret (edict_t *self, vec3_t start, vec3_t dir, int speed)
 	turret->pain = Turret_Pain;
 	turret->flags |= FL_NO_KNOCKBACK;
 	turret->takedamage = DAMAGE_YES;
-	turret->random = 0; //used for left/right fire
+	turret->random = 0; /* used for left/right fire */
 	turret->owner = self;
 
 	gi.linkentity (turret);
@@ -920,7 +920,7 @@ void weapon_lturret_fire (edict_t *ent)
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	
 
-	// we try to throw a turret
+	/* we try to throw a turret */
 	endpos[0] = start[0] + forward[0] * 40;
 	endpos[1] = start[1] + forward[1] * 40;
 	endpos[2] = start[2] + forward[2] * 40;  
@@ -956,7 +956,7 @@ void weapon_rturret_fire (edict_t *ent)
 	AngleVectors (ent->client->v_angle, forward, right, NULL);
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 
-	// we try to throw a turret
+	/* we try to throw a turret */
 	endpos[0] = start[0] + forward[0] * 40;
 	endpos[1] = start[1] + forward[1] * 40;
 	endpos[2] = start[2] + forward[2] * 40;  
@@ -985,7 +985,7 @@ void weapon_rturret_fire (edict_t *ent)
 
 void Weapon_LaserTurret (edict_t *ent)
 {
-	it_lturret = FindItem("automatic defence turret");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
 
 	if ((ent->client->newweapon) && (ent->client->weaponstate == WEAPON_READY))
 	{
@@ -1077,7 +1077,7 @@ void Weapon_LaserTurret (edict_t *ent)
 			ent->client->weaponstate = WEAPON_READY;
 		}
 	}
-	it_lturret = FindItem("automatic defence turret");	//bugfix
+	it_lturret = FindItem("automatic defence turret");	/* bugfix */
 }
 
 void Weapon_RocketTurret (edict_t *ent)
@@ -1174,9 +1174,9 @@ void Weapon_RocketTurret (edict_t *ent)
 	}
 }
 
-//----------------------------------------------------------------------------------------------
-// Bastard Sword
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Bastard Sword */
+/*----------------------------------------------------------------------------------------------*/
 
 void weapon_sword_fire (edict_t *ent)
 {
@@ -1190,7 +1190,7 @@ void weapon_sword_fire (edict_t *ent)
 	if (is_quad)
 		damage *= 4;
 
-	// DAMAGE
+	/* DAMAGE */
 	while ((blip = findradius(blip, ent->s.origin, 100)) != NULL)
 	{
 		if (blip->takedamage)
@@ -1206,7 +1206,7 @@ void weapon_sword_fire (edict_t *ent)
 			{
 				if (blip->client->weaponstate != WEAPON_FIRING)
 				{
-					// 90% blocked
+					/* 90% blocked */
 					if (random() < 0.9)
 						gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/sword/blocked.wav"), 1, ATTN_NORM, 0);
 					else
@@ -1214,7 +1214,7 @@ void weapon_sword_fire (edict_t *ent)
 				}
 				else
 				{
-					// 50% blocked
+					/* 50% blocked */
 					if (random() < 0.5)
 						gi.sound(ent, CHAN_VOICE, gi.soundindex("weapons/sword/blocked.wav"), 1, ATTN_NORM, 0);
 					else
@@ -1226,7 +1226,7 @@ void weapon_sword_fire (edict_t *ent)
 		}
 	}
 
-	// WALLSPARKS
+	/* WALLSPARKS */
 	
 	AngleVectors (ent->client->v_angle, forward, NULL, NULL);
 	VectorNormalize(forward);
@@ -1256,7 +1256,7 @@ void Weapon_Sword (edict_t *ent)
 {
 	if (ent->client->weaponstate == WEAPON_DROPPING)
 	{
-		if (ent->client->ps.gunframe == 43)	//DEACTIVATE_LAST
+		if (ent->client->ps.gunframe == 43)	/* DEACTIVATE_LAST */
 		{
 			ChangeWeapon (ent);
 			return;
@@ -1268,10 +1268,10 @@ void Weapon_Sword (edict_t *ent)
 
 	if (ent->client->weaponstate == WEAPON_ACTIVATING)
 	{
-		if (ent->client->ps.gunframe == 4)	//FRAME_ACTIVATE_LAST
+		if (ent->client->ps.gunframe == 4)	/* FRAME_ACTIVATE_LAST */
 		{
 			ent->client->weaponstate = WEAPON_READY;
-			ent->client->ps.gunframe = 5;	//FRAME_IDLE_FIRST
+			ent->client->ps.gunframe = 5;	/* FRAME_IDLE_FIRST */
 			return;
 		}
 
@@ -1282,7 +1282,7 @@ void Weapon_Sword (edict_t *ent)
 	if ((ent->client->newweapon) && (ent->client->weaponstate != WEAPON_FIRING))
 	{
 		ent->client->weaponstate = WEAPON_DROPPING;
-		ent->client->ps.gunframe = 39;	//FRAME_DEACTIVATE_FIRST
+		ent->client->ps.gunframe = 39;	/* FRAME_DEACTIVATE_FIRST */
 		return;
 	}
 
@@ -1295,17 +1295,17 @@ void Weapon_Sword (edict_t *ent)
 			if (random() < 0.5)
 			{
 				ent->client->swordstate = 1;
-				ent->client->ps.gunframe = 15;	//FRAME_FIRE_FIRST
+				ent->client->ps.gunframe = 15;	/* FRAME_FIRE_FIRST */
 			}
 			else
 			{
 				ent->client->swordstate = 0;
-				ent->client->ps.gunframe = 27;	//FRAME_FIRE_FIRST
+				ent->client->ps.gunframe = 27;	/* FRAME_FIRE_FIRST */
 
 			}
 			ent->client->weaponstate = WEAPON_FIRING;
 
-			// start the animation
+			/* start the animation */
 			ent->client->anim_priority = ANIM_ATTACK;
 			if (ent->client->ps.pmove.pm_flags & PMF_DUCKED)
 			{
@@ -1320,9 +1320,9 @@ void Weapon_Sword (edict_t *ent)
 		}
 		else
 		{
-			if (ent->client->ps.gunframe == 14)	//FRAME_IDLE_LAST
+			if (ent->client->ps.gunframe == 14)	/* FRAME_IDLE_LAST */
 			{
-				ent->client->ps.gunframe = 5;	//FRAME_IDLE_FIRST
+				ent->client->ps.gunframe = 5;	/* FRAME_IDLE_FIRST */
 				return;
 			}
 
@@ -1355,7 +1355,7 @@ void Weapon_Sword (edict_t *ent)
 
 		if (ent->client->swordstate == 1)
 		{
-			if (ent->client->ps.gunframe >= 26)	//FRAME_FIRE_LAST+1
+			if (ent->client->ps.gunframe >= 26)	/* FRAME_FIRE_LAST+1*/
 			{
 				ent->client->weaponstate = WEAPON_READY;
 				ent->client->ps.gunframe = 5;
@@ -1363,7 +1363,7 @@ void Weapon_Sword (edict_t *ent)
 		}
 		else
 		{
-			if (ent->client->ps.gunframe >= 38)	//FRAME_FIRE_LAST+1
+			if (ent->client->ps.gunframe >= 38)	/* FRAME_FIRE_LAST+1*/
 			{
 				ent->client->weaponstate = WEAPON_READY;
 				ent->client->ps.gunframe = 5;
@@ -1374,9 +1374,9 @@ void Weapon_Sword (edict_t *ent)
 }
 
 
-//----------------------------------------------------------------------------------------------
-// Airfist
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Airfist */
+/*----------------------------------------------------------------------------------------------*/
 
 void airstuff_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -1547,9 +1547,9 @@ void Weapon_Airfist (edict_t *ent)
 	Weapon_Generic (ent, 4, 12, 50, 54, pause_frames, fire_frames, Weapon_Airfist_Fire);
 }
 
-//----------------------------------------------------------------------------------------------
-//  Explosive Shotgun & Explosive Super Shotgun
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/*  Explosive Shotgun & Explosive Super Shotgun */
+/*----------------------------------------------------------------------------------------------*/
 void fire_lead2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kick, int te_impact, int hspread, int vspread, int mod)
 {
 	trace_t		tr;
@@ -1583,7 +1583,7 @@ void fire_lead2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 
 		tr = gi.trace (start, NULL, NULL, end, self, content_mask);
 
-		// see if we hit water
+		/* see if we hit water */
 		if (tr.contents & MASK_WATER)
 		{
 			int		color;
@@ -1618,7 +1618,7 @@ void fire_lead2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 					gi.multicast (tr.endpos, MULTICAST_PVS);
 				}
 
-				// change bullet's course when it enters water
+				/* change bullet's course when it enters water */
 				VectorSubtract (end, start, dir);
 				vectoangles (dir, dir);
 				AngleVectors (dir, forward, right, up);
@@ -1629,12 +1629,12 @@ void fire_lead2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 				VectorMA (end, u, up, end);
 			}
 
-			// re-trace ignoring water this time
+			/* re-trace ignoring water this time */
 			tr = gi.trace (water_start, NULL, NULL, end, self, MASK_SHOT);
 		}
 	}
 
-	// send gun puff / flash
+	/* send gun puff / flash */
 	if (!((tr.surface) && (tr.surface->flags & SURF_SKY)))
 	{
 		if (tr.fraction < 1.0)
@@ -1661,7 +1661,7 @@ void fire_lead2 (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int kic
 		}
 	}
 
-	// if went through water, determine where the end and make a bubble trail
+	/* if went through water, determine where the end and make a bubble trail */
 	if (water)
 	{
 		vec3_t	pos;
@@ -1728,7 +1728,7 @@ void weapon_esupershotgun_fire (edict_t *ent)
 	AngleVectors (v, forward, NULL, NULL);
 	fire_eshotgun (ent, start, forward, damage, kick, 300, 300, 1, MOD_ESSHOTGUN);
 
-	// send muzzle flash
+	/* send muzzle flash */
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
 	gi.WriteByte (MZ_SSHOTGUN | is_silenced);
@@ -1749,9 +1749,9 @@ void Weapon_ExplosiveSuperShotgun (edict_t *ent)
 	Weapon_Generic (ent, 6, 17, 57, 61, pause_frames, fire_frames, weapon_esupershotgun_fire);
 }
 
-//----------------------------------------------------------------------------------------------
-//  Crossbow
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/*  Crossbow */
+/*----------------------------------------------------------------------------------------------*/
 
 void arrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -1773,7 +1773,7 @@ void arrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 
 		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 60% blocked
+			/* 60% blocked */
 			if (random() < 0.6)
 			{
 				self->s.sound = 0;
@@ -1800,7 +1800,7 @@ void arrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *su
 			G_FreeEdict (self);
 		}
 	}
-	else if ((Q_stricmp(other->classname, "func_door") == 0) || (Q_stricmp(other->classname, "func_plat") == 0)) //door or plat
+	else if ((Q_stricmp(other->classname, "func_door") == 0) || (Q_stricmp(other->classname, "func_plat") == 0)) /* door or plat */
 	{
 		self->s.sound = 0;
 		self->movetype = MOVETYPE_BOUNCE;
@@ -1896,9 +1896,9 @@ void Weapon_Crossbow (edict_t *ent)
 	Weapon_Generic (ent, 4, 12, 50, 54, pause_frames, fire_frames, Weapon_Crossbow_Fire);
 }
 
-//----------------------------------------------------------------------------------------------
-//  Poison Crossbow
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/*  Poison Crossbow */
+/*----------------------------------------------------------------------------------------------*/
 
 void parrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -1920,7 +1920,7 @@ void parrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *s
 
 		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 60% blocked
+			/* 60% blocked */
 			if (random() < 0.6)
 			{
 				self->s.sound = 0;
@@ -1951,14 +1951,14 @@ void parrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *s
 		if (other->client)
 		{
 			if (!(other->client->invincible_framenum > level.framenum)
-				&& !(other->flags & FL_GODMODE)) // invulnerable or god
+				&& !(other->flags & FL_GODMODE)) /* invulnerable or god */
 			{
 				other->client->PoisonTime += 10;
 				G_FreeEdict (self);
 			}
 		}
 	}
-	else if ((Q_stricmp(other->classname, "func_door") == 0) || (Q_stricmp(other->classname, "func_plat") == 0)) //door or plat
+	else if ((Q_stricmp(other->classname, "func_door") == 0) || (Q_stricmp(other->classname, "func_plat") == 0)) /* door or plat */
 	{
 		self->s.sound = 0;
 		self->movetype = MOVETYPE_BOUNCE;
@@ -2052,9 +2052,9 @@ void Weapon_PoisonCrossbow (edict_t *ent)
 	Weapon_Generic (ent, 4, 12, 50, 54, pause_frames, fire_frames, Weapon_PoisonCrossbow_Fire);
 }
 
-//----------------------------------------------------------------------------------------------
-//  Explosive Crossbow
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/*  Explosive Crossbow */
+/*----------------------------------------------------------------------------------------------*/
 
 void earrow_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -2142,9 +2142,9 @@ void Weapon_ExplosiveCrossbow (edict_t *ent)
 	Weapon_Generic (ent, 4, 12, 50, 54, pause_frames, fire_frames, Weapon_ExplosiveCrossbow_Fire);
 }
 
-//----------------------------------------------------------------------------------------------
-//  Homing Missile Launcher
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/*  Homing Missile Launcher */
+/*----------------------------------------------------------------------------------------------*/
 
 void homing_think (edict_t *ent)
 {
@@ -2280,7 +2280,7 @@ void Weapon_HomingLauncher_Fire (edict_t *ent)
 	P_ProjectSource (ent->client, ent->s.origin, offset, forward, right, start);
 	fire_homing (ent, start, forward, damage, 650, damage_radius, radius_damage);
 
-	// send muzzle flash
+	/* send muzzle flash */
 	gi.WriteByte (svc_muzzleflash);
 	gi.WriteShort (ent-g_edicts);
 	gi.WriteByte (MZ_ROCKET | is_silenced);
@@ -2302,9 +2302,9 @@ void Weapon_HomingLauncher (edict_t *ent)
 	Weapon_Generic (ent, 4, 12, 50, 54, pause_frames, fire_frames, Weapon_HomingLauncher_Fire);
 }
 
-//----------------------------------------------------------------------------------------------
-//  Buzzsaw
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/*  Buzzsaw */
+/*----------------------------------------------------------------------------------------------*/
 
 void buzz_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
@@ -2330,7 +2330,7 @@ void buzz_touch (edict_t *self, edict_t *other, cplane_t *plane, csurface_t *sur
 	{
 		if (other->client && other->client->pers.weapon == it_sword && infront (other, self))
 		{
-			// 60% blocked
+			/* 60% blocked */
 			if (random() < 0.6)
 			{
 				self->movetype = MOVETYPE_BOUNCE;
@@ -2446,9 +2446,9 @@ void Weapon_Buzzsaw (edict_t *ent)
 	Weapon_Generic (ent, 4, 12, 50, 54, pause_frames, fire_frames, Weapon_Buzzsaw_Fire);
 }
 
-//----------------------------------------------------------------------------------------------
-// Flash Grenade
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Flash Grenade */
+/*----------------------------------------------------------------------------------------------*/
 
 
 
@@ -2474,9 +2474,9 @@ void FlashGrenade_Explode (edict_t *ent)
 			 continue;
 		if (target->client->camera)
 			continue;
-		if (target->client->invincible_framenum > level.framenum) // invulnerable
+		if (target->client->invincible_framenum > level.framenum) /* invulnerable */
 			continue;
-		if (target->flags & FL_GODMODE) // god
+		if (target->flags & FL_GODMODE) /* god */
 			continue;
 
 		VectorSubtract(ent->s.origin, target->s.origin, v);
@@ -2485,7 +2485,7 @@ void FlashGrenade_Explode (edict_t *ent)
 		if ( Distance < FLASH_RADIUS/10 )
 			BlindTimeAdd = blindtime->value;
 		else
-			BlindTimeAdd = 1.5 * blindtime->value * ( 1 / ( ( Distance - FLASH_RADIUS*2 ) / (FLASH_RADIUS*2) - 2 ) + 1 ); // Blind partially
+			BlindTimeAdd = 1.5 * blindtime->value * ( 1 / ( ( Distance - FLASH_RADIUS*2 ) / (FLASH_RADIUS*2) - 2 ) + 1 ); /* Blind partially */
 		
 		if ( BlindTimeAdd < 0 )
 			BlindTimeAdd = 0;
@@ -2653,7 +2653,7 @@ void weapon_flashgrenade_fire (edict_t *ent, qboolean held)
 	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
 	fire_flashgrenade2 (ent, start, forward, damage, speed, timer, radius, held);
 
-	//vwep
+	/* vwep */
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED && ent->health > 0)
 	{
 		ent->client->anim_priority = ANIM_ATTACK;
@@ -2735,7 +2735,7 @@ void Weapon_FlashGrenade (edict_t *ent)
 				ent->client->weapon_sound = gi.soundindex("weapons/hgrenc1b.wav");
 			}
 
-			// they waited too long, detonate it in their hand
+			/* they waited too long, detonate it in their hand */
 			if (!ent->client->grenade_blew_up && level.time >= ent->client->grenade_time)
 			{
 				ent->client->weapon_sound = 0;
@@ -2779,9 +2779,9 @@ void Weapon_FlashGrenade (edict_t *ent)
 	}
 }
 
-//----------------------------------------------------------------------------------------------
-// Laser Mine
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Laser Mine */
+/*----------------------------------------------------------------------------------------------*/
 
 void pre_target_laser_think (edict_t *self)
 {
@@ -2813,11 +2813,11 @@ void LaserMine_Die (edict_t *ent, edict_t *inflictor, edict_t *attacker, int dam
 
 void LaserMine_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t *surf)
 {
-	 int laser_colour[] = {0xf2f2f0f0,             // red
-                           0xd0d1d2d3,             // green
-                           0xf3f3f1f1,             // blue
-                           0xdcdddedf,             // yellow
-                           0xe0e1e2e3              // bitty yellow strobe
+	 int laser_colour[] = {0xf2f2f0f0,             /* red */
+                           0xd0d1d2d3,             /* green */
+                           0xf3f3f1f1,             /* blue */
+                           0xdcdddedf,             /* yellow */
+                           0xe0e1e2e3              /* bitty yellow strobe */
                            };
 
 	if (other == ent->owner)
@@ -2845,7 +2845,7 @@ void LaserMine_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t 
 		return;
 	}
 
-	if (!other->takedamage && plane) // FWP Funky lasermine/corpse race condition pseudo hack fix 
+	if (!other->takedamage && plane) /* FWP Funky lasermine/corpse race condition pseudo hack fix */
 	{
 		edict_t *self;
 
@@ -2853,7 +2853,7 @@ void LaserMine_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t 
 
 		ent->s.sound  = 0;
 
-		// FWP Killable laser mines
+		/* FWP Killable laser mines */
           
                 if (lasermine_health->value == 0) {
 			ent->clipmask = MASK_SHOT;   
@@ -2884,10 +2884,10 @@ void LaserMine_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t 
 		self->movetype		= MOVETYPE_NONE;
 		self->solid			= SOLID_NOT;
 		self->s.renderfx	= RF_BEAM|RF_TRANSLUCENT;
-		self->s.modelindex	= 1;                    // must be non-zero
+		self->s.modelindex	= 1;                    /* must be non-zero */
 		self->s.sound		= gi.soundindex ("world/laser.wav");
 		self->classname		= "chaoslaser";
-		self->s.frame		= 2;    // beam diameter
+		self->s.frame		= 2;    /* beam diameter */
 		self->owner			= ent;
 		self->s.skinnum		= laser_colour[((int) (random() * 1000)) % 5];
 		self->dmg           = 200;
@@ -2905,14 +2905,14 @@ void LaserMine_Touch (edict_t *ent, edict_t *other, cplane_t *plane, csurface_t 
 		VectorSet (self->mins, -8, -8, -8);
 		VectorSet (self->maxs, 8, 8, 8);
 
-		// link to world
+		/* link to world */
 		gi.linkentity (self);
 
                 if (lasermine_health->value > 0)
                    ent->other=self;
                 
 		target_laser_off (self);
-		self->nextthink = level.time + 2;	//must be after target_laser_off
+		self->nextthink = level.time + 2;	/* must be after target_laser_off */
 	}
 }
 
@@ -2974,7 +2974,7 @@ void weapon_lasergrenade_fire (edict_t *ent, qboolean held)
 	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
 	fire_lasermine2 (ent, start, forward, damage, speed, timer, radius, held);
 
-	//vwep
+	/* vwep */
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED && ent->health > 0)
 	{
 		ent->client->anim_priority = ANIM_ATTACK;
@@ -3056,7 +3056,7 @@ void Weapon_LaserGrenade (edict_t *ent)
 				ent->client->weapon_sound = gi.soundindex("weapons/hgrenc1b.wav");
 			}
 
-			// they waited too long, detonate it in their hand
+			/* they waited too long, detonate it in their hand */
 			if (!ent->client->grenade_blew_up && level.time >= ent->client->grenade_time)
 			{
 				ent->client->weapon_sound = 0;
@@ -3100,9 +3100,9 @@ void Weapon_LaserGrenade (edict_t *ent)
 	}
 }
 
-//----------------------------------------------------------------------------------------------
-// Poison Grenade
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Poison Grenade */
+/*----------------------------------------------------------------------------------------------*/
 
 void PoisonGrenade_Explode (edict_t *ent)
 {
@@ -3126,9 +3126,9 @@ void PoisonGrenade_Explode (edict_t *ent)
 			 continue;
 		if (target->client->camera)
 			continue;
-		if (target->client->invincible_framenum > level.framenum) // invulnerable
+		if (target->client->invincible_framenum > level.framenum) /* invulnerable */
 			continue;
-		if (target->flags & FL_GODMODE) // god
+		if (target->flags & FL_GODMODE) /* god */
 			continue;
 
 		VectorSubtract(ent->s.origin, target->s.origin, v);
@@ -3137,18 +3137,18 @@ void PoisonGrenade_Explode (edict_t *ent)
 		if ( Distance < POISON_RADIUS/10 )
 			PoisonTimeAdd = poisontime->value;
 		else
-			PoisonTimeAdd = 1.5 * poisontime->value * ( 1 / ( ( Distance - POISON_RADIUS*2 ) / (POISON_RADIUS*2) - 2 ) + 1 ); // Blind partially
+			PoisonTimeAdd = 1.5 * poisontime->value * ( 1 / ( ( Distance - POISON_RADIUS*2 ) / (POISON_RADIUS*2) - 2 ) + 1 ); /* Blind partially */
 		
 		if ( PoisonTimeAdd < 0 )
 			PoisonTimeAdd = 0;
 
 		target->client->PoisonTime = PoisonTimeAdd * 1.5;
 		target->client->PoisonBase = poisontime->value;
-		target->s.angles[YAW] = (rand() % 360); // Whee!
+		target->s.angles[YAW] = (rand() % 360); /* Whee!*/
 
-		if (target->client && target->client->fakedeath != 0)	//target is fakedead
+		if (target->client && target->client->fakedeath != 0)	/* target is fakedead */
 		{
-			FakeDeath(target); //unfake him
+			FakeDeath(target); /* unfake him */
 		}
 
 		T_Damage (target, ent, ent, target->velocity, target->s.origin, target->velocity, 20, 1, DAMAGE_ENERGY, MOD_PGRENADE);
@@ -3309,7 +3309,7 @@ void weapon_poisongrenade_fire (edict_t *ent, qboolean held)
 	speed = GRENADE_MINSPEED + (GRENADE_TIMER - timer) * ((GRENADE_MAXSPEED - GRENADE_MINSPEED) / GRENADE_TIMER);
 	fire_poisongrenade2 (ent, start, forward, damage, speed, timer, radius, held);
 
-	//vwep
+	/* vwep */
 	if (ent->client->ps.pmove.pm_flags & PMF_DUCKED && ent->health > 0)
 	{
 		ent->client->anim_priority = ANIM_ATTACK;
@@ -3391,7 +3391,7 @@ void Weapon_PoisonGrenade (edict_t *ent)
 				ent->client->weapon_sound = gi.soundindex("weapons/hgrenc1b.wav");
 			}
 
-			// they waited too long, detonate it in their hand
+			/* they waited too long, detonate it in their hand */
 			if (!ent->client->grenade_blew_up && level.time >= ent->client->grenade_time)
 			{
 				ent->client->weapon_sound = 0;
@@ -3435,9 +3435,9 @@ void Weapon_PoisonGrenade (edict_t *ent)
 	}
 }
 
-//----------------------------------------------------------------------------------------------
-// Proximity Mine
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Proximity Mine */
+/*----------------------------------------------------------------------------------------------*/
 
 void Proxy_Die (edict_t *self, edict_t *inflictor, edict_t *attacker, int damage, vec3_t point);
 
@@ -3573,7 +3573,7 @@ void Proxy_Think (edict_t *ent)
 
 		VectorCopy(bestdir, ent->velocity);
 	}
-	else if (random() < 0.1 && ent->groundentity) // No enemy there so do other things !!
+	else if (random() < 0.1 && ent->groundentity) /* No enemy there so do other things !!*/
 	{
 		vec3_t	vangles;
 
@@ -3642,7 +3642,7 @@ void EvilProxy_Think (edict_t *ent)
 			continue;
 		if (players[i]->client->camera)
 			continue;
-		if (players[i]->client->invisible_framenum > level.framenum)	//invisible
+		if (players[i]->client->invisible_framenum > level.framenum)	/* invisible */
 			continue;
 
 		VectorSubtract(players[i]->s.origin, ent->s.origin, blipdir);
@@ -3710,7 +3710,7 @@ void EvilProxy_Think (edict_t *ent)
 
 		VectorCopy(blipdir, ent->velocity);
 	}
-	else if (random() < 0.05  && ent->groundentity) // No enemy there so do other things !!
+	else if (random() < 0.05  && ent->groundentity) /* No enemy there so do other things !!*/
 	{
 		vec3_t	vangles;
 
@@ -3811,9 +3811,9 @@ void fire_proxymine (edict_t *self, vec3_t start, vec3_t aimdir, int damage, int
 	gi.linkentity (grenade);
 }
 
-//----------------------------------------------------------------------------------------------
-// Flash Grenade Launcher
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Flash Grenade Launcher */
+/*----------------------------------------------------------------------------------------------*/
 
 void weapon_flashgrenadelauncher_fire (edict_t *ent)
 {
@@ -3857,9 +3857,9 @@ void Weapon_FlashGrenadeLauncher (edict_t *ent)
 	Weapon_Generic (ent, 5, 16, 59, 64, pause_frames, fire_frames, weapon_flashgrenadelauncher_fire);
 }
 
-//----------------------------------------------------------------------------------------------
-// Poison Grenade Launcher
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Poison Grenade Launcher */
+/*----------------------------------------------------------------------------------------------*/
 
 void weapon_poisongrenadelauncher_fire (edict_t *ent)
 {
@@ -3903,9 +3903,9 @@ void Weapon_PoisonGrenadeLauncher (edict_t *ent)
 	Weapon_Generic (ent, 5, 16, 59, 64, pause_frames, fire_frames, weapon_poisongrenadelauncher_fire);
 }
 
-//----------------------------------------------------------------------------------------------
-// Proxy Mine Launcher
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Proxy Mine Launcher */
+/*----------------------------------------------------------------------------------------------*/
 
 void weapon_proxyminelauncher_fire (edict_t *ent)
 {
@@ -3949,9 +3949,9 @@ void Weapon_ProxyMineLauncher (edict_t *ent)
 	Weapon_Generic (ent, 5, 16, 59, 64, pause_frames, fire_frames, weapon_proxyminelauncher_fire);
 }
 
-//----------------------------------------------------------------------------------------------
-// Gravity Vortex
-//----------------------------------------------------------------------------------------------
+/*----------------------------------------------------------------------------------------------*/
+/* Gravity Vortex */
+/*----------------------------------------------------------------------------------------------*/
 
 #define	VORTEX_INACTIVE		0
 #define	VORTEX_FIRED		1
@@ -3976,7 +3976,7 @@ void BlackHole_Think (edict_t *ent)
 
 	ent->nextthink = level.time + .1;
 
-	//animate black hole
+	/* animate black hole */
 	ent->s.frame += 1;
 	if (ent->s.frame > 19)
 		ent->s.frame = 0;
@@ -4110,10 +4110,10 @@ int dummy;
 
 		}
 
-		//		else	// Something other then Evil Proxies, at the time of
-		//{ 	// this writting this was only Proxies and Turrets
+		/*		else	// Something other then Evil Proxies, at the time of */
+		/*{ 	// this writting this was only Proxies and Turrets */
 		
-		// }
+		/* }*/
 		if(blip->client && blip->client->camera)
 			return false;
  
@@ -4236,7 +4236,7 @@ void Vortex_Think (edict_t *ent)
 			vortexstate = VORTEX_SPAWNSTUFF;
 		}
 
-		//animate rings
+		/* animate rings */
 		ent->velocity[2] = 15;
 		ent->s.frame += 1;
 		if (ent->s.frame > 19)
@@ -4249,7 +4249,7 @@ void Vortex_Think (edict_t *ent)
 
 		gi.sound(ent, CHAN_WEAPON, gi.soundindex("weapons/vortex/storm.wav"), 1, ATTN_NORM, 0);
 
-		// spawn black hole
+		/* spawn black hole */
 		black = G_Spawn();
 		VectorCopy (ent->s.origin, black->s.origin);
 		black->movetype = MOVETYPE_NONE;
@@ -4266,7 +4266,7 @@ void Vortex_Think (edict_t *ent)
 
 		gi.linkentity (black);
 
-		// spawn black hole stuff
+		/* spawn black hole stuff */
 		for (i = 0; i < 7; i++)
 		{
 			stuff = G_Spawn();
@@ -4306,12 +4306,12 @@ void Vortex_Think (edict_t *ent)
 	}
 	else if (vortexstate == VORTEX_ACTIVE)
 	{
-		//animate rings
+		/* animate rings */
 		ent->s.frame += 1;
 		if (ent->s.frame > 19)
 			ent->s.frame = 0;
 
-		// move
+		/* move */
 		VectorCopy(ent->s.origin, black->s.origin);
 
 		ent->velocity[0] += crandom() * 20;
@@ -4323,7 +4323,7 @@ void Vortex_Think (edict_t *ent)
 
 		VectorCopy(ent->velocity, black->velocity);
 
-		//suck
+		/* suck */
 		while ((blip = findradius2(blip, ent->s.origin, 600)) != NULL)
 		{
 		  	if( !Valid_Target(ent, blip) )
