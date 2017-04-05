@@ -3989,7 +3989,7 @@ void BlackHole_Think (edict_t *ent)
  */
 int Valid_Target( edict_t *ent, edict_t *blip )
 {
-int dummy;
+int dummy UNUSEDVAR;
 
   	/*
 	 * For every item we never allow it to legally target itself

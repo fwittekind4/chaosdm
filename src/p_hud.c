@@ -198,7 +198,7 @@ void DeathmatchScoreboardMessage (edict_t *ent, edict_t *killer)
 	int		sorted[MAX_CLIENTS];
 	int		sortedscores[MAX_CLIENTS];
 	int		score, total;
-	int		picnum;
+	int		picnum UNUSEDVAR;
 	int		x, y;
 	gclient_t	*cl;
 	edict_t		*cl_ent;

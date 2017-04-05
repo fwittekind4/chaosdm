@@ -961,12 +961,11 @@ void bprintf2 (int printlevel, char *fmt, ...)
 {
 	int i;
 	char	bigbuffer[0x10000];
-	int		len;
 	va_list		argptr;
 	edict_t	*cl_ent;
 
 	va_start (argptr,fmt);
-	len = vsprintf (bigbuffer,fmt,argptr);
+	vsprintf (bigbuffer,fmt,argptr);
 	va_end (argptr);
 
 	if (dedicated->value)
@@ -985,14 +984,13 @@ void bprintf2 (int printlevel, char *fmt, ...)
 void cprintf2 (edict_t *ent, int printlevel, char *fmt, ...)
 {
 	char	bigbuffer[0x10000];
-	int		len;
 	va_list		argptr;
 
 	if (!ent)
 		return;
 
 	va_start (argptr,fmt);
-	len = vsprintf (bigbuffer,fmt,argptr);
+	vsprintf (bigbuffer,fmt,argptr);
 	va_end (argptr);
 
 	if (ent->inuse && (Q_stricmp(ent->classname, "bot") != 0))
@@ -1005,7 +1003,6 @@ void nprintf (int printlevel, char *fmt, ...)
 {
 	int i;
 	char	bigbuffer[0x10000];
-	int		len;
 	va_list		argptr;
 	edict_t	*cl_ent;
 
@@ -1013,7 +1010,7 @@ void nprintf (int printlevel, char *fmt, ...)
 		return;
 
 	va_start (argptr,fmt);
-	len = vsprintf (bigbuffer,fmt,argptr);
+	vsprintf (bigbuffer,fmt,argptr);
 	va_end (argptr);
 
 	for (i=0 ; i<maxclients->value ; i++)

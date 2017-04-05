@@ -132,7 +132,7 @@ void Bot_Create(int level, int team, char *name, char *skin)
 {
 	int       i;
 	char      userinfo[MAX_INFO_STRING];
-	edict_t   *bot;
+	edict_t   *bot = NULL;
 
 	for (i = maxclients->value; i > 0; i--)
 	{
@@ -1566,7 +1566,7 @@ void RemoveFromList(edict_t *ent)
 void Load_BotChat(void)
 {
 	FILE	*fp;
-	int		section, line, i;
+	int		section, line=0, i;
 	char	filename[256], buffer;
 	cvar_t	*game_dir;
 

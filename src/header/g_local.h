@@ -1178,3 +1178,8 @@ int		red_base, blue_base;	/* node at red/blue flag */
 /* ZOID */
 #include "g_ctf.h"
 
+#ifdef __GNUC__
+#define UNUSEDVAR __attribute__((unused))
+#else
+#define UNUSEDVAR
+#endif

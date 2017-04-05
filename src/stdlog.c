@@ -33,8 +33,8 @@ static FILE     *StdLogFile = NULL;
 
 static unsigned int uiLogstyle = 0;
 
-static const char *_unused_id_stdlog_c = "$Id: stdlog.c,v 1.8 1999/09/11 21:47:01 major Exp $";
-static const char *_unused_id_stdlog_h = __STDLOG_ID__;
+static const char *_unused_id_stdlog_c UNUSEDVAR = "$Id: stdlog.c,v 1.8 1999/09/11 21:47:01 major Exp $";
+static const char *_unused_id_stdlog_h UNUSEDVAR = __STDLOG_ID__;
 
 /*
  *  LOCAL FUNCTION PROTOTYPES

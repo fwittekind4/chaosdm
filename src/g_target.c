@@ -334,7 +334,7 @@ speed	default is 1000
 
 void use_target_blaster (edict_t *self, edict_t *other, edict_t *activator)
 {
-	int effect;
+	int effect UNUSEDVAR;
 
 	if (self->spawnflags & 2)
 		effect = 0;

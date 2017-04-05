@@ -614,7 +614,7 @@ void Bot_Think(edict_t *ent)
 		}
 		else
 		{
-			int	lastnodeflag = NORMAL_NODE;
+			int	lastnodeflag UNUSEDVAR = NORMAL_NODE;
 
 			if (n > 0)
 				lastnodeflag = nodes[ent->client->b_path[n-1]].flag;
@@ -830,7 +830,7 @@ void Bot_Think(edict_t *ent)
 	else
 	{
 		vec3_t	forward, dir, oorigin, wallangles;
-		vec_t	dist;
+		vec_t	dist UNUSEDVAR;
 		trace_t	tr;
 
 		it_lturret = FindItem("automatic defence turret");	/* bugfix */
@@ -2015,7 +2015,6 @@ void Bot_Say (edict_t *ent, qboolean team, char *fmt, ...)
 {
 	int i;
 	char	bigbuffer[0x10000];
-	int		len;
 	va_list		argptr;
 	edict_t	*cl_ent;
 
@@ -2023,7 +2022,7 @@ void Bot_Say (edict_t *ent, qboolean team, char *fmt, ...)
 		return;
 
 	va_start (argptr,fmt);
-	len = vsprintf (bigbuffer,fmt,argptr);
+	vsprintf (bigbuffer,fmt,argptr);
 	va_end (argptr);
 
 	if (dedicated->value)
