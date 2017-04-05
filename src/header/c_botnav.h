@@ -1,7 +1,7 @@
 /* basic definitions */
 #define		MAX_NODES			512
-#define		INFINITY			65535
-#define		noPredecessor		INFINITY
+#define		CINFINITY			65535
+#define		noPredecessor		CINFINITY
 
 #define		NO_PATH				0
 #define		VALID_PATH			1
