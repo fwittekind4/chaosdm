@@ -1,204 +1,189 @@
+# ----------------------------------------------------- #
+# Makefile for the Chaos game module for Quake II         #
+#                                                       #
+# Just type "make" to compile the                       #
+#  - Chaos Game (game.so / game.dll)                      #
+#                                                       #
+# Dependencies:                                         #
+# - None, but you need a Quake II to play.              #
+#   While in theorie every one should work              #
+#   Yamagi Quake II ist recommended.                    #
+#                                                       #
+# Platforms:                                            #
+# - FreeBSD                                             #
+# - Linux                                               #
+# - Mac OS X                                            #
+# - OpenBSD                                             #
+# - Windows                                             # 
+# ----------------------------------------------------- #
+
+# Detect the OS
+ifdef SystemRoot
+OSTYPE := Windows
+else
+OSTYPE := $(shell uname -s)
+endif
+ 
+# Special case for MinGW
+ifneq (,$(findstring MINGW,$(OSTYPE)))
+OSTYPE := Windows
+endif
+
+# ----------
+
+# Base CFLAGS. 
+#
+# -O2 are enough optimizations.
 # 
-# Makefile				Chaotic Dreams Makefile
+# -fno-strict-aliasing since the source doesn't comply
+#  with strict aliasing rules and it's next to impossible
+#  to get it there...
 #
-# Major'Trips'
-# Sat May 22 00:08:36 CDT 1999
+# -fomit-frame-pointer since the framepointer is mostly
+#  useless for debugging Quake II and slows things down.
 #
-#	This file was originally part of the Quake2 3.20 source tree.
-#	I simply barrowed it for inclusion here.
+# -g to build allways with debug symbols. Please do not
+#  change this, since it's our only chance to debug this
+#  crap when random crashes happen!
+#
+# -fPIC for position independend code.
+#
+# -MMD to generate header dependencies.
+ifeq ($(OSTYPE), Darwin)
+CFLAGS := -O2 -fno-strict-aliasing -fomit-frame-pointer \
+		  -Wall -pipe -g -fwrapv -arch i386 -arch x86_64
+else
+CFLAGS := -O2 -fno-strict-aliasing -fomit-frame-pointer \
+		  -Wall -pipe -g -MMD -fwrapv
+endif
 
-BUILD_DEBUG_DIR=debug
-BUILD_RELEASE_DIR=release
+# ----------
 
-CC=gcc
+# Base LDFLAGS.
+ifeq ($(OSTYPE), Darwin)
+LDFLAGS := -shared -arch i386 -arch x86_64 
+else
+LDFLAGS := -shared
+endif
 
-# Base Flags
-# If you want to add a CFLAG to be included in both the 
-# debug and the release build, add it here
-BASE_CFLAGS=-Dstricmp=strcasecmp -DC_ONLY -pedantic 
+# ----------
 
-# Release Flags
-# Flags added here are ONLY used for building the release
-# binaries
-RELEASE_CFLAGS=$(BASE_CFLAGS) -ffast-math -funroll-loops \
-	-fomit-frame-pointer -fexpensive-optimizations
+# Builds everything
+all: chaos
 
-# Debug Flags
-# These flags are only used when compiling the debug binaries
-DEBUG_CFLAGS=$(BASE_CFLAGS) -g -Wall
+# ----------
+ 
+# When make is invoked by "make VERBOSE=1" print
+# the compiler and linker commands.
 
-# LD Flags
-# These are typically not used, though I understand it's 
-# necessary to use them on a Slakware system
-#LDFLAGS=-ldl -lm 
+ifdef VERBOSE
+Q :=
+else
+Q := @
+endif
 
-##### Dont go beyond here unless you know what's going on ####
+# ----------
 
-ARCH=x86_64
+# Phony targets
+.PHONY : all clean chaos
 
-SHLIBEXT=so
+# ----------
+ 
+# Cleanup
+clean:
+	@echo "===> CLEAN"
+	${Q}rm -Rf build release
+ 
+# ----------
 
-SHLIBCFLAGS=-fPIC
-SHLIBLDFLAGS=-shared
+# The Chaos game
+ifeq ($(OSTYPE), Windows)
+chaos:
+	@echo "===> Building game.dll"
+	$(Q)mkdir -p release
+	$(MAKE) release/game.dll
 
-DO_CC=$(CC) $(CFLAGS) -o $@ -c $<
-DO_SHLIB_CC=$(CC) $(CFLAGS) $(SHLIBCFLAGS) -o $@ -c $<
+build/%.o: %.c
+	@echo "===> CC $<"
+	$(Q)mkdir -p $(@D)
+	$(Q)$(CC) -c $(CFLAGS) -o $@ $<
+else
+chaos:
+	@echo "===> Building game.so"
+	$(Q)mkdir -p release
+	$(MAKE) release/game.so
 
-TARGETS=$(BUILDDIR)/game$(ARCH).$(SHLIBEXT) \
+build/%.o: %.c
+	@echo "===> CC $<"
+	$(Q)mkdir -p $(@D)
+	$(Q)$(CC) -c $(CFLAGS) -o $@ $<
 
-build_debug:
-	@-if [ ! -d "$(BUILD_DEBUG_DIR)" ]; then \
-	  mkdir $(BUILD_DEBUG_DIR);fi
-	$(MAKE) targets BUILDDIR=$(BUILD_DEBUG_DIR) CFLAGS="$(DEBUG_CFLAGS)"
+release/game.so : CFLAGS += -fPIC
+endif
+ 
+# ----------
 
-build_release:
-	@-if [ ! -d "$(BUILD_RELEASE_DIR)" ]; then \
-	  mkdir $(BUILD_RELEASE_DIR);fi
-	$(MAKE) targets BUILDDIR=$(BUILD_RELEASE_DIR) CFLAGS="$(RELEASE_CFLAGS)"
+CHAOS_OBJS_ = \
+	src/c_base.o \
+	src/c_botai.o \
+	src/c_botmisc.o \
+	src/c_botnav.o \
+	src/c_cam.o \
+	src/c_item.o \
+	src/c_weapon.o \
+	src/g_cmds.o \
+	src/g_combat.o \
+	src/g_ctf.o \
+	src/g_func.o \
+	src/g_items.o \
+	src/g_main.o \
+	src/g_misc.o \
+	src/g_phys.o \
+	src/g_save.o \
+	src/g_spawn.o \
+	src/g_svcmds.o \
+	src/g_target.o \
+	src/g_trigger.o \
+	src/g_utils.o \
+	src/g_weapon.o \
+	src/gslog.o \
+	src/m_move.o \
+	src/p_client.o \
+	src/p_hud.o \
+	src/p_menu.o \
+	src/p_view.o \
+	src/p_weapon.o \
+	src/q_shared.o \
+	src/stdlog.o
 
-all: build_debug build_release
+# ----------
 
-targets: $(TARGETS)
+# Rewrite pathes to our object directory
+CHAOS_OBJS = $(patsubst %,build/%,$(CHAOS_OBJS_))
 
-GAME_OBJS = \
-	$(BUILDDIR)/c_base.o \
-	$(BUILDDIR)/c_botai.o \
-	$(BUILDDIR)/c_botmisc.o \
-	$(BUILDDIR)/c_botnav.o \
-	$(BUILDDIR)/c_cam.o \
-	$(BUILDDIR)/c_item.o \
-	$(BUILDDIR)/c_weapon.o \
-	$(BUILDDIR)/g_cmds.o \
-	$(BUILDDIR)/g_combat.o \
-	$(BUILDDIR)/g_ctf.o \
-	$(BUILDDIR)/g_func.o \
-	$(BUILDDIR)/g_items.o \
-	$(BUILDDIR)/g_main.o \
-	$(BUILDDIR)/g_misc.o \
-	$(BUILDDIR)/g_phys.o \
-	$(BUILDDIR)/g_save.o \
-	$(BUILDDIR)/g_spawn.o \
-	$(BUILDDIR)/g_svcmds.o \
-	$(BUILDDIR)/g_target.o \
-	$(BUILDDIR)/g_trigger.o \
-	$(BUILDDIR)/g_utils.o \
-	$(BUILDDIR)/g_weapon.o \
-	$(BUILDDIR)/gslog.o \
-	$(BUILDDIR)/m_move.o \
-	$(BUILDDIR)/p_client.o \
-	$(BUILDDIR)/p_hud.o \
-	$(BUILDDIR)/p_menu.o \
-	$(BUILDDIR)/p_view.o \
-	$(BUILDDIR)/p_weapon.o \
-	$(BUILDDIR)/q_shared.o \
-	$(BUILDDIR)/stdlog.o
+# ----------
 
-$(BUILDDIR)/game$(ARCH).$(SHLIBEXT) : $(GAME_OBJS)
-	$(CC) $(SHLIBLDFLAGS) $(CFLAGS) -o $@ $(GAME_OBJS)
+# Generate header dependencies
+CHAOS_DEPS= $(CHAOS:.o=.d)
 
+# ----------
 
-$(BUILDDIR)/c_base.o : c_base.c
-	$(DO_SHLIB_CC)
+# Suck header dependencies in
+-include $(CHAOS_DEPS)
 
-$(BUILDDIR)/c_botai.o : c_botai.c
-	$(DO_SHLIB_CC)
+# ----------
 
-$(BUILDDIR)/c_botmisc.o : c_botmisc.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/c_botnav.o : c_botnav.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/c_cam.o : c_cam.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/c_item.o : c_item.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/c_weapon.o : c_weapon.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_cmds.o : g_cmds.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_combat.o : g_combat.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_ctf.o : g_ctf.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_func.o : g_func.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_items.o : g_items.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_main.o : g_main.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_misc.o : g_misc.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_phys.o : g_phys.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_save.o : g_save.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_spawn.o : g_spawn.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_svcmds.o : g_svcmds.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_target.o : g_target.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_trigger.o : g_trigger.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_utils.o : g_utils.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/g_weapon.o : g_weapon.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/gslog.o : gslog.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/m_move.o : m_move.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/p_client.o : p_client.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/p_hud.o : p_hud.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/p_menu.o : p_menu.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/p_view.o : p_view.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/p_weapon.o : p_weapon.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/q_shared.o : q_shared.c
-	$(DO_SHLIB_CC)
-
-$(BUILDDIR)/stdlog.o : stdlog.c
-	$(DO_SHLIB_CC)
-
-#####
-
-clean: clean-debug clean-release
-
-clean-debug:
-	$(MAKE) clean2 BUILDDIR=$(BUILD_DEBUG_DIR) CFLAGS="$(DEBUG_CFLAGS)"
-
-clean-release:
-	$(MAKE) clean2 BUILDDIR=$(BUILD_RELEASE_DIR) CFLAGS="$(DEBUG_CFLAGS)"
-
-clean2:
-	-rm -f $(GAME_OBJS)
+ifeq ($(OSTYPE), Windows)
+release/game.dll : $(CHAOS_OBJS)
+	@echo "===> LD $@"
+	$(Q)$(CC) $(LDFLAGS) -o $@ $(CHAOS_OBJS)
+release/game.dylib : $(CHAOS_OBJS)
+	@echo "===> LD $@"
+	${Q}$(CC) $(LDFLAGS) -o $@ $(CHAOS_OBJS)
+else
+release/game.so : $(CHAOS_OBJS)
+	@echo "===> LD $@"
+	$(Q)$(CC) $(LDFLAGS) -o $@ $(CHAOS_OBJS)
+endif
+ 
+# ----------
