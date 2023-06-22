@@ -5,6 +5,9 @@
 #include "header/c_base.h"
 #include "header/c_botai.h"
 
+qboolean	is_quad;     /* MATTHIAS */
+byte		is_silenced;
+
 void weapon_grenade_fire (edict_t *ent, qboolean held);
 
 

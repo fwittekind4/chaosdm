@@ -8,7 +8,9 @@
 #include "header/stdlog.h"
 #include "header/gslog.h"
 
-
+char	*chat_text[NUM_CHATSECTIONS][MAX_LINES_PER_SECTION];
+int		chat_linecount[NUM_CHATSECTIONS];
+ 
 void ClientUserinfoChanged (edict_t *ent, char *userinfo);
 void SP_misc_teleporter_dest (edict_t *ent);
 

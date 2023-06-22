@@ -1,5 +1,8 @@
 /* g_local.h -- local definitions for game module */
 
+#ifndef G_LOCAL_INCLUDE
+#define G_LOCAL_INCLUDE
+
 #include "q_shared.h"
 
 /* define GAME_INCLUDE so that game.h does not define the */
@@ -521,8 +524,8 @@ extern	cvar_t	*bob_roll;
 extern	cvar_t	*sv_cheats;
 extern	cvar_t	*maxclients;
 
-qboolean	is_quad;     /* MATTHIAS */
-byte		is_silenced;
+extern qboolean	is_quad;     /* MATTHIAS */
+extern byte		is_silenced;
 
 #define world	(&g_edicts[0])
 
@@ -1116,12 +1119,12 @@ void	nprintf (int printlevel, char *fmt, ...);
 void	stuffcmd(edict_t *ent, char *s);
 qboolean visible2 (vec3_t spot1, vec3_t spot2);
 void	EndDMLevel (void);
-int		numbots;
-int		numnodes;
-int		numred;	/* size of the red team */
-int		numblue;	/* size of the blue team */
-int		numturrets;
-int		vortexstate;
+extern int		numbots;
+extern int		numnodes;
+extern int		numred;	/* size of the red team */
+extern int		numblue;	/* size of the blue team */
+extern int		numturrets;
+extern int		vortexstate;
 
 #define MAX_MAPS           64 
 #define MAX_MAPNAME_LEN    32
@@ -1140,38 +1143,39 @@ typedef struct
 	int		currentmap;
 } maplist_t;
 
-maplist_t maplist;
+extern maplist_t maplist;
 
-char	motd[570];
-int		numplayers;
-int		path_buffer[100];				/* used to exchange path infos between functions */
+extern char	motd[570];
+extern int numplayers;
+extern int		path_buffer[100];				/* used to exchange path infos between functions */
 										/* dirty but fast way of doing this */
-int		first_pathnode;
-edict_t *players[MAX_CLIENTS];
+extern int		first_pathnode;
+extern edict_t *players[MAX_CLIENTS];
 /* edict_t *turrets[2];	// maximum of 3 turrets */
-edict_t *turrets[4];	/* maximum of 3 turrets FWP - Source of turret crash, need 3 elements for 3 turrets :)*/
-edict_t	*weapon_list;
-edict_t	*health_list;
-edict_t	*powerup_list;
-edict_t	*ammo_list;
-edict_t	*vortex_pointer;	/* pointer to the vortex if one is currently active */
-cvar_t	*node_debug;
-cvar_t	*lightsoff;
-cvar_t	*botchat;
-cvar_t	*blindtime;
-cvar_t	*poisontime;
-cvar_t	*lasertime;
-cvar_t	*proxytime;
-cvar_t	*defence_turret_ammo;
-cvar_t	*rocket_turret_ammo;
-cvar_t	*dntg;
-cvar_t	*lasermine_health;
-cvar_t	*ex_arrow_damage;
-cvar_t	*ex_arrow_radius;
-cvar_t	*cosg; /* FWP Debugging var, core on shutdown game */
+extern edict_t *turrets[4];	/* maximum of 3 turrets FWP - Source of turret crash, need 3 elements for 3 turrets :)*/
+extern edict_t	*weapon_list;
+extern edict_t	*health_list;
+extern edict_t	*powerup_list;
+extern edict_t	*ammo_list;
+extern edict_t	*vortex_pointer;	/* pointer to the vortex if one is currently active */
+extern cvar_t	*node_debug;
+extern cvar_t	*lightsoff;
+extern cvar_t	*botchat;
+extern cvar_t	*blindtime;
+extern cvar_t	*poisontime;
+extern cvar_t	*lasertime;
+extern cvar_t	*proxytime;
+extern cvar_t	*defence_turret_ammo;
+extern cvar_t	*rocket_turret_ammo;
+extern cvar_t	*dntg;
+extern cvar_t	*lasermine_health;
+extern cvar_t	*ex_arrow_damage;
+extern cvar_t	*ex_arrow_radius;
+extern cvar_t	*cosg; /* FWP Debugging var, core on shutdown game */
 
-cvar_t	*start_invulnerable_time;
-int		red_base, blue_base;	/* node at red/blue flag */
+extern cvar_t	*start_invulnerable_time;
+extern int red_base;
+extern int blue_base;	/* node at red/blue flag */
 
 /* #define CHAOS_RETAIL */
 
@@ -1182,4 +1186,6 @@ int		red_base, blue_base;	/* node at red/blue flag */
 #define UNUSEDVAR __attribute__((unused))
 #else
 #define UNUSEDVAR
+#endif
+
 #endif
