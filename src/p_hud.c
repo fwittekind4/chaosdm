@@ -1,6 +1,47 @@
 #include "header/g_local.h"
 #include "header/c_base.h"
 
+int		numbots;
+int		numnodes;
+int		numred;
+int		numblue;
+int		numturrets;
+int		vortexstate;
+
+maplist_t maplist;
+
+char	motd[570];
+int numplayers;
+int		path_buffer[100];				/* used to exchange path infos between functions */
+										/* dirty but fast way of doing this */
+int		first_pathnode;
+edict_t *players[MAX_CLIENTS];
+/* edict_t *turrets[2];	// maximum of 3 turrets */
+edict_t *turrets[4];	/* maximum of 3 turrets FWP - Source of turret crash, need 3 elements for 3 turrets :)*/
+edict_t	*weapon_list;
+edict_t	*health_list;
+edict_t	*powerup_list;
+edict_t	*ammo_list;
+edict_t	*vortex_pointer;	/* pointer to the vortex if one is currently active */
+cvar_t	*node_debug;
+cvar_t	*lightsoff;
+cvar_t	*botchat;
+cvar_t	*blindtime;
+cvar_t	*poisontime;
+cvar_t	*lasertime;
+cvar_t	*proxytime;
+cvar_t	*defence_turret_ammo;
+cvar_t	*rocket_turret_ammo;
+cvar_t	*dntg;
+cvar_t	*lasermine_health;
+cvar_t	*ex_arrow_damage;
+cvar_t	*ex_arrow_radius;
+cvar_t	*cosg; /* FWP Debugging var, core on shutdown game */
+
+cvar_t	*start_invulnerable_time;
+int red_base;
+int blue_base;
+
 void Bot_Respawn(edict_t *ent);
 qboolean Jet_Active( edict_t *ent );
 void ShowScanner(edict_t *ent,char *layout);

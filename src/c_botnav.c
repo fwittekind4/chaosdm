@@ -3,6 +3,8 @@
 #include "header/c_botnav.h"
 
 qboolean Bot_CanReachSpotDirectly(edict_t *ent, vec3_t target);
+nodes_t		nodes[MAX_NODES];
+nodeinfo_t	nodeinfo[MAX_NODES];
 
 /*
 Init the note table system
